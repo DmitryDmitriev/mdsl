@@ -1,0 +1,80 @@
+/**
+ * Глобальные CSS-переменные токенов для использования в компонентах и Storybook.
+ * Соответствует docs/DESIGN-TOKENS.md и docs/COLOR-PALETTE.md
+ */
+
+:root {
+  /* === Spacing (px) === */
+  --spacing-0: 0;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+
+  /* Stack */
+  --stack-sm: var(--spacing-4);
+  --stack-md: var(--spacing-6);
+  --stack-lg: var(--spacing-8);
+  --stack-xl: var(--spacing-12);
+  --stack-2xl: var(--spacing-16);
+
+  /* Height */
+  --height-sm: 40px;
+  --height-md: 48px;
+  --height-lg: 56px;
+  --height-xs: 32px;
+
+  /* Radius */
+  --radius-0: 0;
+  --radius-1: 4px;
+  --radius-2: 8px;
+  --radius-3: 12px;
+  --radius-4: 16px;
+  --radius-5: 20px;
+  --radius-full: 999px;
+  --radius-control-sm: var(--radius-2);
+  --radius-control-md: var(--radius-3);
+  --radius-control-lg: var(--radius-3);
+  --radius-surface: var(--radius-4);
+  --radius-overlay: var(--radius-5);
+  --radius-pill: var(--radius-full);
+
+  /* === Colors (semantic) === */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f5;
+  --bg-tertiary: #e4e4e7;
+  --border-default: #e4e4e7;
+  --border-disabled: #f4f4f5;
+  --border-active: #18181b;
+  --accent-link: #3b82f6;
+  --accent-positive: #16a34a;
+  --accent-warning: #fbbf24;
+  --accent-negative: #dc2626;
+  --accent-active: #136938;
+  --accent-graphite: #18181b;
+  --text-primary: #09090b;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #d4d4d8;
+  --text-inverted: #ffffff;
+  --text-positive: #74df8b;
+  --text-negative: #ffa080;
+  --font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Типографика кнопок (референс из buttons-spec) */
+:root {
+  --button-font-size-lg: 16px;
+  --button-line-height-lg: 24px;
+  --button-font-size-md: 14px;
+  --button-line-height-md: 20px;
+  --button-font-size-sm: 12px;
+  --button-line-height-sm: 16px;
+  --button-font-weight: 500;
+}

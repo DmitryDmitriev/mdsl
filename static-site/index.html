@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DSL — дизайн-система</title>
+  <style>
+    :root {
+      --spacing-1: 4px; --spacing-2: 8px; --spacing-3: 12px; --spacing-4: 16px;
+      --spacing-5: 20px; --spacing-6: 24px; --spacing-8: 32px; --spacing-10: 40px;
+      --spacing-12: 48px; --spacing-14: 56px; --spacing-16: 64px;
+      --radius-2: 8px; --radius-3: 12px; --radius-4: 16px;
+      --height-xs: 32px; --height-sm: 40px; --height-md: 48px; --height-lg: 56px;
+      --bg-primary: #fff; --bg-secondary: #f4f4f5; --bg-tertiary: #e4e4e7;
+      --border-default: #e4e4e7; --text-primary: #09090b; --text-secondary: #52525b;
+      --accent-active: #136938; --accent-link: #3b82f6; --accent-positive: #16a34a;
+      --accent-negative: #dc2626; --accent-warning: #f59e0b; --text-inverted: #fff;
+      --zinc-50: #fafafa; --zinc-100: #f4f4f5; --zinc-200: #e4e4e7; --zinc-300: #d4d4d8;
+      --zinc-400: #a1a1aa; --zinc-500: #71717a; --zinc-600: #52525b; --zinc-700: #3f3f46;
+      --zinc-800: #27272a; --zinc-900: #18181b; --zinc-950: #09090b;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: var(--spacing-6); background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    h1 { font-size: 1.75rem; margin-top: 0; }
+    h2 { font-size: 1.25rem; margin-top: var(--spacing-12); margin-bottom: var(--spacing-4); padding-bottom: var(--spacing-2); border-bottom: 1px solid var(--border-default); }
+    h3 { font-size: 1rem; margin-top: var(--spacing-6); margin-bottom: var(--spacing-2); }
+    p { margin: 0 0 var(--spacing-4); color: var(--text-primary); }
+    section { margin-bottom: var(--spacing-8); }
+    .nav { margin-bottom: var(--spacing-8); padding: var(--spacing-4); background: var(--bg-secondary); border-radius: var(--radius-4); }
+    .nav a { color: var(--accent-link); margin-right: var(--spacing-4); }
+    .palette { display: flex; flex-wrap: wrap; gap: var(--spacing-2); margin: var(--spacing-4) 0; }
+    .swatch { width: 64px; height: 40px; border-radius: var(--radius-2); display: flex; align-items: flex-end; padding: 4px; font-size: 10px; }
+    .swatch.dark { color: #fff; }
+    .semantic-row { display: flex; align-items: center; gap: var(--spacing-4); margin: var(--spacing-2) 0; }
+    .semantic-row span { min-width: 180px; font-size: 0.9rem; }
+    .bar { height: 24px; border-radius: 4px; background: var(--accent-link); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; font-weight: 500; border: none; cursor: pointer; font-family: inherit; }
+    .btn-primary { background: var(--accent-active); color: var(--text-inverted); }
+    .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-default); }
+    .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-default); }
+    .btn-ghost { background: transparent; color: var(--text-primary); }
+    .btn-xs { height: var(--height-xs); padding: 0 var(--spacing-3); border-radius: var(--radius-2); font-size: 12px; }
+    .btn-sm { height: var(--height-sm); padding: 0 var(--spacing-4); border-radius: var(--radius-3); font-size: 14px; }
+    .btn-md { height: var(--height-md); padding: 0 var(--spacing-5); border-radius: var(--radius-3); font-size: 14px; }
+    .btn-lg { height: var(--height-lg); padding: 0 var(--spacing-6); border-radius: var(--radius-3); font-size: 16px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: var(--spacing-4); align-items: center; margin: var(--spacing-4) 0; }
+    .token-table { font-size: 0.85rem; border-collapse: collapse; }
+    .token-table th, .token-table td { padding: var(--spacing-2) var(--spacing-4); text-align: left; border: 1px solid var(--border-default); }
+    .token-table th { background: var(--bg-secondary); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="#intro">Введение</a>
+    <a href="#colors">Цвета</a>
+    <a href="#spacing">Отступы</a>
+    <a href="#radius">Радиусы</a>
+    <a href="#height">Высота</a>
+    <a href="#buttons">Кнопки</a>
+  </nav>
+
+  <section id="intro">
+    <h1>DSL — дизайн-система</h1>
+    <p>Статичная витрина токенов и компонентов. Спецификации: <code>docs/COLOR-PALETTE.md</code>, <code>docs/DESIGN-TOKENS.md</code>, <code>docs/buttons-spec-figma.md</code>.</p>
+    <p>В UI используйте только <strong>семантические</strong> токены (Background, Accent, height/md, radius/control-md и т.д.), не примитивные значения.</p>
+  </section>
+
+  <section id="colors">
+    <h2>Цвета</h2>
+    <h3>Zinc (примитивная палитра)</h3>
+    <div class="palette">
+      <div class="swatch" style="background: var(--zinc-50); color: #000">50</div>
+      <div class="swatch" style="background: var(--zinc-100); color: #000">100</div>
+      <div class="swatch" style="background: var(--zinc-200)">200</div>
+      <div class="swatch" style="background: var(--zinc-300)">300</div>
+      <div class="swatch" style="background: var(--zinc-400)">400</div>
+      <div class="swatch dark" style="background: var(--zinc-500)">500</div>
+      <div class="swatch dark" style="background: var(--zinc-600)">600</div>
+      <div class="swatch dark" style="background: var(--zinc-700)">700</div>
+      <div class="swatch dark" style="background: var(--zinc-800)">800</div>
+      <div class="swatch dark" style="background: var(--zinc-900)">900</div>
+      <div class="swatch dark" style="background: var(--zinc-950)">950</div>
+    </div>
+    <h3>Семантика (используйте в макетах и коде)</h3>
+    <div class="semantic-row"><span>Background Primary</span>  <div class="bar" style="background: var(--bg-primary); width: 120px; border: 1px solid var(--border-default);"></div></div>
+    <div class="semantic-row"><span>Background Secondary</span> <div class="bar" style="background: var(--bg-secondary); width: 120px;"></div></div>
+    <div class="semantic-row"><span>Accent Active (Bazaraki)</span> <div class="bar" style="background: var(--accent-active); width: 120px;"></div></div>
+    <div class="semantic-row"><span>Accent Link</span> <div class="bar" style="background: var(--accent-link); width: 120px;"></div></div>
+    <div class="semantic-row"><span>Accent Positive</span> <div class="bar" style="background: var(--accent-positive); width: 120px;"></div></div>
+    <div class="semantic-row"><span>Accent Negative</span> <div class="bar" style="background: var(--accent-negative); width: 120px;"></div></div>
+  </section>
+
+  <section id="spacing">
+    <h2>Отступы (Spacing)</h2>
+    <p>Базовая единица 4px. spacing/N = 4×N px.</p>
+    <table class="token-table">
+      <tr><th>Токен</th><th>px</th></tr>
+      <tr><td>spacing/2</td><td>8</td></tr>
+      <tr><td>spacing/4</td><td>16</td></tr>
+      <tr><td>spacing/6</td><td>24</td></tr>
+      <tr><td>spacing/8</td><td>32</td></tr>
+      <tr><td>stack-sm</td><td>16</td></tr>
+      <tr><td>stack-md</td><td>24</td></tr>
+      <tr><td>stack-lg</td><td>32</td></tr>
+    </table>
+    <h3>Визуально</h3>
+    <div class="semantic-row"><span>8px</span>  <div class="bar" style="width: 8px;"></div></div>
+    <div class="semantic-row"><span>16px</span> <div class="bar" style="width: 16px;"></div></div>
+    <div class="semantic-row"><span>24px</span> <div class="bar" style="width: 24px;"></div></div>
+    <div class="semantic-row"><span>32px</span> <div class="bar" style="width: 32px;"></div></div>
+  </section>
+
+  <section id="radius">
+    <h2>Радиусы</h2>
+    <p>control-sm = 8px, control-md / control-lg = 12px, surface = 16px.</p>
+    <div class="btn-row">
+      <div style="width: 80px; height: 40px; background: var(--bg-tertiary); border-radius: 8px; border: 1px solid var(--border-default);"></div> control-sm (8px)
+      <div style="width: 80px; height: 40px; background: var(--bg-tertiary); border-radius: 12px; border: 1px solid var(--border-default);"></div> control-md (12px)
+      <div style="width: 100px; height: 48px; background: var(--bg-secondary); border-radius: 16px; border: 1px solid var(--border-default);"></div> surface (16px)
+    </div>
+  </section>
+
+  <section id="height">
+    <h2>Высота контролов</h2>
+    <table class="token-table">
+      <tr><th>Токен</th><th>px</th></tr>
+      <tr><td>height/xs</td><td>32</td></tr>
+      <tr><td>height/sm</td><td>40</td></tr>
+      <tr><td>height/md</td><td>48</td></tr>
+      <tr><td>height/lg</td><td>56</td></tr>
+    </table>
+    <div class="btn-row">
+      <div style="width: 100px; height: 32px; background: var(--accent-active); border-radius: 8px;"></div> 32
+      <div style="width: 100px; height: 40px; background: var(--accent-active); border-radius: 12px;"></div> 40
+      <div style="width: 100px; height: 48px; background: var(--accent-active); border-radius: 12px;"></div> 48
+      <div style="width: 100px; height: 56px; background: var(--accent-active); border-radius: 12px;"></div> 56
+    </div>
+  </section>
+
+  <section id="buttons">
+    <h2>Кнопки</h2>
+    <p>Размеры: xs (32px), sm (40px), md (48px), lg (56px). Варианты: Primary, Secondary, Outline, Ghost.</p>
+    <h3>По размерам</h3>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary btn-xs">xs</button>
+      <button type="button" class="btn btn-primary btn-sm">sm</button>
+      <button type="button" class="btn btn-primary btn-md">md</button>
+      <button type="button" class="btn btn-primary btn-lg">lg</button>
+    </div>
+    <h3>По вариантам (md)</h3>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary btn-md">Primary</button>
+      <button type="button" class="btn btn-secondary btn-md">Secondary</button>
+      <button type="button" class="btn btn-outline btn-md">Outline</button>
+      <button type="button" class="btn btn-ghost btn-md">Ghost</button>
+    </div>
+    <h3>Disabled</h3>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary btn-md" disabled>Primary</button>
+      <button type="button" class="btn btn-secondary btn-md" disabled>Secondary</button>
+    </div>
+  </section>
+
+  <p style="margin-top: 2rem; color: var(--text-secondary); font-size: 0.9rem;">DSL Design System · Токены и компоненты</p>
+</body>
+</html>
