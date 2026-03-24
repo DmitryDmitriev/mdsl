@@ -8,7 +8,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Минимальная высота кнопок и однострочных инпутов. height/sm = 40px, height/md = 48px, height/lg = 56px, height/xs = 32px (compact). Спецификация: docs/DESIGN-TOKENS.md, docs/buttons-spec-figma.md',
+          'Минимальная высота кнопок и однострочных инпутов. height/sm = 40px, height/md = 48px, height/lg = 56px, height/xs = 32px (compact). Спецификация: docs/DESIGN-TOKENS.md, docs/button-spec.md',
       },
     },
   },

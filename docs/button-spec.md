@@ -1,8 +1,10 @@
-# Кнопки (Button) — спека для Figma
+# Кнопки (Button) — спецификация для разработки
 
-**Один компонент — одна спека.** Это единственный файл спецификации компонента «Кнопка»; не создавать отдельные файлы-описания для него.
+**Один компонент — одна спека.** Единственный файл спецификации компонента «Кнопка».
 
-Спека привязана к **дизайн-системе** и токенам из **docs/DESIGN-TOKENS.md**. В макетах и компонентах используются только **Semantic**-токены; Core — для построения семантики. Иконки — только из Figma Assets, размеры **16**, **24**, **32** px (см. docs/DESIGN-TOKENS.md).
+Привязка к **docs/DESIGN-TOKENS.md**. В UI используются только **семантические** токены; Core — для построения семантики. Иконки в кнопках — размеры **16**, **24** или **32** px (см. **docs/DESIGN-TOKENS.md**, раздел «Иконки»).
+
+Реализация в репозитории: **src/components/Button/Button.tsx**, токены **@/tokens** (`height`, `buttonPaddingX`, `buttonGap`, `radius`, `borderWidth`, **semantic** из **@/tokens/colors**).
 
 ---
 
@@ -30,11 +32,11 @@
 | lg, md, sm | **radius/control-lg** | radius/3 | 12 px |
 | xs | **radius/control-md** | radius/2 | 8 px |
 
-В Figma (Semantic): **control-lg** → **radius/3** (12 px) для высот 56 / 48 / 40; **control-md** → **radius/2** (8 px) для высоты 32 (**xs**). Токен **control-sm** (4 px) в кнопках не используется.
+**control-sm** (4 px) в кнопках не используется.
 
 ### Отступы — space (padding, gap)
 
-Внутренние отступы и зазор между иконкой и текстом берутся из шкалы **spacing**. В UI должны использоваться семантические переменные; ниже — рекомендуемые референсы (при отсутствии отдельных токенов для кнопок можно временно использовать Core в Figma, затем вынести в Semantic).
+Внутренние отступы и зазор между иконкой и текстом — шкала **spacing**; в коде — `buttonPaddingX`, `buttonGap` (**src/tokens/spacing.ts**).
 
 **Padding horizontal (отступ от края до текста/иконки):**
 
@@ -69,19 +71,17 @@
 
 ### Иконки (размер)
 
-Шкала иконок может быть привязана к **spacing** или к отдельной шкале icon/size. Пока — референс на Core:
+| Размер кнопки | Размер иконки |
+|---------------|---------------|
+| lg            | 24 px         |
+| md, sm        | 24 px         |
+| xs            | 16 px         |
 
-| Размер кнопки | Рекомендуемый Semantic | Core / значение | px   |
-|---------------|-------------------------|------------------|------|
-| lg            | 24 px | Figma Assets (docs/DESIGN-TOKENS.md) |
-| md, sm        | 24 px | Figma Assets |
-| xs            | 16 px | Figma Assets |
-
-В компонентах допускаются только размеры иконок **16**, **24**, **32** px (источник — Figma Assets).
+Допустимые размеры иконок в компонентах — **16**, **24**, **32** px (**docs/DESIGN-TOKENS.md**).
 
 ### Обводка (вариант Outline)
 
-Толщина обводки зависит от **размера кнопки** (как в UI-Kit-Mobile, Figma): на компактной **xs** тонкая линия, на **sm и выше** — более заметная.
+Толщина обводки зависит от **размера кнопки**: на **xs** — тонкая линия, на **sm и выше** — более заметная.
 
 | Размер | Толщина | Semantic (толщина) | Core |
 |--------|---------|--------------------|------|
@@ -103,7 +103,7 @@
 | md, sm        | Body 2                 | —     | 14 px      | 20 px       | 500    |
 | xs            | Caption Medium          | caption-md | 12 px   | 16 px       | 500    |
 
-В Figma: создать текстовые стили **Button / lg** (Body 1, Medium), **Button / md**, **Button / sm** (Body 2, Medium), **Button / xs** (typography/caption-md). Цвет текста — по **docs/COLOR-PALETTE.md** (Accent, Text & Icon).
+Цвет текста — по **docs/COLOR-PALETTE.md** (Accent, Text & Icon).
 
 ### Цвета (Semantic)
 
@@ -134,7 +134,7 @@
 | Border radius         | 12 px    | radius/control-lg → radius/3 |
 | Border width (Outline)| 2 px     | border/emphasis → border/2 |
 | Типографика | Body 1: 16 px / 24 px, Medium | docs/TYPOGRAPHY.md |
-| Иконка (если есть)    | 24×24 px | Figma Assets, 24 px |
+| Иконка (если есть)    | 24×24 px | |
 | Отступ иконка ↔ текст | 12 px    | space/button-gap-lg → spacing/3 |
 
 ### Иконные кнопки (только иконка)
@@ -143,7 +143,7 @@
 |------------|----------|--------|
 | Size       | 56×56 px | height/lg |
 | Border radius | 12 px | radius/control-lg → radius/3 |
-| Icon size  | 24×24 px | Figma Assets, 24 px |
+| Icon size  | 24×24 px | |
 
 ---
 
@@ -161,7 +161,7 @@
 | Border radius         | 12 px    | radius/control-lg → radius/3 |
 | Border width (Outline)| 2 px     | border/emphasis → border/2 |
 | Типографика | Body 2: 14 px / 20 px, Medium | docs/TYPOGRAPHY.md |
-| Иконка (если есть)    | 24×24 px | Figma Assets, 24 px |
+| Иконка (если есть)    | 24×24 px | |
 | Отступ иконка ↔ текст | 8 px     | space/button-gap-md → spacing/2 |
 
 ### Иконные кнопки
@@ -170,7 +170,7 @@
 |------------|----------|--------|
 | Size       | 48×48 px | height/md |
 | Border radius | 12 px | radius/control-lg → radius/3 |
-| Icon size  | 24×24 px | Figma Assets, 24 px |
+| Icon size  | 24×24 px | |
 
 ---
 
@@ -188,7 +188,7 @@
 | Border radius         | 12 px    | radius/control-lg → radius/3 |
 | Border width (Outline)| 2 px     | border/emphasis → border/2 |
 | Типографика | Body 2: 14 px / 20 px, Medium | docs/TYPOGRAPHY.md |
-| Иконка (если есть)    | 24×24 px | Figma Assets, 24 px |
+| Иконка (если есть)    | 24×24 px | |
 | Отступ иконка ↔ текст | 8 px     | space/button-gap-sm → spacing/2 |
 
 ### Иконные кнопки
@@ -197,7 +197,7 @@
 |------------|----------|--------|
 | Size       | 40×40 px | height/sm |
 | Border radius | 12 px | radius/control-lg → radius/3 |
-| Icon size  | 24×24 px | Figma Assets, 24 px |
+| Icon size  | 24×24 px | |
 
 ---
 
@@ -215,7 +215,7 @@
 | Border radius         | 8 px     | radius/control-md → radius/2 |
 | Border width (Outline)| 1 px     | border/default → border/1 |
 | Типографика | typography/caption-md: 12 px / 16 px, Medium | docs/TYPOGRAPHY.md |
-| Иконка (если есть)    | 16×16 px | Figma Assets, 16 px |
+| Иконка (если есть)    | 16×16 px | |
 | Отступ иконка ↔ текст | 4 px     | space/button-gap-xs → spacing/1 |
 
 ### Иконные кнопки
@@ -224,7 +224,7 @@
 |------------|----------|--------|
 | Size       | 32×32 px | spacing/8 |
 | Border radius | 8 px  | radius/control-md → radius/2 |
-| Icon size  | 16×16 px | Figma Assets, 16 px |
+| Icon size  | 16×16 px | |
 
 ---
 
@@ -250,32 +250,8 @@
 
 ---
 
-## Синхронизация с кодом (Compose)
+## Синхронизация с кодом
 
-По docs/DESIGN-TOKENS.md:
+**Web (этот репозиторий):** значения в **px** в `Button.tsx` и **@/tokens**; Outline: `borderWidth.default` (1) для **xs**, `borderWidth.emphasis` (2) для **sm / md / lg** — см. **docs/DESIGN-TOKENS.md**.
 
-- **spacing/N** → `N * 4.dp`
-- **radius/3**, **radius/2** → `12.dp`, `8.dp`
-- **border/1**, **border/2** → `1.dp`, `2.dp` (Outline: xs → 1, sm/md/lg → 2)
-- **height/lg**, **height/md**, **height/sm** → `56.dp`, `48.dp`, `40.dp`; 32 → `32.dp` (spacing/8)
-
-Семантические имена в коде должны совпадать с таблицей (например `ControlHeight.Large`, `ControlRadius.Large`).
-
----
-
-## Для копирования в Figma
-
-Краткий блок для описания компонента, комментариев или документации в Figma. Источники: эта спека, **docs/TYPOGRAPHY.md**, **docs/COLOR-PALETTE.md**.
-
-**Общее:** Шрифт Inter. Состояния: Default, Disabled. Варианты: Primary, Secondary, Outline, Ghost (текстовые и иконные). Цвета: Accent + Text & Icon (COLOR-PALETTE). **Outline:** толщина **1 px** (border/default) на **xs**, **2 px** (border/emphasis) на **sm / md / lg**; цвет Border/Default и Border/Disabled.
-
-**Текстовые стили в Figma (создать один раз):**
-
-| Имя стиля   | Шрифт | Size | Line height | Weight |
-|-------------|--------|------|-------------|--------|
-| Button / lg | Inter  | 16   | 24          | Medium (500) |
-| Button / md | Inter  | 14   | 20          | Medium (500) |
-| Button / sm | Inter  | 14   | 20          | Medium (500) |
-| Button / xs | Inter  | 12   | 16          | Medium (500) |
-
-**Переменные (рекомендуемые в Figma):** Height: lg 56, md 48, sm 40, xs 32. Spacing: 4, 8, 12, 16, 20, 24 (spacing/1…6). Radius: 8 (radius/2), 12 (radius/3). Цвета: Accent/Primary, Accent/Secondary, Text & Icon (Primary, Tertiary, Inverted W-B), Border (Default, Disabled).
+**Android (Compose):** те же числа в **dp**: spacing/N → `N * 4.dp`, radius/3 и radius/2 → `12.dp`, `8.dp`, border → `1.dp` / `2.dp`, высоты → `32/40/48/56.dp`.

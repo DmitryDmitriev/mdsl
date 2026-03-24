@@ -22,7 +22,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
     height: heightTokens.sm, // 40
     paddingTop: spacing[3],
     paddingBottom: spacing[3],
-    paddingLeft: spacing[2], // 8 px — по Figma UI-Kit-Mobile
+    paddingLeft: spacing[2], // 8 px — docs/badge-spec.md
     paddingRight: spacing[2],
     gap: spacing[1],
     fontSize: 14,
@@ -36,7 +36,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
     paddingRight: spacing[3],
     gap: spacing[1],
     fontSize: 14,
-    lineHeight: '20px', // Body 2 Medium — по Figma
+    lineHeight: '20px', // Body 2 Medium — docs/badge-spec.md
   },
 };
 

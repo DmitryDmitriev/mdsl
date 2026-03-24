@@ -19,7 +19,7 @@ export const radiusCore = {
 } as const;
 
 /**
- * Семантика как в Figma (Semantic): control-sm/md/lg → Core radius/1, /2, /3;
+ * Семантика: control-sm/md/lg → Core radius/1, /2, /3;
  * surface → radius/3; overlay → radius/4. Кнопки: xs → control-md (8), sm/md/lg → control-lg (12).
  */
 export const radius = {

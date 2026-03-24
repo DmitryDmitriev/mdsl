@@ -1,6 +1,6 @@
 /**
  * Токены отступов и высот.
- * Спецификация: docs/DESIGN-TOKENS.md, docs/buttons-spec-figma.md
+ * Спецификация: docs/DESIGN-TOKENS.md, docs/button-spec.md
  *
  * Core: spacing/N = 4×N px. В UI используйте семантические токены (space, stack, height).
  */
@@ -58,7 +58,7 @@ export const buttonGap = {
 
 /**
  * Толщина линии (px). Семантика: border/default → 1, border/emphasis → 2 (docs/DESIGN-TOKENS.md).
- * Outline-кнопка: xs — default, sm/md/lg — emphasis (docs/buttons-spec-figma.md).
+ * Outline-кнопка: xs — default, sm/md/lg — emphasis (docs/button-spec.md).
  */
 export const borderWidth = {
   default: 1,

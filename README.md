@@ -1,6 +1,6 @@
 # DSL Design System
 
-Дизайн-система: токены (цвета, отступы, радиусы, высоты) и компоненты. Спецификации в папке `docs/`.
+Дизайн-система: токены (цвета, отступы, радиусы, высоты) и компоненты. **Спеки для разработки** — в папке `docs/` (оглавление: **docs/README.md**).
 
 ## Storybook
 
@@ -34,11 +34,11 @@ npm run build-storybook
 | **Токены → Высота контролов** | Дизайн, разработка | height/xs, sm, md, lg для кнопок и инпутов. |
 | **Компоненты → Button** | Все | Размеры, варианты (Primary, Secondary, Outline, Ghost), с иконкой, только иконка, disabled. |
 
-В каждой стори есть описание и при необходимости — код и ссылки на `docs/COLOR-PALETTE.md`, `docs/DESIGN-TOKENS.md`, `docs/buttons-spec-figma.md`.
+В каждой стори есть описание и при необходимости — код и ссылки на `docs/COLOR-PALETTE.md`, `docs/DESIGN-TOKENS.md`, `docs/button-spec.md`.
 
 ## Структура проекта
 
-- `docs/` — спецификации (цвета, токены, кнопки, типографика, чекбокс). Токены подписей caption-lg / caption-md / caption-sm: **docs/TYPOGRAPHY.md**, **docs/DESIGN-TOKENS.md**. Чекбокс: **docs/checkbox-spec.md**.
+- `docs/` — спеки для разработки: см. **docs/README.md** (токены, типографика, цвета, компоненты).
 - `src/tokens/` — токены в коде (TypeScript + CSS-переменные в `global.css`).
 - `src/components/` — компоненты (например, Button) и их сториз.
 - `.storybook/` — конфигурация Storybook.
