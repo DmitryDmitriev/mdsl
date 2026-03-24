@@ -1,6 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { primitive, semantic } from '@/tokens/colors';
 
+/** Относительная яркость 0–1 (0 = чёрный). */
+function luminance(hex: string): number {
+  const m = hex.replace(/^#/, '').match(/.{2}/g);
+  if (!m) return 0;
+  const [r, g, b] = m.map((x) => parseInt(x, 16) / 255);
+  return 0.299 * r + 0.587 * g + 0.114 * b;
+}
+
+/** Нужен белый бордер, если цвет совпадает с поверхностью или оба тёмные. */
+function needsWhiteBorder(color: string, surfaceColor: string | undefined): boolean {
+  if (!surfaceColor) return false;
+  if (color === surfaceColor) return true;
+  const lColor = luminance(color);
+  const lSurface = luminance(surfaceColor);
+  return lSurface < 0.2 && lColor < 0.25;
+}
+
 const meta: Meta = {
   title: 'Токены/Цвета',
   tags: ['autodocs'],
@@ -28,7 +45,7 @@ export const PrimitiveNeutral: StoryObj = {
             height: 48,
             background: value,
             borderRadius: 8,
-            border: key === '50' || key === '100' ? '1px solid #e5e5e5' : 'none',
+            border: key === '50' || key === '100' ? '1px solid rgba(0,0,0,0.08)' : 'none',
             display: 'flex',
             alignItems: 'flex-end',
             padding: 4,
@@ -55,7 +72,7 @@ export const PrimitiveZinc: StoryObj = {
             height: 48,
             background: value,
             borderRadius: 8,
-            border: key === '50' || key === '100' ? '1px solid #e4e4e7' : 'none',
+            border: key === '50' || key === '100' ? '1px solid rgba(0,0,0,0.08)' : 'none',
             display: 'flex',
             alignItems: 'flex-end',
             padding: 4,
@@ -100,7 +117,7 @@ export const BrandColors: StoryObj = {
                   height: 48,
                   background: secondary,
                   borderRadius: 8,
-                  border: '1px solid #e5e5e5',
+                  border: '1px solid rgba(0,0,0,0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -154,7 +171,18 @@ const accentRoles: { name: string; light: string; lightLabel: string; dark: stri
   { name: 'Primary', light: semantic.accent.primary, lightLabel: 'Zinc/900', dark: semantic.accent.primaryDark, darkLabel: 'Zinc/200' },
 ];
 
-function AccentSwatch({ value, label, textDark }: { value: string; label: string; textDark?: boolean }) {
+function AccentSwatch({
+  value,
+  label,
+  textDark,
+  surfaceColor,
+}: {
+  value: string;
+  label: string;
+  textDark?: boolean;
+  surfaceColor?: string;
+}) {
+  const whiteBorder = needsWhiteBorder(value, surfaceColor);
   return (
     <div
       style={{
@@ -167,6 +195,8 @@ function AccentSwatch({ value, label, textDark }: { value: string; label: string
         borderRadius: 6,
         minWidth: 100,
         fontSize: 12,
+        border: whiteBorder ? '1px solid #fff' : undefined,
+        fontFamily: 'var(--font-family)',
       }}
     >
       <span style={{ width: 16, height: 16, background: 'rgba(0,0,0,0.15)', borderRadius: 4 }} />
@@ -175,9 +205,11 @@ function AccentSwatch({ value, label, textDark }: { value: string; label: string
   );
 }
 
+const darkSurface = semantic.background.invertedPrimary;
+
 export const SemanticAccent: StoryObj = {
   render: () => (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: 'auto', fontFamily: 'var(--font-family)' }}>
       <table style={{ borderCollapse: 'collapse', minWidth: 360, fontSize: 14 }}>
         <thead>
           <tr style={{ borderBottom: '1px solid #e4e4e7' }}>
@@ -193,8 +225,13 @@ export const SemanticAccent: StoryObj = {
               <td style={{ padding: '8px 12px' }}>
                 <AccentSwatch value={light} label={lightLabel} textDark={light === semantic.accent.secondary} />
               </td>
-              <td style={{ padding: '8px 12px' }}>
-                <AccentSwatch value={dark} label={darkLabel} textDark={dark === semantic.accent.primaryDark} />
+              <td style={{ padding: '8px 12px', background: darkSurface }}>
+                <AccentSwatch
+                  value={dark}
+                  label={darkLabel}
+                  textDark={dark === semantic.accent.primaryDark}
+                  surfaceColor={darkSurface}
+                />
               </td>
             </tr>
           ))}

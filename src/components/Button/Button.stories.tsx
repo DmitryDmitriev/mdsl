@@ -30,7 +30,7 @@ const meta: Meta<typeof Button> = {
     docs: {
       description: {
         component:
-          'Кнопка по спецификации docs/buttons-spec-figma.md. Размеры: xs (32px), sm (40px), md (48px), lg (56px). Варианты: Primary, Secondary, Outline, Ghost. В коде используйте токены из @/tokens (height, buttonPaddingX, buttonGap, radius, semantic colors).',
+          'Кнопка по спецификации docs/buttons-spec-figma.md. Размеры: xs (32px), sm (40px), md (48px), lg (56px). Варианты: Primary, Secondary, Outline, Ghost. Outline: толщина border 1px (xs) / 2px (sm–lg). Токены: @/tokens — height, buttonPaddingX, buttonGap, radius, borderWidth, semantic colors.',
       },
     },
   },

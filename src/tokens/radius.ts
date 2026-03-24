@@ -18,12 +18,15 @@ export const radiusCore = {
   full: 999,
 } as const;
 
-/** Семантические радиусы для контролов и поверхностей */
+/**
+ * Семантика как в Figma (Semantic): control-sm/md/lg → Core radius/1, /2, /3;
+ * surface → radius/3; overlay → radius/4. Кнопки: xs → control-md (8), sm/md/lg → control-lg (12).
+ */
 export const radius = {
-  controlSm: radiusCore[2],  // 8
-  controlMd: radiusCore[3],  // 12
-  controlLg: radiusCore[3],  // 12
-  surface: radiusCore[4],    // 16
-  overlay: radiusCore[5],    // 20
+  controlSm: radiusCore[1], // 4 — мелкие контролы
+  controlMd: radiusCore[2], // 8 — кнопка xs, rounded badge, мелкие hit-targets
+  controlLg: radiusCore[3], // 12 — кнопки sm/md/lg, surface
+  surface: radiusCore[3], // 12 — карточки, панели
+  overlay: radiusCore[4], // 16 — модалки, bottom sheet (открытый край)
   pill: radiusCore.full,
 } as const;

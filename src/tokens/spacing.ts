@@ -55,3 +55,12 @@ export const buttonGap = {
   sm: spacing[2],
   xs: spacing[1],
 } as const;
+
+/**
+ * Толщина линии (px). Семантика: border/default → 1, border/emphasis → 2 (docs/DESIGN-TOKENS.md).
+ * Outline-кнопка: xs — default, sm/md/lg — emphasis (docs/buttons-spec-figma.md).
+ */
+export const borderWidth = {
+  default: 1,
+  emphasis: 2,
+} as const;

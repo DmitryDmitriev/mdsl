@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { height, buttonPaddingX, buttonGap, radius } from '@/tokens';
+import { height, buttonPaddingX, buttonGap, radius, borderWidth } from '@/tokens';
 import { semantic } from '@/tokens/colors';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -11,7 +11,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     paddingLeft: buttonPaddingX.xs,
     paddingRight: buttonPaddingX.xs,
     gap: buttonGap.xs,
-    borderRadius: radius.controlSm,
+    borderRadius: radius.controlMd,
     fontSize: 12,
     lineHeight: '16px',
   },
@@ -20,7 +20,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     paddingLeft: buttonPaddingX.sm,
     paddingRight: buttonPaddingX.sm,
     gap: buttonGap.sm,
-    borderRadius: radius.controlSm,
+    borderRadius: radius.controlLg,
     fontSize: 14,
     lineHeight: '20px',
   },
@@ -29,7 +29,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     paddingLeft: buttonPaddingX.md,
     paddingRight: buttonPaddingX.md,
     gap: buttonGap.md,
-    borderRadius: radius.controlMd,
+    borderRadius: radius.controlLg,
     fontSize: 14,
     lineHeight: '20px',
   },
@@ -44,15 +44,24 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
   },
 };
 
+function outlineStrokeW(size: ButtonSize): number {
+  return size === 'xs' ? borderWidth.default : borderWidth.emphasis;
+}
+
 function getVariantStyles(
   variant: ButtonVariant,
-  disabled: boolean
+  disabled: boolean,
+  size: ButtonSize
 ): React.CSSProperties {
+  const outlineW = outlineStrokeW(size);
   if (disabled) {
     return {
       background: variant === 'primary' || variant === 'secondary' ? semantic.background.tertiary : 'transparent',
       color: semantic.text.tertiary,
-      border: variant === 'outline' ? `1px solid ${semantic.border.disabled}` : '1px solid transparent',
+      border:
+        variant === 'outline'
+          ? `${outlineW}px solid ${semantic.border.disabled}`
+          : '1px solid transparent',
     };
   }
   switch (variant) {
@@ -72,7 +81,7 @@ function getVariantStyles(
       return {
         background: 'transparent',
         color: semantic.text.primary,
-        border: `1px solid ${semantic.border.default}`,
+        border: `${outlineW}px solid ${semantic.border.default}`,
       };
     case 'ghost':
       return {
@@ -102,7 +111,7 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const sizeStyle = sizeStyles[size];
-  const variantStyle = getVariantStyles(variant, disabled);
+  const variantStyle = getVariantStyles(variant, disabled, size);
   const isIconOnly = !children && icon;
 
   return (

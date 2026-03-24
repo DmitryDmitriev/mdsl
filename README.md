@@ -38,7 +38,7 @@ npm run build-storybook
 
 ## Структура проекта
 
-- `docs/` — спецификации (цвета, токены, кнопки).
+- `docs/` — спецификации (цвета, токены, кнопки, типографика, чекбокс). Токены подписей caption-lg / caption-md / caption-sm: **docs/TYPOGRAPHY.md**, **docs/DESIGN-TOKENS.md**. Чекбокс: **docs/checkbox-spec.md**.
 - `src/tokens/` — токены в коде (TypeScript + CSS-переменные в `global.css`).
 - `src/components/` — компоненты (например, Button) и их сториз.
 - `.storybook/` — конфигурация Storybook.

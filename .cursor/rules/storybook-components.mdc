@@ -1,0 +1,17 @@
+---
+description: Все новые UI-компоненты обязательно добавляются в Storybook.
+globs: "**/src/components/**/*.tsx","**/.storybook/**"
+alwaysApply: false
+---
+
+# Storybook — правила для компонентов
+
+При создании **нового UI-компонента** в `src/components/` обязательно добавляй его в Storybook.
+
+## Что сделать
+
+1. **Создать файл сторис** рядом с компонентом: `ComponentName.stories.tsx` в той же папке, что и компонент (по образцу `Button/Button.stories.tsx`).
+2. **Структура сторис:** `Meta` с `title: 'Компоненты/ComponentName'`, `component`, `tags: ['autodocs']`, при необходимости `argTypes` и `parameters.docs.description.component`. Экспортировать хотя бы одну стори (например Default).
+3. **Добавить в порядок в Storybook:** в `.storybook/preview.ts` в `storySort.order` → `'Компоненты'` → массив имён — добавить имя нового компонента (например `['Button', 'Badge', 'Avatar', 'НовыйКомпонент']`).
+
+Без сторис компонент считается незавершённым: дизайн-система должна быть документирована в Storybook.

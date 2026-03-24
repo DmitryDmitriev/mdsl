@@ -20,7 +20,7 @@ const preview: Preview = {
           'Токены',
           ['Цвета', 'Отступы (Spacing)', 'Радиусы', 'Высота контролов'],
           'Компоненты',
-          ['Button'],
+          ['Button', 'Badge', 'Avatar', 'Sheets'],
         ],
       },
     },

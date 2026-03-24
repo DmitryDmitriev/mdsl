@@ -45,11 +45,11 @@ export const SemanticRadius: StoryObj = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {[
-        { name: 'control-sm (кнопки xs)', value: radius.controlSm },
-        { name: 'control-md (кнопки sm/md/lg)', value: radius.controlMd },
-        { name: 'control-lg', value: radius.controlLg },
-        { name: 'surface (карточки, панели)', value: radius.surface },
-        { name: 'overlay (модалки)', value: radius.overlay },
+        { name: 'control-sm (мелкие контролы, 4)', value: radius.controlSm },
+        { name: 'control-md (кнопка xs, бейдж rounded, 8)', value: radius.controlMd },
+        { name: 'control-lg (кнопки sm/md/lg, 12)', value: radius.controlLg },
+        { name: 'surface (карточки, панели, 12)', value: radius.surface },
+        { name: 'overlay (модалки, шит, 16)', value: radius.overlay },
         { name: 'pill (капсулы)', value: radius.pill },
       ].map(({ name, value }) => (
         <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
