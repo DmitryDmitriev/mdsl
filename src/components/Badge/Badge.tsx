@@ -10,9 +10,9 @@ export type BadgeShape = 'pill' | 'rounded';
  * Размеры бейджа по шкале size/* (docs/badge-spec.md §3):
  * - 2xs: 16px (size/2xs) — микро-индикаторы, dot-каунтеры
  * - xs: 20px (size/xs) — каунтеры в trailing list items
- * - sm: 32px (size/sm) — компактный бейдж
- * - md: 40px (size/md) — стандартный бейдж
- * - lg: 48px (size/lg) — крупный бейдж
+ * - sm: 32px (size/md) — компактный бейдж
+ * - md: 40px (size/lg) — стандартный бейдж
+ * - lg: 48px (size/xl) — крупный бейдж
  */
 const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> = {
   '2xs': {
@@ -38,7 +38,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     iconSize: 12,
   },
   sm: {
-    height: sizeTokens.sm, // 32px
+    height: sizeTokens.md, // 32px (size/md)
     paddingTop: spacing[2],
     paddingBottom: spacing[2],
     paddingLeft: spacing[2],
@@ -49,7 +49,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     iconSize: 16,
   },
   md: {
-    height: sizeTokens.md, // 40px
+    height: sizeTokens.lg, // 40px (size/lg)
     paddingTop: spacing[3],
     paddingBottom: spacing[3],
     paddingLeft: spacing[2],
@@ -60,7 +60,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     iconSize: 24,
   },
   lg: {
-    height: sizeTokens.lg, // 48px
+    height: sizeTokens.xl, // 48px (size/xl)
     paddingTop: spacing[4],
     paddingBottom: spacing[4],
     paddingLeft: spacing[3],

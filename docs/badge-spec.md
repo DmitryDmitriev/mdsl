@@ -75,9 +75,9 @@
 |--------|--------|-----------|-----------|-------|--------|---------------------|
 | 2xs    | 16 px (`size/2xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Микро-индикаторы, dot-каунтеры. |
 | xs     | 20 px (`size/xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Каунтеры в trailing list items. |
-| sm     | 32 px (`size/sm`) | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
-| md     | 40 px (`size/md`) | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
-| lg     | 48 px (`size/lg`) | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
+| sm     | 32 px (`size/md`) | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
+| md     | 40 px (`size/lg`) | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
+| lg     | 48 px (`size/xl`) | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
 
 ---
 
@@ -145,7 +145,7 @@
 ### Привязка токенов
 | Property | Токен |
 |----------|-------|
-| height | `size/2xs`, `size/xs`, `size/sm`, `size/md`, `size/lg` |
+| height | `size/2xs`, `size/xs`, `size/md`, `size/lg`, `size/xl` |
 | paddingLeft/Right | `spacing/1`, `spacing/2`, `spacing/3` |
 | paddingTop/Bottom | `spacing/1`, `spacing/2`, `spacing/3`, `spacing/4` |
 
