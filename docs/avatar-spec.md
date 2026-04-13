@@ -33,13 +33,15 @@
 
 | Size | Токен | Значение | Иконка | Шрифт |
 |------|-------|----------|--------|-------|
-| `s` | `size/sm` | 24px | 12px | 10px |
+| `s` | `size/sm` | 24px | 16px | 10px |
 | `m` | `size/md` | 32px | 16px | 14px |
-| `l` | `size/lg` | 40px | 20px | 16px |
+| `l` | `size/lg` | 40px | 24px | 16px |
 | `xl` | `size/xl` | 48px | 24px | 18px |
-| `2xl` | `size/2xl` | 56px | 28px | 20px |
+| `2xl` | `size/2xl` | 56px | 32px | 20px |
 | `3xl` | `spacing/16` | 64px | 32px | 24px |
 | `4xl` | `size/3xl` | 80px | 40px | 30px |
+
+**Стандартные размеры иконок:** 16, 24, 32, 40
 
 В коде: `size.sm`, `size.md`, `size.lg`, `size.xl`, `size['2xl']`, `spacing[16]`, `size['3xl']`
 
