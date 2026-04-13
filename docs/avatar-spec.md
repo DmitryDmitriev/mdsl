@@ -1,95 +1,170 @@
 # Avatar — спецификация компонента
 
-Компонент аватара пользователя (фото или инициалы). Использует только токены из **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md**.
+Компонент аватара пользователя. Использует токены из дизайн-системы.
+
+**Figma:** Avatar v2 (токенизированная версия)
 
 ---
 
-## 1. Размеры (Semantic)
+## 1. Свойства компонента
 
-Размер аватара привязан к семантике **height** (как у кнопок и инпутов). Квадрат: ширина = высота.
-
-| Токен       | Значение | Использование              |
-|-------------|----------|----------------------------|
-| height/xs   | 32 px    | Компактные списки, чипы    |
-| height/sm   | 40 px    | Маленькие карточки         |
-| height/md   | 48 px    | Стандартные карточки, хедер|
-| height/lg   | 56 px    | Крупные профили, превью    |
-
-В коде: `height.xs`, `height.sm`, `height.md`, `height.lg` из `@/tokens`.
+| Свойство | Значения | По умолчанию |
+|----------|----------|--------------|
+| **type** | `letter` \| `person` \| `add` \| `photo` | `letter` |
+| **size** | `s` \| `m` \| `l` \| `xl` \| `2xl` \| `3xl` \| `4xl` | `m` |
+| **pin** | `boolean` | `false` |
 
 ---
 
-## 2. Форма и скругление
+## 2. Типы (type)
 
-- **Форма:** круг (квадрат со скруглением 50% или radius/full).
-- **Токен:** `radius/pill` (radius.pill в коде) — полное скругление.
-
----
-
-## 3. Варианты отображения
-
-### 3.1 С изображением (src)
-
-- Показывается картинка, заполняющая круг.
-- `object-fit: cover`, `object-position: center`.
-- Обводка (опционально): **border/default** (1 px), цвет **border/default** (semantic.border.default).
-
-### 3.2 Fallback (без изображения или ошибка загрузки)
-
-- Фон: **Background Secondary** (semantic.background.secondary).
-- Текст (инициалы): **Text Primary** (semantic.text.primary).
-- Шрифт: по **docs/TYPOGRAPHY.md** в зависимости от размера:
-  - xs: typography/caption-md (12 px / 16 px), Medium (500)
-  - sm: typography/caption-lg (14 px / 16 px), Medium (500)
-  - md: Body 2 (14 px / 20 px), Medium (500)
-  - lg: Body 1 (16 px / 24 px), Medium (500)
-- Инициалы: одна или две буквы (например, первые буквы имени и фамилии), по центру.
+| Type | Назначение | Содержимое |
+|------|------------|------------|
+| `letter` | Пользователь без фото | Инициалы (1-2 буквы) |
+| `person` | Пользователь без фото | Иконка пользователя |
+| `add` | Призыв загрузить фото | Иконка камеры |
+| `photo` | Пользователь с фото | Изображение |
 
 ---
 
-## 4. Статус (опционально)
+## 3. Размеры (size)
 
-Индикатор статуса пользователя (online, offline, away) — точка в углу аватара.
+Прогрессия: 24 → 32 → 40 → 48 → 56 → 64 → 80 (шаг +8px, последний +16px)
 
-- **Позиция:** правый нижний угол, отступ от края — **spacing/1** (4 px).
-- **Размер точки:** 25% от размера аватара или минимум 8 px (spacing/2).
-- **Обводка:** border/1, цвет **Background Primary** (semantic.background.primary), чтобы отделить от фона.
-- **Цвета статуса (семантика Decor / Accent):**
-  - **online:** accent/positive (semantic.accent.positive)
-  - **offline:** border/default или text/tertiary (semantic.text.tertiary)
-  - **away:** accent/warning (semantic.accent.warning)
+| Size | Токен | Значение | Иконка | Шрифт |
+|------|-------|----------|--------|-------|
+| `s` | `size/sm` | 24px | 12px | 10px |
+| `m` | `size/md` | 32px | 16px | 14px |
+| `l` | `size/lg` | 40px | 20px | 16px |
+| `xl` | `size/xl` | 48px | 24px | 18px |
+| `2xl` | `size/2xl` | 56px | 28px | 20px |
+| `3xl` | `spacing/16` | 64px | 32px | 24px |
+| `4xl` | `size/3xl` | 80px | 40px | 30px |
 
----
-
-## 5. Токены в коде
-
-| Элемент           | Токен / значение                          |
-|-------------------|-------------------------------------------|
-| Размер (width, height) | height.xs / .sm / .md / .lg        |
-| Радиус            | radius.pill                               |
-| Фон fallback      | semantic.background.secondary             |
-| Текст инициалов   | semantic.text.primary                     |
-| Обводка           | 1 px, semantic.border.default            |
-| Статус online     | semantic.accent.positive                  |
-| Статус offline    | semantic.text.tertiary                    |
-| Статус away       | semantic.accent.warning                   |
-| Отступ статуса    | spacing[1] (4 px)                         |
+В коде: `size.sm`, `size.md`, `size.lg`, `size.xl`, `size['2xl']`, `spacing[16]`, `size['3xl']`
 
 ---
 
-## 6. API компонента (рекомендуемое)
+## 4. Форма
 
-- **src** (string, optional) — URL изображения.
-- **alt** (string) — описание для доступности (например, имя пользователя).
-- **name** (string, optional) — для инициалов при fallback (например, "Иван Петров" → "ИП").
-- **size** ('xs' | 'sm' | 'md' | 'lg') — размер, по умолчанию 'md'.
-- **status** ('online' | 'offline' | 'away' | undefined) — индикатор статуса.
-- **showBorder** (boolean, optional) — показывать обводку (border/default).
+- **Форма:** круг (эллипс)
+- Для прямоугольных контейнеров: `border-radius: radius/pill` (999px)
 
 ---
 
-## 7. Ссылки
+## 5. Pin-индикатор статуса
 
-- Токены: **docs/DESIGN-TOKENS.md**
-- Цвета: **docs/COLOR-PALETTE.md**
-- Типографика: **docs/TYPOGRAPHY.md**
+Индикатор онлайн-статуса в правом нижнем углу. Все размеры на **4px сетке**.
+
+### 5.1 Размеры Pin (токенизированы)
+
+| Avatar Size | Outer (фон) | Токен | Inner (точка) | Токен |
+|-------------|-------------|-------|---------------|-------|
+| `s` | 8px | `spacing/2` | 4px | `spacing/1` |
+| `m`, `l` | 12px | `spacing/3` | 8px | `spacing/2` |
+| `xl`, `2xl` | 16px | `spacing/4` | 12px | `spacing/3` |
+| `3xl` | 20px | `spacing/5` | 16px | `spacing/4` |
+| `4xl` | 24px | `spacing/6` | 16px | `spacing/4` |
+
+### 5.2 Позиционирование
+
+- Позиция: `bottom-right`, смещение +2px от края аватара
+- Constraints: `MAX` по обеим осям
+
+---
+
+## 6. Токены цветов
+
+| Элемент | Токен | Использование |
+|---------|-------|---------------|
+| Фон аватара | `Background/Tertiary` | Letter, Person, Add |
+| Инициалы | `Text/Secondary` | Letter type |
+| Иконки | `Icon/Secondary` | Person, Add types |
+| Pin фон | `Background/Primary` | Белая обводка вокруг точки |
+| Pin статус | `Accent/Graphite` | Точка индикатора |
+
+В коде:
+```ts
+background: semantic.background.tertiary
+text: semantic.text.secondary
+icon: semantic.icon.secondary
+pinBackground: semantic.background.primary
+pinStatus: semantic.accent.graphite
+```
+
+---
+
+## 7. Структура слоёв
+
+```
+Avatar (Component)
+├── background (Ellipse) — только для Letter/Person/Add
+│   └── fills: Background/Tertiary
+│   └── size: привязан к size token
+├── [content] — зависит от type:
+│   ├── Letter: Text "AB" (Text/Secondary)
+│   ├── Person: Icon User stroke (Icon/Secondary)
+│   ├── Add: Icon Camera fill (Icon/Secondary)
+│   └── Photo: Ellipse с image fill
+├── Pin Background (Ellipse) — если pin=true
+│   └── fills: Background/Primary
+│   └── size: привязан к spacing token
+└── Status Indicator (Ellipse) — если pin=true
+    └── fills: Accent/Graphite
+    └── size: привязан к spacing token
+```
+
+---
+
+## 8. API компонента
+
+```tsx
+interface AvatarProps {
+  /** Тип отображения */
+  type?: 'letter' | 'person' | 'add' | 'photo';
+  
+  /** Размер */
+  size?: 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl';
+  
+  /** Показать индикатор статуса */
+  pin?: boolean;
+  
+  /** URL изображения (для type="photo") */
+  src?: string;
+  
+  /** Имя пользователя (для генерации инициалов) */
+  name?: string;
+  
+  /** Инициалы (если нужно задать явно) */
+  initials?: string;
+  
+  /** Alt текст для изображения */
+  alt?: string;
+}
+```
+
+---
+
+## 9. Примеры использования
+
+```tsx
+// Инициалы
+<Avatar type="letter" size="m" name="Иван Петров" />
+
+// Иконка пользователя
+<Avatar type="person" size="l" />
+
+// Призыв загрузить фото
+<Avatar type="add" size="xl" />
+
+// С фотографией и статусом онлайн
+<Avatar type="photo" size="m" src="/avatar.jpg" pin />
+```
+
+---
+
+## 10. Ссылки
+
+- Figma: [UI-Kit-Mobile → Avatar](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile)
+- Токены: `docs/DESIGN-TOKENS.md`
+- Цвета: `docs/COLOR-PALETTE.md`
