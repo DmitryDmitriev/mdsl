@@ -28,7 +28,7 @@ export const UniversalSizes: StoryObj = {
         { token: 'size/lg', value: size.lg, label: 'lg (40px)' },
         { token: 'size/xl', value: size.xl, label: 'xl (48px)' },
         { token: 'size/2xl', value: size['2xl'], label: '2xl (56px)' },
-      ].map(({ token, value, label }) => (
+      ].map(({ token, value }) => (
         <div key={token} style={{ textAlign: 'center' }}>
           <div
             style={{

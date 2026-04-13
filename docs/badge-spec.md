@@ -2,7 +2,9 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **xs / sm / md**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **question**, **answer**, **admin** (см. §1). Типографика: **xs** — caption-md (12/16); **sm** и **md** — Body 2 Medium (14/20). Иконки: **xs** — 16 px; **sm** и **md** — 24 px.
+Размеры **2xs / xs-s / xs / sm / md**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **question**, **answer**, **admin** (см. §1). Типографика: **2xs / xs-s** — caption-sm (11/14); **xs / sm / md** — Body 2 Medium (14/20). Иконки: **2xs / xs-s** — 12 px; **xs** — 16 px; **sm / md** — 24 px.
+
+Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
 ---
 
@@ -28,15 +30,21 @@
 - **Фон и текст**: только `semantic.decor[variant].bg` и `semantic.decor[variant].text`.
 
 ### Отступы (spacing)
-- **xs**: padding vertical `spacing/2` (8 px), horizontal `spacing/2` (8 px).
+- **2xs**: padding `spacing/1` (4 px) по всем сторонам.
+- **xs-s**: padding `spacing/1` (4 px) по всем сторонам.
+- **xs**: padding `spacing/2` (8 px) по всем сторонам.
 - **sm**: padding vertical `spacing/3` (12 px), horizontal `spacing/2` (8 px).
 - **md**: padding vertical `spacing/4` (16 px), horizontal `spacing/3` (12 px).
+
+> Все отступы привязаны к токенам `spacing/*` в Figma.
 
 ### Радиус (radius)
 - **pill**: `radius.pill` (капсула) — по умолчанию.
 - **rounded**: `radius.controlMd` (8 px) — альтернатива для коротких бейджей (Semantic: control-md → radius/2).
 
 ### Типографика
+- **2xs**: typography/caption-sm — 11 px / 14 px, weight 500.
+- **xs-s**: typography/caption-sm — 11 px / 14 px, weight 500.
 - **xs**: typography/caption-md — 12 px / 16 px, weight 500 (docs/TYPOGRAPHY.md).
 - **sm**: Body 2 Medium — 14 px / 20 px, weight 500.
 - **md**: Body 2 Medium — 14 px / 20 px, weight 500.
@@ -46,13 +54,30 @@
 
 ## 3. Размеры
 
-Высота бейджа **фиксирована** и совпадает с рендером в коде и Storybook. Размеры привязаны к семантическим высотам: **xs** = `height.xs` (32), **sm** = `height.sm` (40), **md** = `height.md` (48). Прогрессия xs < sm < md.
+### Почему `size/*`, а не `control-height/*`
+
+В дизайн-системе есть две шкалы для высот:
+
+| Шкала | Назначение | Минимум | Примеры |
+|-------|------------|---------|---------|
+| `control-height/*` | Интерактивные контролы | 32 px | Кнопки, инпуты, селекты |
+| `size/*` | Информационные элементы | 16 px | Бейджи, аватары, иконки |
+
+**Бейдж — не контрол, а информационный индикатор.** Пользователь не нажимает на сам бейдж, поэтому touch target (≥32 px) не требуется. Это позволяет делать компактные бейджи 16–24 px для плотных интерфейсов.
+
+Если бейдж должен быть интерактивным, оберните его в `<button>` или `<a>` с `control-height/*` — но сам бейдж внутри остаётся на `size/*`.
+
+### Таблица размеров
+
+Высота бейджа **фиксирована** и привязана к шкале **size/**. Прогрессия 2xs < xs-s < xs < sm < md.
 
 | Размер | Высота | Padding X | Padding Y | Font  | Иконка | Область применения |
 |--------|--------|-----------|-----------|-------|--------|---------------------|
-| xs     | 32 px (`height.xs`) | spacing/2 (8) | spacing/2 (8) | typography/caption-md (12/16) | 16×16 px | Плотные интерфейсы (уточняется). |
-| sm     | 40 px (`height.sm`) | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Компактные блоки. |
-| md     | 48 px (`height.md`) | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Стандартное использование. |
+| 2xs    | 16 px (`size/2xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (11/14) | 12×12 px | Микро-индикаторы, dot-каунтеры. |
+| xs-s   | 20 px (`size/xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (11/14) | 12×12 px | Каунтеры в trailing list items. |
+| xs     | 32 px (`size/md`) | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
+| sm     | 40 px (`size/lg`) | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
+| md     | 48 px (`size/xl`) | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
 
 ---
 
@@ -65,25 +90,70 @@
 
 ## 5. Контент и варианты отображения
 
+Структура бейджа: **[Icon?] [Text] [Counter?]**
+
 ### 5.1 Только текст
 Бейдж с одной текстовой подписью. Padding и типографика по размеру (см. п. 3).
 
-### 5.2 Текст + иконка (вариант с иконкой)
+### 5.2 Текст + иконка
 - **Расположение**: иконка слева от текста.
 - **Зазор**: между иконкой и текстом — `spacing/1` (4 px).
-- **Размеры иконки** по размеру бейджа (**16** и **24** px):
-  - **xs**: 16×16 px (высота бейджа 32 px)
-  - **sm**: 24×24 px (высота бейджа 40 px)
-  - **md**: 24×24 px (высота бейджа 48 px)
-- **Цвет иконки**: наследует цвет текста бейджа (`semantic.decor[variant].text`), чтобы иконка и подпись были в одной семантической паре.
-- **Порядок в разметке**: [иконка] → [gap] → [текст]. Padding бейджа не меняется: отступ от края до иконки и от текста до края — по таблице размеров (Padding X, Padding Y).
+- **Размеры иконки** по размеру бейджа:
+  - **2xs / xs-s**: 12×12 px
+  - **xs**: 16×16 px
+  - **sm / md**: 24×24 px
+- **Цвет иконки**: наследует цвет текста бейджа (`semantic.decor[variant].text`).
+- **Порядок в разметке**: [иконка] → [gap] → [текст].
 
-Используйте вариант с иконкой, когда нужно визуально усилить смысл (статус, категория, тип) или улучшить узнаваемость в плотных списках.
+### 5.3 Текст + каунтер
+- **Расположение**: каунтер справа от текста.
+- **Зазор**: `spacing/1` (4 px).
+- **Типографика каунтера**: совпадает с типографикой текста бейджа.
+- **Цвет каунтера**: наследует цвет текста бейджа.
+- **Пример**: «High reliability **25**» — где 25 — каунтер.
+
+### 5.4 Иконка + текст + каунтер
+Полная структура: [Icon] → [gap] → [Text] → [gap] → [Counter]. Все зазоры — `spacing/1` (4 px).
 
 ---
 
-## 6. Ссылки
+## 6. Использование маленьких размеров
+
+### 6.1 Каунтеры в trailing list items
+Для отображения количества в trailing-слоте списков используйте размер **xs-s** (20 px) или **xs** (24 px):
+- Только число: `<Badge size="xs-s" variant="question">12</Badge>`
+- С текстом: `<Badge size="xs" variant="info">New 5</Badge>`
+
+### 6.2 Микро-индикаторы
+Для notification dots и мини-каунтеров используйте размер **2xs** (16 px):
+- Точка: пустой бейдж с минимальной шириной
+- Число: `<Badge size="2xs" variant="negative">3</Badge>`
+
+---
+
+## 7. Figma
+
+Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4039-2840)
+
+### Варианты (40 шт.)
+- **Type**: Good, Warning, Error, Default (маппится на good, warning, negative, question)
+- **Size**: 2xs, xs-s, xs, sm, md
+- **Shape**: Pill, Rounded
+- **Icon**: true/false
+- **Counter**: true/false
+
+### Привязка токенов
+| Property | Токен |
+|----------|-------|
+| height | `size/2xs`, `size/xs`, `size/md`, `size/lg`, `size/xl` |
+| paddingLeft/Right | `spacing/1`, `spacing/2`, `spacing/3` |
+| paddingTop/Bottom | `spacing/1`, `spacing/2`, `spacing/3`, `spacing/4` |
+
+---
+
+## 8. Ссылки
 
 - Цвета: **docs/COLOR-PALETTE.md**
 - Токены: **docs/DESIGN-TOKENS.md**
 - Типографика: **docs/TYPOGRAPHY.md**
+- Шкала size: **src/tokens/spacing.ts** → `size`
