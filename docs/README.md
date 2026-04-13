@@ -9,6 +9,7 @@
 | [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) | Отступы, радиусы, высоты, border, правила токенов |
 | [COLOR-PALETTE.md](./COLOR-PALETTE.md) | Цветовая семантика |
 | [TYPOGRAPHY.md](./TYPOGRAPHY.md) | Шрифт, стили текста |
+| [elevation-spec.md](./elevation-spec.md) | Тени и elevation (5 уровней Light, Dark, Sheet) |
 
 ## Спеки компонентов
 
