@@ -1,15 +1,15 @@
 import type { HTMLAttributes } from 'react';
-import { spacing, radius, height as heightTokens } from '@/tokens';
+import { spacing, radius, size } from '@/tokens';
 import { semantic } from '@/tokens/colors';
 
 export type BadgeVariant = keyof typeof semantic.decor;
 export type BadgeSize = 'xs' | 'sm' | 'md';
 export type BadgeShape = 'pill' | 'rounded';
 
-/** Размеры по семантическим высотам: xs = height.xs (32), sm = height.sm (40), md = height.md (48). Прогрессия xs < sm < md. */
+/** Размеры по шкале size: xs = size/md (32), sm = size/lg (40), md = size/xl (48). */
 const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
   xs: {
-    height: heightTokens.xs, // 32
+    height: size.md, // 32px — size/md
     paddingTop: spacing[2],
     paddingBottom: spacing[2],
     paddingLeft: spacing[2],
@@ -19,7 +19,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
     lineHeight: '16px',
   },
   sm: {
-    height: heightTokens.sm, // 40
+    height: size.lg, // 40px — size/lg
     paddingTop: spacing[3],
     paddingBottom: spacing[3],
     paddingLeft: spacing[2], // 8 px — docs/badge-spec.md
@@ -29,7 +29,7 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
     lineHeight: '20px',
   },
   md: {
-    height: heightTokens.md, // 48
+    height: size.xl, // 48px — size/xl
     paddingTop: spacing[4],
     paddingBottom: spacing[4],
     paddingLeft: spacing[3],
@@ -51,7 +51,7 @@ function getVariantStyles(variant: BadgeVariant): React.CSSProperties {
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   /** Семантический вариант (decor: good, info, warning, negative, question, answer, admin) */
   variant?: BadgeVariant;
-  /** Размер: xs (32 px), sm (40 px), md (48 px) — по height.xs / height.sm / height.md */
+  /** Размер: xs (32 px), sm (40 px), md (48 px) — по size/md / size/lg / size/xl */
   size?: BadgeSize;
   /** Форма: pill (капсула) или rounded (скруглённый прямоугольник) */
   shape?: BadgeShape;

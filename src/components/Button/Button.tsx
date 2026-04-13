@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { height, buttonPaddingX, buttonGap, radius, borderWidth } from '@/tokens';
+import { controlHeight, buttonPaddingX, buttonGap, radius, borderWidth } from '@/tokens';
 import { semantic } from '@/tokens/colors';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -7,7 +7,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 
 const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
   xs: {
-    height: height.xs,
+    height: controlHeight.xs,
     paddingLeft: buttonPaddingX.xs,
     paddingRight: buttonPaddingX.xs,
     gap: buttonGap.xs,
@@ -16,7 +16,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     lineHeight: '16px',
   },
   sm: {
-    height: height.sm,
+    height: controlHeight.sm,
     paddingLeft: buttonPaddingX.sm,
     paddingRight: buttonPaddingX.sm,
     gap: buttonGap.sm,
@@ -25,7 +25,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     lineHeight: '20px',
   },
   md: {
-    height: height.md,
+    height: controlHeight.md,
     paddingLeft: buttonPaddingX.md,
     paddingRight: buttonPaddingX.md,
     gap: buttonGap.md,
@@ -34,7 +34,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     lineHeight: '20px',
   },
   lg: {
-    height: height.lg,
+    height: controlHeight.lg,
     paddingLeft: buttonPaddingX.lg,
     paddingRight: buttonPaddingX.lg,
     gap: buttonGap.lg,

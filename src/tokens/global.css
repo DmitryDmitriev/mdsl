@@ -34,11 +34,26 @@ body,
   --stack-xl: var(--spacing-12);
   --stack-2xl: var(--spacing-16);
 
-  /* Height */
-  --height-sm: 40px;
-  --height-md: 48px;
-  --height-lg: 56px;
-  --height-xs: 32px;
+  /* Size — универсальные размеры для бейджей, аватаров, иконок */
+  --size-2xs: var(--spacing-4);  /* 16px */
+  --size-xs: var(--spacing-5);   /* 20px */
+  --size-sm: var(--spacing-6);   /* 24px */
+  --size-md: var(--spacing-8);   /* 32px */
+  --size-lg: var(--spacing-10);  /* 40px */
+  --size-xl: var(--spacing-12);  /* 48px */
+  --size-2xl: var(--spacing-14); /* 56px */
+
+  /* Control Height — высота контролов с touch target */
+  --control-height-xs: var(--spacing-8);  /* 32px */
+  --control-height-sm: var(--spacing-10); /* 40px */
+  --control-height-md: var(--spacing-12); /* 48px */
+  --control-height-lg: var(--spacing-14); /* 56px */
+
+  /* Height (deprecated, use control-height) */
+  --height-xs: var(--control-height-xs);
+  --height-sm: var(--control-height-sm);
+  --height-md: var(--control-height-md);
+  --height-lg: var(--control-height-lg);
 
   /* Radius */
   --radius-0: 0;

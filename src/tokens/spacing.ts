@@ -1,8 +1,9 @@
 /**
- * Токены отступов и высот.
+ * Токены отступов, размеров и высот.
  * Спецификация: docs/DESIGN-TOKENS.md, docs/button-spec.md
  *
- * Core: spacing/N = 4×N px. В UI используйте семантические токены (space, stack, height).
+ * Core: spacing/N = 4×N px.
+ * Semantic: size/* — универсальные размеры, controlHeight/* — высота контролов с touch target.
  */
 
 const base = 4;
@@ -32,13 +33,33 @@ export const stack = {
   '2xl': spacing[16], // 64
 } as const;
 
-/** Высота контролов (кнопки, инпуты) */
-export const height = {
+/**
+ * Универсальная шкала размеров для не-контролов: бейджи, аватары, иконки, thumbnails.
+ * Используйте size/* когда touch target не требуется.
+ */
+export const size = {
+  '2xs': spacing[4],  // 16 — микро-бейдж, индикатор
+  xs: spacing[5],     // 20 — каунтер, маленький бейдж
+  sm: spacing[6],     // 24 — бейдж в списке, мини-аватар
+  md: spacing[8],     // 32 — аватар sm, иконка lg
+  lg: spacing[10],    // 40 — аватар md
+  xl: spacing[12],    // 48 — аватар lg
+  '2xl': spacing[14], // 56 — большой аватар
+} as const;
+
+/**
+ * Высота интерактивных контролов (кнопки, инпуты) с гарантией touch target ≥32px.
+ * Для не-контролов (бейджи, аватары) используйте size/*.
+ */
+export const controlHeight = {
+  xs: spacing[8],  // 32 — compact
   sm: spacing[10], // 40
   md: spacing[12], // 48
   lg: spacing[14], // 56
-  xs: spacing[8],  // 32 (compact)
 } as const;
+
+/** @deprecated Используйте controlHeight. Алиас для обратной совместимости. */
+export const height = controlHeight;
 
 /** Padding кнопок по горизонтали */
 export const buttonPaddingX = {

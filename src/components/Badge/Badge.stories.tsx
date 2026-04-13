@@ -26,7 +26,7 @@ const meta: Meta<typeof Badge> = {
     docs: {
       description: {
         component:
-          'Бейдж по спецификации docs/badge-spec.md. Варианты из semantic.decor (Good, Info, Warning, Negative, Question, Answer, Admin). Размеры привязаны к семантическим высотам: xs = 32 px (height.xs), sm = 40 px (height.sm), md = 48 px (height.md); прогрессия xs < sm < md. Формы pill/rounded. Контент: только текст или текст + иконка слева (gap 4 px). Токены: spacing, radius, height, semantic.decor.',
+          'Бейдж по спецификации docs/badge-spec.md. Варианты из semantic.decor (Good, Info, Warning, Negative, Question, Answer, Admin). Размеры по шкале size: xs = 32 px (size/md), sm = 40 px (size/lg), md = 48 px (size/xl); прогрессия xs < sm < md. Формы pill/rounded. Контент: только текст или текст + иконка слева (gap 4 px). Токены: spacing, radius, size, semantic.decor.',
       },
     },
   },
@@ -113,7 +113,7 @@ export const Sizes: StoryObj<typeof Badge> = {
   ),
   parameters: {
     docs: {
-      description: 'Размеры xs (32 px), sm (40 px), md (48 px). Соответствуют height.xs, height.sm, height.md.',
+      description: 'Размеры xs (32 px), sm (40 px), md (48 px). Соответствуют size/md, size/lg, size/xl.',
     },
   },
 };

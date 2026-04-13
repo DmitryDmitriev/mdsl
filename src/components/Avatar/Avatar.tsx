@@ -1,15 +1,15 @@
 import { useState, type CSSProperties, type ImgHTMLAttributes } from 'react';
-import { height, radius, spacing } from '@/tokens';
+import { size, radius, spacing } from '@/tokens';
 import { semantic } from '@/tokens/colors';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg';
 export type AvatarStatus = 'online' | 'offline' | 'away';
 
 const sizeMap = {
-  xs: height.xs,
-  sm: height.sm,
-  md: height.md,
-  lg: height.lg,
+  xs: size.md,   // 32px — size/md
+  sm: size.lg,   // 40px — size/lg
+  md: size.xl,   // 48px — size/xl
+  lg: size['2xl'], // 56px — size/2xl
 } as const;
 
 /** Размер шрифта инициалов по размеру аватара (TYPOGRAPHY.md) */
@@ -52,7 +52,7 @@ export interface AvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, '
   alt?: string;
   /** Имя для инициалов при fallback (например, "Иван Петров" → "ИП") */
   name?: string;
-  /** Размер: xs (32), sm (40), md (48), lg (56) — height/xs..height/lg */
+  /** Размер: xs (32), sm (40), md (48), lg (56) — size/md..size/2xl */
   size?: AvatarSize;
   /** Индикатор статуса в углу */
   status?: AvatarStatus;
