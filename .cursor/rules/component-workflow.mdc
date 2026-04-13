@@ -1,0 +1,33 @@
+# Завершение работы над компонентом
+
+После завершения работы над компонентом (создание, изменение, исправление) **обязательно**:
+
+1. **Обновить спецификацию** в `docs/<component-name>-spec.md`:
+   - Размеры, токены, отступы
+   - Типографика
+   - Варианты и состояния
+   - Ссылки на Figma (актуальный node-id)
+   - Примеры использования
+
+2. **Обновить React-компонент** в `src/components/<ComponentName>/`:
+   - TypeScript типы (`BadgeSize`, `BadgeVariant`, etc.)
+   - JSDoc комментарии
+   - Стили и токены
+
+3. **Обновить Storybook** (`*.stories.tsx`):
+   - Описания в `argTypes`
+   - Примеры для всех вариантов
+   - Документация в `parameters.docs`
+
+4. **Закоммитить и запушить на GitHub**:
+   ```bash
+   git add .
+   git commit -m "feat(ComponentName): описание изменений"
+   git push
+   ```
+
+## Формат коммитов
+
+- `feat(Badge): add lg size, rename xs-s → xs`
+- `fix(Button): correct padding tokens`
+- `docs(Avatar): update specification`

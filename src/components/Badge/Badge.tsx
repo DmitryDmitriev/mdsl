@@ -3,16 +3,16 @@ import { spacing, radius, size as sizeTokens } from '@/tokens';
 import { semantic } from '@/tokens/colors';
 
 export type BadgeVariant = keyof typeof semantic.decor;
-export type BadgeSize = '2xs' | 'xs-s' | 'xs' | 'sm' | 'md';
+export type BadgeSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg';
 export type BadgeShape = 'pill' | 'rounded';
 
 /**
  * Размеры бейджа по шкале size/* (docs/badge-spec.md §3):
  * - 2xs: 16px (size/2xs) — микро-индикаторы, dot-каунтеры
- * - xs-s: 20px (size/xs) — каунтеры в trailing list items
- * - xs: 32px (size/md) — компактный бейдж
- * - sm: 40px (size/lg) — стандартный бейдж
- * - md: 48px (size/xl) — крупный бейдж
+ * - xs: 20px (size/xs) — каунтеры в trailing list items
+ * - sm: 32px (size/sm) — компактный бейдж
+ * - md: 40px (size/md) — стандартный бейдж
+ * - lg: 48px (size/lg) — крупный бейдж
  */
 const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> = {
   '2xs': {
@@ -22,23 +22,23 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     paddingLeft: spacing[1],
     paddingRight: spacing[1],
     gap: spacing[1],
-    fontSize: 11,
-    lineHeight: '14px',
+    fontSize: 10,
+    lineHeight: '12px',
     iconSize: 12,
   },
-  'xs-s': {
+  xs: {
     height: sizeTokens.xs, // 20px
     paddingTop: spacing[1],
     paddingBottom: spacing[1],
     paddingLeft: spacing[1],
     paddingRight: spacing[1],
     gap: spacing[1],
-    fontSize: 11,
-    lineHeight: '14px',
+    fontSize: 10,
+    lineHeight: '12px',
     iconSize: 12,
   },
-  xs: {
-    height: sizeTokens.md, // 32px
+  sm: {
+    height: sizeTokens.sm, // 32px
     paddingTop: spacing[2],
     paddingBottom: spacing[2],
     paddingLeft: spacing[2],
@@ -48,8 +48,8 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     lineHeight: '16px',
     iconSize: 16,
   },
-  sm: {
-    height: sizeTokens.lg, // 40px
+  md: {
+    height: sizeTokens.md, // 40px
     paddingTop: spacing[3],
     paddingBottom: spacing[3],
     paddingLeft: spacing[2],
@@ -59,8 +59,8 @@ const sizeStyles: Record<BadgeSize, React.CSSProperties & { iconSize: number }> 
     lineHeight: '20px',
     iconSize: 24,
   },
-  md: {
-    height: sizeTokens.xl, // 48px
+  lg: {
+    height: sizeTokens.lg, // 48px
     paddingTop: spacing[4],
     paddingBottom: spacing[4],
     paddingLeft: spacing[3],
@@ -83,7 +83,7 @@ function getVariantStyles(variant: BadgeVariant): React.CSSProperties {
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   /** Семантический вариант (decor: good, info, warning, negative, question, answer, admin) */
   variant?: BadgeVariant;
-  /** Размер: 2xs (16px), xs-s (20px), xs (32px), sm (40px), md (48px) */
+  /** Размер: 2xs (16px), xs (20px), sm (32px), md (40px), lg (48px) */
   size?: BadgeSize;
   /** Форма: pill (капсула) или rounded (скруглённый прямоугольник) */
   shape?: BadgeShape;

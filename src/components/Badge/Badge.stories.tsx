@@ -13,8 +13,8 @@ const meta: Meta<typeof Badge> = {
     },
     size: {
       control: 'select',
-      options: ['2xs', 'xs-s', 'xs', 'sm', 'md'],
-      description: 'Размер: 2xs (16px), xs-s (20px), xs (32px), sm (40px), md (48px).',
+      options: ['2xs', 'xs', 'sm', 'md', 'lg'],
+      description: 'Размер: 2xs (16px), xs (20px), sm (32px), md (40px), lg (48px).',
     },
     shape: {
       control: 'select',
@@ -30,7 +30,7 @@ const meta: Meta<typeof Badge> = {
     docs: {
       description: {
         component:
-          'Бейдж по спецификации docs/badge-spec.md. Варианты из semantic.decor. Размеры: 2xs (16px), xs-s (20px), xs (24px), sm (32px), md (40px). Контент: [Icon?] [Text] [Counter?]. Токены: spacing, radius, size, semantic.decor.',
+          'Бейдж по спецификации docs/badge-spec.md. Варианты из semantic.decor. Размеры: 2xs (16px), xs (20px), sm (32px), md (40px), lg (48px). Контент: [Icon?] [Text] [Counter?]. Токены: spacing, radius, size, semantic.decor.',
       },
     },
   },
@@ -98,15 +98,15 @@ export const Sizes: StoryObj<typeof Badge> = {
   render: () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
       <Badge size="2xs" variant="info">2xs</Badge>
-      <Badge size="xs-s" variant="info">xs-s</Badge>
       <Badge size="xs" variant="info">xs</Badge>
       <Badge size="sm" variant="info">sm</Badge>
       <Badge size="md" variant="info">md</Badge>
+      <Badge size="lg" variant="info">lg</Badge>
     </div>
   ),
   parameters: {
     docs: {
-      description: 'Все размеры: 2xs (16px), xs-s (20px), xs (24px), sm (32px), md (40px).',
+      description: 'Все размеры: 2xs (16px), xs (20px), sm (32px), md (40px), lg (48px).',
     },
   },
 };
@@ -116,14 +116,14 @@ export const SmallSizesForListItems: StoryObj<typeof Badge> = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ fontSize: 14, color: '#666' }}>Каунтеры для trailing:</span>
-        <Badge size="xs-s" variant="question">12</Badge>
-        <Badge size="xs-s" variant="info">New</Badge>
-        <Badge size="xs-s" variant="negative">3</Badge>
+        <Badge size="xs" variant="question">12</Badge>
+        <Badge size="xs" variant="info">New</Badge>
+        <Badge size="xs" variant="negative">3</Badge>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ fontSize: 14, color: '#666' }}>Компактные бейджи:</span>
-        <Badge size="xs" variant="good">Active</Badge>
-        <Badge size="xs" variant="warning">Pending</Badge>
+        <Badge size="sm" variant="good">Active</Badge>
+        <Badge size="sm" variant="warning">Pending</Badge>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ fontSize: 14, color: '#666' }}>Микро-индикаторы:</span>
@@ -168,7 +168,7 @@ export const WithIcon: StoryObj<typeof Badge> = {
   },
   parameters: {
     docs: {
-      description: 'Иконка слева от текста, gap = spacing/1. Размеры иконок: 2xs/xs-s → 12px, xs → 16px, sm/md → 24px.',
+      description: 'Иконка слева от текста, gap = spacing/1. Размеры иконок: 2xs/xs → 12px, sm → 16px, md/lg → 24px.',
     },
   },
 };
@@ -206,14 +206,14 @@ export const CounterVariants: StoryObj<typeof Badge> = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Badge size="sm" variant="good" counter="5">Messages</Badge>
-        <Badge size="sm" variant="info" counter="12">Notifications</Badge>
-        <Badge size="sm" variant="warning" counter="3">Warnings</Badge>
-        <Badge size="sm" variant="negative" counter="1">Errors</Badge>
+        <Badge size="md" variant="good" counter="5">Messages</Badge>
+        <Badge size="md" variant="info" counter="12">Notifications</Badge>
+        <Badge size="md" variant="warning" counter="3">Warnings</Badge>
+        <Badge size="md" variant="negative" counter="1">Errors</Badge>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Badge size="xs-s" variant="question" counter="99+">Items</Badge>
-        <Badge size="xs" variant="info" counter="NEW">Updates</Badge>
+        <Badge size="xs" variant="question" counter="99+">Items</Badge>
+        <Badge size="sm" variant="info" counter="NEW">Updates</Badge>
       </div>
     </div>
   ),
@@ -248,17 +248,17 @@ export const AllSizesAndShapes: StoryObj<typeof Badge> = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <Badge size="2xs" shape="pill" variant="info">2xs</Badge>
-        <Badge size="xs-s" shape="pill" variant="info">xs-s</Badge>
         <Badge size="xs" shape="pill" variant="info">xs</Badge>
         <Badge size="sm" shape="pill" variant="info">sm</Badge>
         <Badge size="md" shape="pill" variant="info">md</Badge>
+        <Badge size="lg" shape="pill" variant="info">lg</Badge>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <Badge size="2xs" shape="rounded" variant="info">2xs</Badge>
-        <Badge size="xs-s" shape="rounded" variant="info">xs-s</Badge>
         <Badge size="xs" shape="rounded" variant="info">xs</Badge>
         <Badge size="sm" shape="rounded" variant="info">sm</Badge>
         <Badge size="md" shape="rounded" variant="info">md</Badge>
+        <Badge size="lg" shape="rounded" variant="info">lg</Badge>
       </div>
     </div>
   ),
