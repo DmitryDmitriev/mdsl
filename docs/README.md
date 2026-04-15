@@ -16,6 +16,7 @@
 | Файл | Компонент |
 |------|-----------|
 | [button-spec.md](./button-spec.md) | Button |
+| [fab-bar-spec.md](./fab-bar-spec.md) | FAB Bar (Floating Action Button Bar) |
 | [avatar-spec.md](./avatar-spec.md) | Avatar |
 | [badge-spec.md](./badge-spec.md) | Badge |
 | [checkbox-spec.md](./checkbox-spec.md) | Checkbox |
