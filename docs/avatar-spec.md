@@ -10,7 +10,7 @@
 
 | Свойство | Значения | По умолчанию |
 |----------|----------|--------------|
-| **type** | `letter` \| `person` \| `add` \| `photo` | `letter` |
+| **type** | `letter` \| `icon` \| `photo` | `letter` |
 | **size** | `s` \| `m` \| `l` \| `xl` \| `2xl` \| `3xl` \| `4xl` | `m` |
 | **pin** | `boolean` | `false` |
 
@@ -21,8 +21,7 @@
 | Type | Назначение | Содержимое |
 |------|------------|------------|
 | `letter` | Пользователь без фото | Инициалы (1-2 буквы) |
-| `person` | Пользователь без фото | Иконка пользователя |
-| `add` | Призыв загрузить фото | Иконка камеры |
+| `icon` | Пользователь без фото / контекстный статус | Любая релевантная иконка |
 | `photo` | Пользователь с фото | Изображение |
 
 ---
@@ -79,9 +78,9 @@
 
 | Элемент | Токен | Использование |
 |---------|-------|---------------|
-| Фон аватара | `Background/Tertiary` | Letter, Person, Add |
+| Фон аватара | `Background/Tertiary` | Letter, Icon |
 | Инициалы | `Text/Secondary` | Letter type |
-| Иконки | `Icon/Secondary` | Person, Add types |
+| Иконки | `Icon/Secondary` | Icon type |
 | Pin фон | `Background/Primary` | Белая обводка вокруг точки |
 | Pin статус | `Accent/Graphite` | Точка индикатора |
 
@@ -100,13 +99,12 @@ pinStatus: semantic.accent.graphite
 
 ```
 Avatar (Component)
-├── background (Ellipse) — только для Letter/Person/Add
+├── background (Ellipse) — только для Letter/Icon
 │   └── fills: Background/Tertiary
 │   └── size: привязан к size token
 ├── [content] — зависит от type:
 │   ├── Letter: Text "AB" (Text/Secondary)
-│   ├── Person: Icon User stroke (Icon/Secondary)
-│   ├── Add: Icon Camera fill (Icon/Secondary)
+│   ├── Icon: Любая релевантная иконка (Icon/Secondary)
 │   └── Photo: Ellipse с image fill
 ├── Pin Background (Ellipse) — если pin=true
 │   └── fills: Background/Primary
@@ -123,7 +121,7 @@ Avatar (Component)
 ```tsx
 interface AvatarProps {
   /** Тип отображения */
-  type?: 'letter' | 'person' | 'add' | 'photo';
+  type?: 'letter' | 'icon' | 'photo';
   
   /** Размер */
   size?: 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl';
@@ -153,11 +151,8 @@ interface AvatarProps {
 // Инициалы
 <Avatar type="letter" size="m" name="Иван Петров" />
 
-// Иконка пользователя
-<Avatar type="person" size="l" />
-
-// Призыв загрузить фото
-<Avatar type="add" size="xl" />
+// Контекстная иконка (например, профиль/камера/статус)
+<Avatar type="icon" size="l" />
 
 // С фотографией и статусом онлайн
 <Avatar type="photo" size="m" src="/avatar.jpg" pin />
