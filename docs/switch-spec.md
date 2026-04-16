@@ -2,7 +2,7 @@
 
 **Один компонент — одна спека.** Компонент «Switch» (переключатель / тогл) — бинарный контрол для настроек.
 
-Привязка к **docs/DESIGN-TOKENS.md**. Все цвета, размеры и радиусы — только через **семантические** токены.
+Привязка к **docs/DESIGN-TOKENS.md**. Все цвета, размеры и радиусы — только через **существующие** токены системы. Компонентно-специфичные токены не используются.
 
 Figma: страница **🟢 Switch**, набор **Switch** (COMPONENT_SET).
 
@@ -37,36 +37,34 @@ Switch (COMPONENT) ← Track
 
 ## Размеры
 
+Все размеры привязаны к существующим токенам `size/*` из шкалы дизайн-системы. Компонентно-специфичные токены не создавались.
+
 ### Size = 32 (стандартный)
 
-| Элемент | Параметр | Значение | Semantic | Core |
+| Элемент | Параметр | Значение | Токен | Core |
 |---|---|---|---|---|
-| **Track** | width | **52 px** | `switch/track-width/lg` | *(raw, не на 4px grid)* |
-| **Track** | height | **32 px** | `switch/track-height/lg` → `size/md` | `spacing/8` |
-| **Knob** | width × height | **24 × 24 px** | `switch/knob/lg` → `size/sm` | `spacing/6` |
-| **Внутренний padding** | (track height − knob) / 2 | **4 px** | `switch/padding` → `spacing/1` | `spacing/1` |
+| **Track** | width | **56 px** | `size/2xl` | `spacing/14` |
+| **Track** | height | **32 px** | `size/md` | `spacing/8` |
+| **Knob** | width × height | **24 × 24 px** | `size/sm` | `spacing/6` |
+| **Внутренний padding** | (track height − knob) / 2 | **4 px** | *(вычисляемый)* | — |
 
 ### Size = 24 (компактный)
 
-| Элемент | Параметр | Значение | Semantic | Core |
+| Элемент | Параметр | Значение | Токен | Core |
 |---|---|---|---|---|
-| **Track** | width | **40 px** | `switch/track-width/sm` → `size/lg` | `spacing/10` |
-| **Track** | height | **24 px** | `switch/track-height/sm` → `size/sm` | `spacing/6` |
-| **Knob** | width × height | **18 × 18 px** | `switch/knob/sm` | *(raw, не на 4px grid)* |
-| **Внутренний padding** | (track height − knob) / 2 | **3 px** | *(вычисляемый)* | — |
+| **Track** | width | **40 px** | `size/lg` | `spacing/10` |
+| **Track** | height | **24 px** | `size/sm` | `spacing/6` |
+| **Knob** | width × height | **20 × 20 px** | `size/xs` | `spacing/5` |
+| **Внутренний padding** | (track height − knob) / 2 | **2 px** | *(вычисляемый)* | — |
 
 ### Ход ползунка (travel distance)
 
 | Size | Формула | Значение |
 |---|---|---|
-| 32 | track width − knob − 2 × padding = 52 − 24 − 8 | **20 px** |
-| 24 | track width − knob − 2 × padding = 40 − 18 − 6 | **16 px** |
+| 32 | track width − knob − 2 × padding = 56 − 24 − 8 | **24 px** |
+| 24 | track width − knob − 2 × padding = 40 − 20 − 4 | **16 px** |
 
 Анимация перехода: **ease-in-out, ~200 мс** (по HIG/Material Design).
-
-### Примечание по не-gridовым размерам
-
-Значения **52 px** (track width lg) и **18 px** (knob sm) не попадают на 4px-сетку Core. Это стандартные размеры iOS-переключателя (51 × 31 нативный, здесь 52 × 32 — ровные числа). Они заданы как прямые значения в семантических токенах `switch/*` без core-алиасов.
 
 ---
 
@@ -74,7 +72,7 @@ Switch (COMPONENT) ← Track
 
 Оба элемента (Track и Knob) всегда имеют pill-форму.
 
-| Элемент | Semantic | Core | Значение |
+| Элемент | Токен | Core | Значение |
 |---|---|---|---|
 | Track | `radius/pill/pill` | `radius/full` | 999 |
 | Knob | `radius/pill/pill` | `radius/full` | 999 |
@@ -115,18 +113,17 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Icon/Tertiary(gray)
 
 ## Сводная таблица токенов
 
-| Токен | Тип | Значение | Алиас |
-|---|---|---|---|
-| `switch/track-width/lg` | size | 52 | — |
-| `switch/track-width/sm` | size | 40 | → `size/lg` |
-| `switch/track-height/lg` | size | 32 | → `size/md` |
-| `switch/track-height/sm` | size | 24 | → `size/sm` |
-| `switch/knob/lg` | size | 24 | → `size/sm` |
-| `switch/knob/sm` | size | 18 | — |
-| `switch/padding` | spacing | 4 | → `spacing/1` |
-| `radius/pill/pill` | radius | 999 | → `radius/full` |
+### Размеры (только существующие токены системы)
 
-Цвета:
+| Элемент | Size=32 | Size=24 |
+|---|---|---|
+| **Track width** | 56 → `size/2xl` | 40 → `size/lg` |
+| **Track height** | 32 → `size/md` | 24 → `size/sm` |
+| **Knob** | 24 → `size/sm` | 20 → `size/xs` |
+| **Radius** | `radius/pill/pill` | `radius/pill/pill` |
+
+### Цвета
+
 | Токен | Использование |
 |---|---|
 | `Accent/Graphite` | Track fill (On + Enabled) |
@@ -151,7 +148,7 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Icon/Tertiary(gray)
 
 ## Доступность (a11y)
 
-- **Минимальная tap-зона:** Size=32 — 52 × 32 px, Size=24 — 40 × 24 px. Size=24 **меньше** рекомендуемых 44 × 44 pt (WCAG / HIG). При использовании в продакшене обернуть в контейнер с минимальным размером 44 pt.
+- **Минимальная tap-зона:** Size=32 — 56 × 32 px, Size=24 — 40 × 24 px. Size=24 **меньше** рекомендуемых 44 × 44 pt (WCAG / HIG). При использовании в продакшене обернуть в контейнер с минимальным размером 44 pt.
 - **Контраст:** On-состояние (Graphite на белом фоне) — соответствует WCAG AA. Off-состояние (Tertiary на белом) — проверить на реальных экранах.
 - **Роль:** `role="switch"` + `aria-checked` (web), `UISwitch` (iOS), `Switch` (Compose).
 
@@ -169,15 +166,17 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Icon/Tertiary(gray)
 />
 ```
 
-CSS-переменные:
+CSS-переменные (из существующей шкалы `size/*`):
 ```css
---switch-track-width-lg: 52px;
---switch-track-height-lg: 32px;
---switch-knob-lg: 24px;
---switch-track-width-sm: 40px;
---switch-track-height-sm: 24px;
---switch-knob-sm: 18px;
---switch-padding: 4px;
+/* Size=32 */
+--switch-track-width: var(--size-2xl);   /* 56px */
+--switch-track-height: var(--size-md);   /* 32px */
+--switch-knob: var(--size-sm);           /* 24px */
+
+/* Size=24 */
+--switch-track-width-sm: var(--size-lg); /* 40px */
+--switch-track-height-sm: var(--size-sm);/* 24px */
+--switch-knob-sm: var(--size-xs);        /* 20px */
 ```
 
 **iOS (SwiftUI):**
@@ -186,7 +185,7 @@ Toggle("Label", isOn: $isOn)
     .toggleStyle(SwitchToggleStyle(tint: Color(.accentGraphite)))
 ```
 
-Нативный `UISwitch` — 51 × 31 pt; при кастомизации использовать токены из спеки.
+Нативный `UISwitch` — 51 × 31 pt; при кастомизации использовать токены из шкалы `size/*`.
 
 **Android (Compose):**
 ```kotlin
