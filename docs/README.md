@@ -21,6 +21,10 @@
 | [avatar-spec.md](./avatar-spec.md) | Avatar |
 | [badge-spec.md](./badge-spec.md) | Badge |
 | [checkbox-spec.md](./checkbox-spec.md) | Checkbox |
+| [chips-spec.md](./chips-spec.md) | Chips |
+| [divider-spec.md](./divider-spec.md) | Divider |
+| [radio-spec.md](./radio-spec.md) | Radio |
+| [list-item-spec.md](./list-item-spec.md) | List Item |
 | [sheets-spec.md](./sheets-spec.md) | Sheets (bottom/top sheet) |
 | [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (диалог с иллюстрацией) |
 

@@ -74,9 +74,42 @@
 
 ---
 
-## 5. Ссылки
+## 5. Check+Text (чекбокс с подписью)
 
-- **docs/DESIGN-TOKENS.md**
-- **docs/COLOR-PALETTE.md**
-- **docs/TYPOGRAPHY.md**
-- **docs/button-spec.md** (референс по высотам контролов)
+Отдельный COMPONENT_SET `Check+Text` — чекбокс в паре с текстовой подписью.
+
+### Варианты
+
+| State | Описание |
+|---|---|
+| Default | Чекбокс + текст, активный |
+| Select | Выбранный |
+| Indeterminate | Частичный выбор |
+| Disabled | Недоступный |
+
+### Токены (обновлено 2026-04-16)
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| Text width | **FILL** | — (растягивается на родителя) |
+| Gap (чекбокс ↔ текст) | 8 px | `spacing/2` |
+
+> **Изменение:** Text width был FIXED 99 px → переведён на FILL. Текст теперь занимает всю доступную ширину, переносится при длинном содержании.
+
+### Аудит покрытия
+
+| Категория | Покрытие |
+|---|---|
+| Color | **100%** |
+| Token | **100%** |
+| Type | **100%** |
+| Overall | **100%** |
+
+---
+
+## 6. Ссылки
+
+- [DESIGN-TOKENS.md](./DESIGN-TOKENS.md)
+- [COLOR-PALETTE.md](./COLOR-PALETTE.md)
+- [TYPOGRAPHY.md](./TYPOGRAPHY.md)
+- [button-spec.md](./button-spec.md) (референс по высотам контролов)
