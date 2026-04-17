@@ -25,6 +25,7 @@
 | [divider-spec.md](./divider-spec.md) | Divider |
 | [radio-spec.md](./radio-spec.md) | Radio |
 | [list-item-spec.md](./list-item-spec.md) | List Item |
+| [input-v2-spec.md](./input-v2-spec.md) | Input v2 (inline + Stacked + Leading) |
 | [sheets-spec.md](./sheets-spec.md) | Sheets (bottom/top sheet) |
 | [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (диалог с иллюстрацией) |
 
