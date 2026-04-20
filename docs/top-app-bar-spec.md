@@ -39,20 +39,22 @@ Boolean-свойства (с дефолтными значениями):
 
 ```
 Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
-├── Leading (INSTANCE of ButtonIcon Ghost 40 × 40, Form = Square, optional)
-│     default icon: ic_arrow_back_long
+├── Leading (INSTANCE of ButtonIcon Ghost 48 × 48, Form = Square, optional)
+│     default icon: ic_arrow_back_long. 48 px tap-zone по Material Design.
 ├── Content (FILL) — зависит от variant Content:
 │   ├── Title   → VERTICAL: Headline (H3 Medium 20/28) + Subtitle (caption-md 12/16)
+│   │             Content.paddingLeft = 8
 │   ├── Search  → HORIZONTAL: INSTANCE Search v2 (Type=Filled, Size=sm, State=Default)
+│   │             Content.paddingLeft = 8
 │   └── Avatar  → HORIZONTAL: Avatar v2 Photo L (40) + VERTICAL stack (Headline + Subtitle), gap = 8
-│     Content.paddingLeft = 12  (4 root + 12 = 16 от края при Leading off)
+│                 Content.paddingLeft = 0 (аватар примыкает к Leading)
 └── Trailing (HORIZONTAL, HUG, gap = 0)
     ├── Trailing 1 (INSTANCE .=Trailing Slot, optional)
     ├── Trailing 2 (INSTANCE .=Trailing Slot, optional)
     └── Trailing 3 (INSTANCE .=Trailing Slot, optional)
 ```
 
-**Важное проектное решение:** Leading 40 × 40, Trailing 48 × 48 — асимметрия по размерам сознательная: лидирующая кнопка визуально компактнее (40), правые действия — шире (48) для удобного попадания в частые действия.
+**Проектное решение:** Leading и Trailing оба 48 × 48 — симметричные tap-зоны по Material Design. Внутри каждой — иконка 24 × 24 с padding 12.
 
 ### .=Trailing Slot — вспомогательный компонент
 
@@ -75,9 +77,10 @@ Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
 | Bar width | FILL | — |
 | Padding (все стороны) | 4 | `spacing/1` |
 | Gap между слотами | 4 | `spacing/1` |
-| Content paddingLeft (Title / Search / Avatar) | 12 | `spacing/3` |
+| Content paddingLeft (Title, Search) | 8 | `spacing/2` |
+| Content paddingLeft (Avatar) | 0 | `spacing/0` |
 | Content gap (Avatar: avatar ↔ text) | 8 | `spacing/2` |
-| Leading button | 40 × 40 | `size/lg` (внутри ButtonIcon) |
+| Leading button | 48 × 48 | `size/xl` (внутри ButtonIcon) |
 | Trailing button | 48 × 48 | `size/xl` (внутри ButtonIcon) |
 | Avatar (Content=Avatar) | 40 × 40 | `size/lg` |
 
@@ -126,9 +129,10 @@ Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
 | **Height** | `control-height/lg` (56) |
 | **Padding (all sides)** | `spacing/1` (4) |
 | **Gap (slots)** | `spacing/1` (4) |
-| **Content paddingLeft** | `spacing/3` (12) |
-| **Avatar gap** | `spacing/2` (8) |
-| **Leading size** | `size/lg` (40) |
+| **Content paddingLeft (Title/Search)** | `spacing/2` (8) |
+| **Content paddingLeft (Avatar)** | `spacing/0` (0) |
+| **Avatar gap (avatar ↔ text)** | `spacing/2` (8) |
+| **Leading size** | `size/xl` (48) |
 | **Trailing size** | `size/xl` (48) |
 | **Background** | `Background/Primary` |
 | **Headline color** | `Text/Primary` |
@@ -151,7 +155,7 @@ Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
 
 ## Доступность (a11y)
 
-- **Tap-зоны:** Leading 40 × 40, Trailing 48 × 48 — оба слота соответствуют WCAG/HIG (≥ 44 pt) при учёте внешнего padding-бокса; Trailing 48 проходит напрямую.
+- **Tap-зоны:** Leading и Trailing — 48 × 48. Оба слота проходят WCAG / HIG (≥ 44 pt) с запасом.
 - **Клавиатура:** Tab — навигация Leading → Trailing 1 → Trailing 2 → Trailing 3; Esc — назад.
 - **Screen reader:** `aria-label` для каждой кнопки; Headline — роль `heading` (h1 или контекстный уровень) для корректной структуры страницы.
 - **Контраст:** Headline `Text/Primary` и Subtitle `Text/Secondary` на `Background/Primary` — проверить WCAG AA на реальных устройствах.
