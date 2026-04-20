@@ -54,13 +54,14 @@ Leading=No:  root.paddingLeft = 16 (контент в 16 от края)
 
 В Leading=Yes gap от правой грани иконки до контента = 16 px (12 внутренний padding
 Leading + 4 root.itemSpacing). Соответствует Material "16dp after navigation icon".
-└── Trailing (HORIZONTAL, HUG, gap = 0)
-    ├── Trailing 1 (INSTANCE .=Trailing Slot, optional)
-    ├── Trailing 2 (INSTANCE .=Trailing Slot, optional)
-    └── Trailing 3 (INSTANCE .=Trailing Slot, optional)
+├── Trailing 1 (INSTANCE .=Trailing Slot, optional, boolean Trailing 1)
+├── Trailing 2 (INSTANCE .=Trailing Slot, optional, boolean Trailing 2)
+└── Trailing 3 (INSTANCE .=Trailing Slot, optional, boolean Trailing 3)
 ```
 
-**Проектное решение:** Leading и Trailing оба 48 × 48 — симметричные tap-зоны по Material Design. Внутри каждой — иконка 24 × 24 с padding 12.
+**Проектное решение 1:** Leading и Trailing оба 48 × 48 — симметричные tap-зоны по Material Design. Внутри каждой — иконка 24 × 24 с padding 12.
+
+**Проектное решение 2:** Trailing 1/2/3 — sibling-slots в корне (не во вложенном `Trailing` frame). Когда все трое скрыты, они корректно коллапсируют, и Content (Search/Title) занимает всё свободное пространство. Вложенный `Trailing` frame использовать нельзя — HUG-фреймы в Figma не коллапсируют при hidden children.
 
 ### .=Trailing Slot — вспомогательный компонент
 
