@@ -26,6 +26,8 @@
 | [radio-spec.md](./radio-spec.md) | Radio |
 | [list-item-spec.md](./list-item-spec.md) | List Item |
 | [input-v2-spec.md](./input-v2-spec.md) | Input v2 (inline + Stacked + Leading) |
+| [search-spec.md](./search-spec.md) | Search v2 |
+| [top-app-bar-spec.md](./top-app-bar-spec.md) | Top App Bar v2 |
 | [sheets-spec.md](./sheets-spec.md) | Sheets (bottom/top sheet) |
 | [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (диалог с иллюстрацией) |
 
