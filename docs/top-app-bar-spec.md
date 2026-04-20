@@ -43,11 +43,14 @@ Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
 │     default icon: ic_arrow_back_long. 48 px tap-zone по Material Design.
 ├── Content (FILL) — зависит от variant Content:
 │   ├── Title   → VERTICAL: Headline (H3 Medium 20/28) + Subtitle (caption-md 12/16)
-│   │             Content.paddingLeft = 8
+│   │             Content.paddingLeft = 0
 │   ├── Search  → HORIZONTAL: INSTANCE Search v2 (Type=Filled, Size=sm, State=Default)
-│   │             Content.paddingLeft = 8
+│   │             Content.paddingLeft = 0
 │   └── Avatar  → HORIZONTAL: Avatar v2 Photo L (40) + VERTICAL stack (Headline + Subtitle), gap = 8
 │                 Content.paddingLeft = 0 (аватар примыкает к Leading)
+
+Gap от правой грани иконки Leading до начала контента = 16 px (12 внутренний padding
+Leading + 4 root gap). Соответствует Material Design "16dp after navigation icon".
 └── Trailing (HORIZONTAL, HUG, gap = 0)
     ├── Trailing 1 (INSTANCE .=Trailing Slot, optional)
     ├── Trailing 2 (INSTANCE .=Trailing Slot, optional)
@@ -129,8 +132,7 @@ Top App Bar v2 (COMPONENT) — HORIZONTAL, height = 56, padding = 4, gap = 4
 | **Height** | `control-height/lg` (56) |
 | **Padding (all sides)** | `spacing/1` (4) |
 | **Gap (slots)** | `spacing/1` (4) |
-| **Content paddingLeft (Title/Search)** | `spacing/2` (8) |
-| **Content paddingLeft (Avatar)** | `spacing/0` (0) |
+| **Content paddingLeft** | `spacing/0` (0) |
 | **Avatar gap (avatar ↔ text)** | `spacing/2` (8) |
 | **Leading size** | `size/xl` (48) |
 | **Trailing size** | `size/xl` (48) |
