@@ -1,176 +1,139 @@
 # Elevation (Тени)
 
-Тени создают визуальную иерархию и ощущение глубины интерфейса. Уровень elevation определяет "высоту" элемента над поверхностью.
+Подъём подсвечивает sticky-элементы (прилипшие к краю экрана) и плавающие контролы над визуальной подложкой. В системе **три Effect Styles** — по направлению тени и роли.
 
-## Принцип
-
-Каждый уровень elevation состоит из **двух теней**:
-- **Shadow 1** — мягкая контактная тень (маленький offset, низкая opacity)
-- **Shadow 2** — основная тень глубины (больший offset и blur)
+**В Dark-теме тени не применяются.** Визуальная иерархия строится только на цвете поверхности (`Surface/Primary`). Sticky-состояние читается по контрасту.
 
 ---
 
-## Light Theme
+## Модель
 
-### Specifications
+| Токен | Направление | Use case |
+|-------|-------------|----------|
+| **`Elevation/Top`** | ↓ вниз | Sticky Top App Bar при скролле |
+| **`Elevation/Floating`** | равномерная | Плавающие контролы над визуальной подложкой (map buttons, Price Pin) |
+| **`Elevation/Bottom`** | ↑ вверх | Sticky bottom bar: клавиатура, плашка с CTA-кнопкой |
 
-| Level | Shadow | Y Offset | Blur | Opacity |
-|-------|--------|----------|------|---------|
-| **1** | 1 | 1px | 2px | 4% |
-|       | 2 | 1px | 3px | 6% |
-| **2** | 1 | 1px | 2px | 4% |
-|       | 2 | 2px | 6px | 8% |
-| **3** | 1 | 2px | 4px | 4% |
-|       | 2 | 4px | 12px | 8% |
-| **4** | 1 | 2px | 4px | 4% |
-|       | 2 | 8px | 16px | 10% |
-| **5** | 1 | 4px | 6px | 4% |
-|       | 2 | 12px | 24px | 12% |
+Каждый токен — двухслойная тень: мягкая контактная + основная глубина.
 
-### CSS
+---
+
+## Spec values (Light)
+
+| Token | Layer | X | Y | Blur | Spread | Alpha |
+|-------|-------|---|---|------|--------|-------|
+| **Elevation/Top** | 1 | 0 | 4 | 16 | 0 | 0.08 |
+|                   | 2 | 0 | 0 | 6  | 0 | 0.08 |
+| **Elevation/Floating** | 1 | 0 | 1 | 3 | 0 | 0.15 |
+|                        | 2 | 0 | 1 | 2 | 0 | 0.30 |
+| **Elevation/Bottom** | 1 | 0 | -8 | 24 | 0 | 0.10 |
+|                      | 2 | 0 | -2 | 24 | 0 | 0.08 |
+
+---
+
+## CSS
 
 ```css
-/* Level 1 */
---elevation-1: 
-  0 1px 2px rgba(0, 0, 0, 0.04),
-  0 1px 3px rgba(0, 0, 0, 0.06);
+--elevation-top:
+  0 4px 16px rgba(0, 0, 0, 0.08),
+  0 0   6px rgba(0, 0, 0, 0.08);
 
-/* Level 2 */
---elevation-2: 
-  0 1px 2px rgba(0, 0, 0, 0.04),
-  0 2px 6px rgba(0, 0, 0, 0.08);
+--elevation-floating:
+  0 1px 3px rgba(0, 0, 0, 0.15),
+  0 1px 2px rgba(0, 0, 0, 0.30);
 
-/* Level 3 */
---elevation-3: 
-  0 2px 4px rgba(0, 0, 0, 0.04),
-  0 4px 12px rgba(0, 0, 0, 0.08);
+--elevation-bottom:
+  0 -8px 24px rgba(0, 0, 0, 0.10),
+  0 -2px 24px rgba(0, 0, 0, 0.08);
+```
 
-/* Level 4 */
---elevation-4: 
-  0 2px 4px rgba(0, 0, 0, 0.04),
-  0 8px 16px rgba(0, 0, 0, 0.10);
+В Dark-теме все три переменные = `none`.
 
-/* Level 5 */
---elevation-5: 
-  0 4px 6px rgba(0, 0, 0, 0.04),
-  0 12px 24px rgba(0, 0, 0, 0.12);
+```css
+@media (prefers-color-scheme: dark) {
+  --elevation-top: none;
+  --elevation-floating: none;
+  --elevation-bottom: none;
+}
 ```
 
 ---
 
-## Dark Theme
+## Правила применения
 
-В тёмной теме elevation выражается через **осветление поверхности**, а не только тень. Тень остаётся для отделения от фона.
-
-### Level 1
-
-| Shadow | Y Offset | Blur | Opacity |
-|--------|----------|------|---------|
-| 1 | 1px | 3px | 20% |
-| 2 | 1px | 2px | 12% |
-
-```css
---elevation-dark-1: 
-  0 1px 3px rgba(0, 0, 0, 0.20),
-  0 1px 2px rgba(0, 0, 0, 0.12);
-```
+1. **Sticky-элемент у верхнего края** (Top App Bar при скролле) → `Elevation/Top`
+2. **Sticky-элемент у нижнего края** (клавиатура, плашка с CTA) → `Elevation/Bottom`
+3. **Плавающий контрол над визуальной подложкой** (карта, фото-галерея) → `Elevation/Floating`
+4. **Модалки, drawers, dropdowns, bottom sheets** — overlay без тени
+5. **Карточки, Product Card, Btn Collect, GridCard** — без теней; дифференциация через `border/default` или поверхность
+6. **Dark-тема** — ни один Elevation-стиль не применяется
 
 ---
 
-## Sheet Shadows
+## React Native
 
-Специальные тени для bottom sheets (шторок). Направлены **вверх** (отрицательный Y offset).
+```typescript
+import { Platform } from 'react-native';
 
-### Sheet Default
-
-| Shadow | Y Offset | Blur | Opacity |
-|--------|----------|------|---------|
-| 1 | -4px | 16px | 6% |
-| 2 | -1px | 4px | 4% |
-
-### Sheet Active
-
-| Shadow | Y Offset | Blur | Opacity |
-|--------|----------|------|---------|
-| 1 | -8px | 24px | 8% |
-| 2 | -2px | 6px | 4% |
-
-```css
---shadow-sheet-default: 
-  0 -4px 16px rgba(0, 0, 0, 0.06),
-  0 -1px 4px rgba(0, 0, 0, 0.04);
-
---shadow-sheet-active: 
-  0 -8px 24px rgba(0, 0, 0, 0.08),
-  0 -2px 6px rgba(0, 0, 0, 0.04);
+export const elevation = {
+  top: Platform.select({
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 16,
+    },
+    android: { elevation: 4 },
+  }),
+  floating: Platform.select({
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.30,
+      shadowRadius: 2,
+    },
+    android: { elevation: 2 },
+  }),
+  bottom: Platform.select({
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: -8 },
+      shadowOpacity: 0.10,
+      shadowRadius: 24,
+    },
+    android: { elevation: 8 },
+  }),
+};
 ```
 
----
-
-## Когда использовать
-
-| Level | Применение |
-|-------|-----------|
-| **1** | Карточки, небольшие элементы (chips, badges) |
-| **2** | Кнопки FAB, меню в состоянии hover |
-| **3** | Карточки с действиями, dropdown меню |
-| **4** | Модальные окна, dialogs |
-| **5** | Navigation drawers, bottom sheets |
+> **Dark mode:** при активной тёмной теме возвращать пустой объект — тени не применяются.
+> **React Native** поддерживает одну тень — используется параметр с наибольшим визуальным весом (Layer 2 для Floating, Layer 1 для Top/Bottom).
 
 ---
 
 ## Figma
 
-Effect Styles в файле UI Kit Mobile:
-- `Elevation/Light/1` — `Elevation/Light/5`
-- `Elevation/Dark/1`
-- `Shadow/Sheet Default`
-- `Shadow/Sheet Active`
+Effect Styles в файле **UI Kit Mobile** (`PI2N65xbeJPTc5oWhOP7Bl`):
+- `Elevation/Top`
+- `Elevation/Floating`
+- `Elevation/Bottom`
+
+### Deprecated
+
+Старые стили помечены префиксом `[deprecated] ` и остаются в библиотеке для постепенной миграции. В новых макетах не использовать:
+
+- `[deprecated] Elevation/Light/1` … `5`
+- `[deprecated] Shadow/Sheet Default`
+- `[deprecated] Shadow/Sheet Active`
 
 ---
 
-## Реализация в коде
+## История решения
 
-### React Native (Shadow Props)
+Модель с 5 уровнями elevation + 2 sheet-теней была заменена на 3 токена после аудита реального использования подъёмов в приложении (апрель 2026). Аудит показал:
 
-```typescript
-export const elevation = {
-  1: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  2: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  3: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-  4: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.10,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  5: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-    elevation: 12,
-  },
-};
-```
+- Levels 3–5 (Dropdowns / Modals / Drawers) в макетах не встречались — модалки идут через overlay без тени
+- Карточки и GridCard физически не приподняты над контентом
+- Реальные паттерны: sticky top, sticky bottom, floating на картах
 
-> **Примечание:** React Native поддерживает только одну тень. Используются параметры Shadow 2 (основная тень глубины).
+Подробности аудита — страница `🔍 Elevation Audit` в файле Mobile (`PI3XrUDuoGyK4aXkqyzYoB`).
