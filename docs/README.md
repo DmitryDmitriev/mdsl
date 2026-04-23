@@ -9,7 +9,7 @@
 | [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) | Отступы, радиусы, высоты, border, правила токенов |
 | [COLOR-PALETTE.md](./COLOR-PALETTE.md) | Цветовая семантика |
 | [TYPOGRAPHY.md](./TYPOGRAPHY.md) | Шрифт, стили текста |
-| [elevation-spec.md](./elevation-spec.md) | Тени и elevation (5 уровней Light, Dark, Sheet) |
+| [elevation-spec.md](./elevation-spec.md) | Elevation (3 токена: Top / Floating / Bottom) |
 
 ## Спеки компонентов
 
@@ -29,6 +29,5 @@
 | [search-spec.md](./search-spec.md) | Search v2 |
 | [top-app-bar-spec.md](./top-app-bar-spec.md) | Top App Bar v2 |
 | [sheets-spec.md](./sheets-spec.md) | Sheets (bottom/top sheet) |
-| [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (диалог с иллюстрацией) |
-
-Тип **`DialogPlain`** (текст без картинки) — отдельная спека, когда появится в продукте.
+| [dialog-spec.md](./dialog-spec.md) | Dialog (единый компонент с Content-слотом) |
+| [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (частный случай — диалог с иллюстрацией) |
