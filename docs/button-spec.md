@@ -255,3 +255,16 @@
 **Web (этот репозиторий):** значения в **px** в `Button.tsx` и **@/tokens**; Outline: `borderWidth.default` (1) для **xs**, `borderWidth.emphasis` (2) для **sm / md / lg** — см. **docs/DESIGN-TOKENS.md**.
 
 **Android (Compose):** те же числа в **dp**: spacing/N → `N * 4.dp`, radius/3 и radius/2 → `12.dp`, `8.dp`, border → `1.dp` / `2.dp`, высоты → `32/40/48/56.dp`.
+
+---
+
+## Аудит покрытия токенами
+
+| Component | Color | Token | Type | Overall |
+|---|---|---|---|---|
+| Button | 100% | 100% | 100% | 100% |
+| ButtonIcon | 100% | 100% | — | 100% |
+| Buttons Stack | 100% | 100% | 100% | 100% |
+| FAB Bar | 100% | 89% | 100% | 91% |
+
+Все основные кнопки полностью на токенах. У FAB Bar остались SiglButton itemSpacing и Tab Bar Buttons width — компенсация iOS UI Kit, см. fab-bar-spec.md.

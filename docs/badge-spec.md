@@ -157,3 +157,16 @@
 - Токены: **docs/DESIGN-TOKENS.md**
 - Типографика: **docs/TYPOGRAPHY.md**
 - Шкала size: **src/tokens/spacing.ts** → `size`
+
+---
+
+## Аудит покрытия токенами
+
+| Категория | Покрытие |
+|---|---|
+| Color | 100% |
+| Token | 60% |
+| Type | 100% |
+| **Overall** | **73%** |
+
+Что осталось: text gap ×40, counter paddingLeft ×40 — внутренние spacing на текстовых фреймах. Все цвета и типографика на токенах.

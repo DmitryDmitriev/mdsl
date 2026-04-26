@@ -160,6 +160,19 @@ interface AvatarProps {
 
 ---
 
+## Аудит покрытия токенами
+
+| Категория | Покрытие |
+|---|---|
+| Color | **100%** |
+| Token (size/radius/spacing) | **100%** |
+| Type (типографика) | **100%** |
+| **Overall** | **100%** |
+
+Аудит выполнен по правилам исключения building blocks (`.=` префикс), HUG/FILL размеров, иконок из библиотеки и вычисляемого вертикального padding.
+
+---
+
 ## 10. Ссылки
 
 - Figma: [UI-Kit-Mobile → Avatar](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile)

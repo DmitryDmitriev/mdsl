@@ -130,7 +130,7 @@ FAB-кнопки всегда круглые/скруглённые. Radius за
 | **Radius** | pill | pill | pill |
 | **Icon size** | 32 px | 24 px | 24 px |
 | **Touch-padding (встроенный)** | ~12 px | ~8 px | ~8 px |
-| **itemSpacing в баре** | −12 px | **−8 px** | −8 px |
+| **itemSpacing в баре** | **−8 px** | **−8 px** | −8 px |
 
 ---
 
@@ -181,3 +181,16 @@ Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
 - [button-spec.md](./button-spec.md) — спецификация обычных кнопок и IconButton
 - [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — шкалы размеров, spacing, radius
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md) — палитра и семантика цветов
+
+---
+
+## Аудит покрытия токенами
+
+| Категория | Покрытие |
+|---|---|
+| Color | 100% |
+| Token | 89% |
+| Type | 100% |
+| **Overall** | **91%** |
+
+Что осталось: SiglButton itemSpacing ×3 (центральная кнопка, отрицательный gap), Tab Bar Buttons width ×2. Это паттерн iOS UI Kit (см. раздел "Важное правило: отрицательный itemSpacing").

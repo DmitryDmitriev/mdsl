@@ -11,23 +11,42 @@
 | [TYPOGRAPHY.md](./TYPOGRAPHY.md) | Шрифт, стили текста |
 | [elevation-spec.md](./elevation-spec.md) | Elevation (3 токена: Top / Floating / Bottom) |
 
-## Спеки компонентов
+## Спеки и готовность компонентов
 
-| Файл | Компонент |
-|------|-----------|
-| [button-spec.md](./button-spec.md) | Button |
-| [fab-bar-spec.md](./fab-bar-spec.md) | FAB Bar (Floating Action Button Bar) |
-| [switch-spec.md](./switch-spec.md) | Switch (переключатель) |
-| [avatar-spec.md](./avatar-spec.md) | Avatar |
-| [badge-spec.md](./badge-spec.md) | Badge |
-| [checkbox-spec.md](./checkbox-spec.md) | Checkbox |
-| [chips-spec.md](./chips-spec.md) | Chips |
-| [divider-spec.md](./divider-spec.md) | Divider |
-| [radio-spec.md](./radio-spec.md) | Radio |
-| [list-item-spec.md](./list-item-spec.md) | List Item |
-| [input-v2-spec.md](./input-v2-spec.md) | Input v2 (inline + Stacked + Leading) |
-| [search-spec.md](./search-spec.md) | Search v2 |
-| [top-app-bar-spec.md](./top-app-bar-spec.md) | Top App Bar v2 |
-| [sheets-spec.md](./sheets-spec.md) | Sheets (bottom/top sheet) |
-| [dialog-spec.md](./dialog-spec.md) | Dialog (единый компонент с Content-слотом) |
-| [dialog-illustration-spec.md](./dialog-illustration-spec.md) | DialogIllustration (частный случай — диалог с иллюстрацией) |
+Легенда: ✅ готов (код + Storybook) · 📝 спека · ⏳ нет спеки
+
+| Компонент | Спека | Код | Storybook | Сложность |
+|-----------|-------|-----|-----------|-----------|
+| Button | [spec](./button-spec.md) | ✅ | ✅ | M |
+| Avatar | [spec](./avatar-spec.md) | ✅ | ✅ | S |
+| Badge | [spec](./badge-spec.md) | ✅ | ✅ | S |
+| Sheets | [spec](./sheets-spec.md) | ✅ | ✅ | L |
+| Divider | [spec](./divider-spec.md) | 📝 | — | XS |
+| Switch | [spec](./switch-spec.md) | 📝 | — | S |
+| Checkbox | [spec](./checkbox-spec.md) | 📝 | — | S |
+| Radio | [spec](./radio-spec.md) | 📝 | — | S |
+| Chips | [spec](./chips-spec.md) | 📝 | — | M |
+| List Item | [spec](./list-item-spec.md) | 📝 | — | M |
+| FAB Bar | [spec](./fab-bar-spec.md) | 📝 | — | M |
+| Input v2 | [spec](./input-v2-spec.md) | 📝 | — | L |
+| Search v2 | [spec](./search-spec.md) | 📝 | — | L (зависит от Input) |
+| Top App Bar v2 | [spec](./top-app-bar-spec.md) | 📝 | — | L |
+| Dialog | [spec](./dialog-spec.md) | 📝 (✅ Figma) | — | L |
+| ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) | superseded → Dialog | — | — |
+
+**Итого:** 4 / 15 готово в коде (27%). Dialog готов в Figma как единый ComponentSet `6632:39`, ждёт реализации в коде; `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).
+
+## Очередь реализации (по скорости)
+
+Логика: сначала атомарные контролы без зависимостей — они дают быстрый прирост покрытия и нужны для составных компонентов (List Item, Dialog, Sheets-контент).
+
+1. **Divider** — XS, один токен-цвет, 2–3 варианта.
+2. **Switch** — S, изолированный контрол, без слотов.
+3. **Checkbox** — S, пара состояний, общий паттерн с Radio.
+4. **Radio** — S, переиспользует решения Checkbox.
+5. **Chips** — M, после атомов; даёт visible win в фильтрах/поиске.
+6. **List Item** — M, разблокирует контент Sheets и меню.
+7. **FAB Bar** — M, использует готовый Button.
+8. **Input v2** → **Search v2** — L, Search строится на Input.
+9. **Top App Bar v2** — L, использует Button/Avatar/Badge.
+10. **Dialog** — L, в конце (составной; Figma уже финален, остаётся код).
