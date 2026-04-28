@@ -97,7 +97,8 @@ Tabs (COMPONENT_SET, варианты Size × Items)
 | **Item radius** | `radius/1` (4) | `radius/2` (8) | `radius/2` (8) |
 | **Item padding-x** | `spacing/2` (8) | `spacing/3` (12) | `spacing/4` (16) |
 | **Item itemSpacing** | `spacing/1` (4) | `spacing/1` (4) | `spacing/1` (4) |
-| **Icon size** | 16 × 16 | 20 × 20 | 24 × 24 |
+| **Icon size** | 16 × 16 | 24 × 24 | 24 × 24 |
+| **Icon source** | `16 / ic_check` (default) | `24 / ic_check` (default) | `24 / ic_check` (default) |
 | **Text style** | `Caption/caption-md` (12/16) | `Base/Body 2 Medium` (14/20) | `Base/Body 1 Medium` (16/24) |
 
 ---
@@ -131,6 +132,10 @@ Tabs (COMPONENT_SET, варианты Size × Items)
 ### Icon / Badge per tab
 
 Boolean'ы `Icon` и `Badge` управляются на уровне каждого инстанса (override). Можно сделать таб с иконкой+текстом, текст+бейдж или только текст в одной группе.
+
+**Иконки — живые из библиотеки.** Дефолт — `ic_check` (16px для sm, 24px для md/lg). При использовании дизайнер делает Instance Swap на нужную иконку. Цвет привязан к токенам: `Icon/Primary` для Active=On, `Icon/Secondary` для Active=Off.
+
+**Note:** библиотека Larixon не имеет 20px иконок, поэтому md и lg табы используют одинаковый 24px ассет. При появлении 20px ассетов — обновим md.
 
 **Конфигурация Badge внутри Tab Item** (по умолчанию):
 - `Type=Default, Size=2xs, Shape=Pill`
