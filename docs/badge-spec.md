@@ -139,8 +139,21 @@
 - **Type**: Good, Warning, Error, Default (маппится на good, warning, negative, question)
 - **Size**: 2xs, xs, sm, md, lg
 - **Shape**: Pill, Rounded
-- **Icon**: true/false
-- **Counter**: true/false
+
+### Boolean properties
+- **Icon** (default `true`) — показать левую иконку
+- **Label** (default `true`) — показать текстовый лейбл («Low reliability» в дефолте, заменяется через override)
+- **Counter** (default `false`) — показать правый счётчик-число
+
+Комбинации задают разные кейсы:
+
+| Конфиг | Icon | Label | Counter | Результат |
+|---|---|---|---|---|
+| **Status** (default) | ✓ | ✓ | — | `✓ Low reliability` |
+| **Status + count** | ✓ | ✓ | ✓ | `✓ 3 unread items` |
+| **Counter only** | — | — | ✓ | `8` (компактный счётчик, для Tabs / Notifications) |
+| **Label only** | — | ✓ | — | `Beta` (текстовый ярлык) |
+| **Icon only** | ✓ | — | — | только иконка-ярлык (statusbar-стиль) |
 
 ### Привязка токенов
 | Property | Токен |

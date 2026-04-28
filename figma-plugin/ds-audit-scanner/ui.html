@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 12px/1.4 -apple-system, system-ui, sans-serif; margin: 0; padding: 12px; }
+  h1 { font-size: 13px; margin: 0 0 8px; }
+  .controls { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
+  select, button { font: inherit; padding: 4px 8px; border-radius: 4px; border: 1px solid #ccc; background: #fff; }
+  button.primary { background: #18a0fb; color: #fff; border-color: #18a0fb; cursor: pointer; }
+  button.primary:hover { background: #0d8de0; }
+  .status { color: #888; margin-bottom: 8px; min-height: 14px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid #eee; }
+  th { font-weight: 600; color: #666; font-size: 11px; }
+  tr.row { cursor: pointer; }
+  tr.row:hover { background: #f5f5f5; }
+  td.pct { text-align: right; font-variant-numeric: tabular-nums; width: 40px; }
+  .bad  { color: #d62828; font-weight: 600; }
+  .mid  { color: #d68a02; }
+  .good { color: #2a9d4a; }
+  details { margin-top: 8px; }
+  details pre { font-size: 10px; max-height: 160px; overflow: auto; background: #f7f7f7; padding: 6px; border-radius: 4px; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #2c2c2c; color: #eee; }
+    select, button { background: #3a3a3a; color: #eee; border-color: #555; }
+    th { color: #aaa; }
+    th, td { border-color: #444; }
+    tr.row:hover { background: #3a3a3a; }
+    details pre { background: #1f1f1f; }
+  }
+</style>
+</head>
+<body>
+  <h1>DS Audit Scanner</h1>
+  <div class="controls">
+    <select id="scope">
+      <option value="page" selected>Текущая страница</option>
+      <option value="selection">Выделенные SET'ы</option>
+      <option value="document">Весь документ</option>
+    </select>
+    <button class="primary" id="run">Запустить</button>
+    <button id="copy" title="Скопировать JSON отчёт">⧉ JSON</button>
+  </div>
+  <div class="status" id="status">Готов к запуску.</div>
+  <table id="results" hidden>
+    <thead>
+      <tr><th>Компонент</th><th class="pct">Color</th><th class="pct">Token</th><th class="pct">Type</th><th class="pct">All</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <details id="problems-block" hidden>
+    <summary>Проблемы (топ-30 на компонент)</summary>
+    <pre id="problems"></pre>
+  </details>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let lastReport = null;
+
+  function cls(p) { return p >= 90 ? "good" : p >= 70 ? "mid" : "bad"; }
+
+  $("run").onclick = () => {
+    const scope = $("scope").value;
+    $("status").textContent = "Сканирую…";
+    $("results").hidden = true;
+    $("problems-block").hidden = true;
+    parent.postMessage({ pluginMessage: { type: "run", scope } }, "*");
+  };
+
+  $("copy").onclick = () => {
+    if (!lastReport) return;
+    navigator.clipboard.writeText(JSON.stringify(lastReport, null, 2));
+    $("status").textContent = "JSON скопирован.";
+  };
+
+  window.onmessage = (e) => {
+    const msg = e.data.pluginMessage;
+    if (!msg) return;
+    if (msg.type === "progress") {
+      if (msg.current) $("status").textContent = `${msg.current}/${msg.total}: ${msg.name}`;
+      else $("status").textContent = `Найдено компонентов: ${msg.total}`;
+    }
+    if (msg.type === "report") {
+      lastReport = msg.results;
+      const tbody = $("results").querySelector("tbody");
+      tbody.innerHTML = "";
+      const probs = [];
+      for (const r of msg.results) {
+        const tr = document.createElement("tr");
+        tr.className = "row";
+        tr.onclick = () => parent.postMessage({ pluginMessage: { type: "focus", id: r.id } }, "*");
+        tr.innerHTML = `
+          <td>${r.name}</td>
+          <td class="pct ${cls(r.color)}">${r.color}</td>
+          <td class="pct ${cls(r.token)}">${r.token}</td>
+          <td class="pct ${cls(r.type)}">${r.type}</td>
+          <td class="pct ${cls(r.overall)}">${r.overall}</td>`;
+        tbody.appendChild(tr);
+        if (r.problems.length) {
+          probs.push(`▼ ${r.name} (${r.overall}%)`);
+          for (const p of r.problems) probs.push(`  · ${p}`);
+        }
+      }
+      $("results").hidden = false;
+      $("problems").textContent = probs.join("\n");
+      $("problems-block").hidden = probs.length === 0;
+      const avg = Math.round(msg.results.reduce((s, r) => s + r.overall, 0) / (msg.results.length || 1));
+      $("status").textContent = `Готово. ${msg.results.length} компонентов · средний overall ${avg}%`;
+    }
+  };
+</script>
+</body>
+</html>
