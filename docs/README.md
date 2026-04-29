@@ -33,11 +33,10 @@
 | Top App Bar v2 | [spec](./top-app-bar-spec.md) | 📝 | — | L |
 | Dialog | [spec](./dialog-spec.md) | 📝 (✅ Figma) | — | L |
 | Tabs | [spec](./tabs-spec.md) | 📝 (✅ Figma) | — | M |
-| Segment Control (Android M3) | — | — | — | копия M3, только цвета на наших токенах |
-| Segment Control (iOS native) | — | — | — | реплика Apple HIG, для iOS-only кейсов |
+| Segment Control (Android M3) | — | — | — | копия M3 на странице 🟢 Segment Control |
 | ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) | superseded → Dialog | — | — |
 
-**Итого:** 4 / 16 готово в коде (25%). В Figma готовы как ComponentSets: Dialog `6632:39`, Tabs `6762:360` (с building block `.=Tab Item` `6760:13377`), Android Segment Control `888:7950`, iOS Segment Control `4041:189`. `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).
+**Итого:** 4 / 15 готово в коде (27%). В Figma готовы как ComponentSets: Dialog `6632:39`, Tabs `6793:696` на странице 🟢 Tabs (с building block `.=Tab Item` `6760:13377`), Android Segment Control `888:7950` на странице 🟢 Segment Control. iOS Apple-native Segment Control упразднён — заменён на Tabs (Radix-стиль). `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).
 
 ## Очередь реализации (по скорости)
 
