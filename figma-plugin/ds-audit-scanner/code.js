@@ -48,6 +48,8 @@ function auditOne(root) {
   function checkSize(node) {
     if (node.parent && node.parent.type === "COMPONENT_SET") return;
     if (isIcon(node)) return;
+    // TEXT — размер определяется контентом (textAutoResize), не токеном
+    if (node.type === "TEXT") return;
     if (isFixedSize(node, "H")) {
       stats.token.total++;
       bound(node, "width") ? stats.token.bound++ : stats.problems.push(`${node.name}: width ${node.width} no token`);
@@ -59,7 +61,9 @@ function auditOne(root) {
   }
   function checkAutoLayout(node) {
     if (!node.layoutMode || node.layoutMode === "NONE") return;
-    if (typeof node.itemSpacing === "number" && node.itemSpacing !== 0 && node.primaryAxisAlignItems !== "SPACE_BETWEEN") {
+    // itemSpacing: skip if frame has 0 or 1 visible children (gap doesn't apply)
+    const visibleKids = ("children" in node) ? node.children.filter(c => c.visible !== false).length : 0;
+    if (typeof node.itemSpacing === "number" && node.itemSpacing !== 0 && node.primaryAxisAlignItems !== "SPACE_BETWEEN" && visibleKids >= 2) {
       stats.token.total++;
       bound(node, "itemSpacing") ? stats.token.bound++ : stats.problems.push(`${node.name}: itemSpacing ${node.itemSpacing} no token`);
     }

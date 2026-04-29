@@ -87,6 +87,8 @@ async function auditComponents(componentSetIds) {
         return;
       }
       if (isIcon(node)) return; // правила 3, 7
+      // TEXT-узлы — размер определяется контентом (textAutoResize), не токеном
+      if (node.type === "TEXT") return;
       // Width
       if (isFixedSize(node, "H")) {
         stats.token.total++;
@@ -103,8 +105,9 @@ async function auditComponents(componentSetIds) {
 
     function checkAutoLayout(node) {
       if (node.layoutMode === "NONE" || !node.layoutMode) return;
-      // itemSpacing
-      if (typeof node.itemSpacing === "number" && node.itemSpacing !== 0 && node.primaryAxisAlignItems !== "SPACE_BETWEEN") {
+      // itemSpacing: skip if frame has 0 or 1 visible children (gap doesn't apply)
+      const visibleKids = ("children" in node) ? node.children.filter(c => c.visible !== false).length : 0;
+      if (typeof node.itemSpacing === "number" && node.itemSpacing !== 0 && node.primaryAxisAlignItems !== "SPACE_BETWEEN" && visibleKids >= 2) {
         stats.token.total++;
         if (bound(node, "itemSpacing")) stats.token.bound++;
         else stats.problems.push(`${node.name}: itemSpacing ${node.itemSpacing} no token`);
