@@ -1,40 +1,41 @@
 # Alert — спецификация
 
-Alert — статусное сообщение с иконкой, заголовком, описанием и опциональной кнопкой действия. Показывается в потоке контента (не модалка) — для подсказок, предупреждений, ошибок и подтверждений в форме.
+Alert — inline-сообщение в потоке мобильного контента с типизированным фоном, иконкой, заголовком, опциональным описанием/таймстампом и опциональной полно-широкой кнопкой действия.
 
-Figma: страница **Alert**, набор **Alert** (`6910:1946`).
+Figma: страница **Alert**, набор **Alert** (`6947:14128`).
 
 ---
 
 ## 1. Принципы
 
-- **Inline-сообщение.** Не модалка, не toast — Alert живёт в потоке контента (форма, лист, страница).
-- **Цветная семантика по краям.** Border + цвет заголовка указывают тип сообщения. Фон всегда нейтральный (`Background/Primary`) — shadcn-style без tinted backgrounds.
-- **Иконка обязательна.** Слева 16×16, по умолчанию `ic_check`. Дизайнер swap'ает на семантически подходящую (`ic_info`, `ic_warning`, `ic_alert_triangle` — когда появятся в библиотеке).
-- **Action — необязательная.** Кнопка-инстанс справа, по умолчанию `Button Size=32, Type=Outline`.
+- **Mobile-native pattern.** Tinted bg + крупная (32×32) fill-иконка + полноширинная кнопка снизу — паттерн iOS/Android, читается на мелких экранах.
+- **Цвет = тип.** Каждый вариант имеет свой `Decor/Bubble/*` фон + свою fill-иконку. Smartphone-friendly визуальная семантика.
+- **Гибкий контент.** Description и Action — boolean (можно скрыть). Supporting (timestamp / детали) — boolean (показать по необходимости).
+- **Width 328.** Как `Dialog` — стандарт мобильной модалки/баннера для экранов 360px.
 
 ---
 
 ## 2. Структура
 
 ```
-Alert (root, HORIZONTAL, FILL/HUG, padding 12/16, gap 12)
-├── Flex (FILL, HORIZONTAL, gap 12)
-│   ├── Div (HUG, paddingTop=2 для оптического выравнивания иконки 16 vs текст 14)
-│   │   └── icon (INSTANCE 16/ic_check, Icon/Primary)
-│   └── Div (FILL, VERTICAL, gap 4)
-│       ├── Alert Title (TEXT, Base/Body 2 Medium 14/20)
-│       └── This is an alert description. (TEXT, Base/Body 2 14/20)
-└── Button (INSTANCE Size=32, Type=Outline, Form=Square)
+Alert (root, VERTICAL, FIXED 328, padding 12, gap 12, radius 16, fill = tinted)
+├── Content (VERTICAL, FILL/HUG, gap 8)
+│   ├── Header (HORIZONTAL, FILL/HUG, gap 12, align CENTER)
+│   │   ├── icon (INSTANCE 32×32 fill, type-specific)
+│   │   └── title (TEXT, Base/Body 1 Medium 16/24, FILL)
+│   ├── description (TEXT, Base/Body 2 14/20, FILL) — boolean Description
+│   └── supporting (TEXT, Caption/caption-md 12/16, FILL, Text/Tertiery) — boolean Supporting
+└── Action (INSTANCE Button Size=40, Type=Outline, FILL width) — boolean Action
 ```
 
 ### Свойства
 
 | Property | Type | Values | Default |
 |---|---|---|---|
-| **Variant** | variant | `Default` / `Info` / `Success` / `Warning` / `Destructive` | `Default` |
-
-(Action button — instance, всегда виден; иконка — instance swappable.)
+| **Type** | variant | `Info / Warning / Good / Tech / Negative` | `Info` |
+| **Action** | boolean | — | `true` |
+| **Description** | boolean | — | `true` |
+| **Supporting** | boolean | — | `false` |
 
 ---
 
@@ -42,29 +43,28 @@ Alert (root, HORIZONTAL, FILL/HUG, padding 12/16, gap 12)
 
 | Параметр | Значение | Токен |
 |---|---|---|
-| Padding-x | 16 | `spacing/4` |
-| Padding-y | 12 | `spacing/3` |
-| Gap (root) | 12 | `spacing/3` |
-| Gap (Flex) | 12 | `spacing/3` |
-| Gap (title↔desc) | 4 | `spacing/1` |
-| Radius | 12 | `radius/3` |
-| Border weight | 1 | `border/1` |
-| Icon size | 16 × 16 | (из библиотеки иконок) |
-| Внутренний padding-top icon-обёртки | 2 | hardcoded (оптическое выравнивание 16 vs 14) |
+| Width | 328 | hardcoded (как Dialog: `360 − 16×2`) |
+| Padding (все стороны) | 12 | `spacing/3` |
+| Gap root (Content ↔ Action) | 12 | `spacing/3` |
+| Gap Content (title-block ↔ desc) | 8 | `spacing/2` |
+| Gap Header (icon ↔ title) | 12 | `spacing/3` |
+| Radius | 16 | `radius/4` |
+| Icon size | 32 × 32 | (из иконочной библиотеки) |
+| Action button | 40h, FILL width | Button `Size=40, Type=Outline, Form=Square` |
 
 ---
 
-## 4. Цвета по вариантам
+## 4. Цвета по типам
 
-| Variant | Background | Border | Title | Description | Icon |
-|---|---|---|---|---|---|
-| **Default** | `Background/Primary` | `Border/Default` | `Text/Primary` | `Text/Secondary` | `Icon/Primary` |
-| **Info** | `Background/Primary` | `Accent/Link` | `Accent/Link` | `Text/Secondary` | `Icon/Primary` |
-| **Success** | `Background/Primary` | `Accent/Positive` | `Accent/Positive` | `Text/Secondary` | `Icon/Primary` |
-| **Warning** | `Background/Primary` | `Accent/Warning` | `Accent/Warning` | `Text/Secondary` | `Icon/Primary` |
-| **Destructive** | `Background/Primary` | `Accent/Negative` | `Accent/Negative` | `Accent/Negative` | `Icon/Primary` |
+| Type | Background | Title | Description | Icon (fill 32) |
+|---|---|---|---|---|
+| **Info** | `Decor/Bubble/Info` | `Text/Black applied` | `Text/Secondary` | `32 / info_fill` |
+| **Warning** | `Decor/Bubble/Warning` | `Text/Black applied` | `Text/Secondary` | `32 / warning_fill` |
+| **Good** | `Decor/Bubble/Good` | `Text/Black applied` | `Text/Secondary` | `32 / check_circle_fill` |
+| **Tech** | `Decor/Bubble/Tech` | `Text/Black applied` | `Text/Secondary` | `32 / info_fill` (плейсхолдер; swap на cog/settings когда появится в библиотеке) |
+| **Negative** | `Decor/Bubble/Negative` | `Text/Negative` | `Text/Negative` | `32 / declined_fill` |
 
-**Note:** В библиотеке существуют `Text/Negative`, `Text/Link`, `Text/Positive`, `Text/Warning` токены, но они в текущем mode резолвятся в `#FFFFFF` (видимо для inverted-mode). Для colored-вариантов используем `Accent/*` напрямую — они работают одинаково на light theme.
+Supporting всегда `Text/Tertiery` независимо от типа.
 
 ---
 
@@ -72,8 +72,9 @@ Alert (root, HORIZONTAL, FILL/HUG, padding 12/16, gap 12)
 
 | Слой | Стиль |
 |---|---|
-| Title | `Base/Body 2 Medium` (14/20) |
+| Title | `Base/Body 1 Medium` (16/24) |
 | Description | `Base/Body 2` (14/20) |
+| Supporting | `Caption/caption-md` (12/16) |
 
 ---
 
@@ -81,29 +82,31 @@ Alert (root, HORIZONTAL, FILL/HUG, padding 12/16, gap 12)
 
 ```ts
 interface AlertProps {
-  variant?: "default" | "info" | "success" | "warning" | "destructive";  // default "default"
-  icon?: ReactNode;             // override default ic_check
+  type?: "info" | "warning" | "good" | "tech" | "negative";  // default "info"
   title: string;
-  description?: string;
-  action?: ReactNode;           // <Button size="32" variant="outline">Action</Button>
+  description?: string;            // showsDescription
+  supporting?: string;             // showsSupporting (timestamp/details)
+  action?: { label: string; onClick: () => void };  // shows button if provided
+  icon?: ReactNode;                // override default
 }
 ```
 
 ```tsx
-<Alert variant="warning" title="Heads up!" description="You can preview the changes here." />
-<Alert variant="destructive" title="Error" description="Failed to save." action={<Button>Retry</Button>} />
+<Alert type="good" title="Profile verified" description="Your changes are saved." action={{ label: "Open settings", onClick }} />
+<Alert type="negative" title="Verification failed" description="Try again later." />
+<Alert type="info" title="New feature" supporting="2 hours ago" />
 ```
 
 ---
 
 ## 7. Когда использовать
 
-- **Inline-сообщение** в форме, листе, странице
-- **Подтверждение** действия пользователя
-- **Подсказка** или предупреждение
+- **Inline в форме** — сообщение под полем или над секцией
+- **Page-level баннер** — статус операции, новости, system message
+- **Уведомления о состоянии** — verified, archived, error и т.п.
 
 **Не использовать** для:
-- Глобальных уведомлений (toast) → `Snackbar`
+- Глобальных toast-уведомлений → `Snackbar`
 - Модальных подтверждений → `Dialog`
 - Полноэкранных пустых состояний → `EmptyState`
 
@@ -114,23 +117,31 @@ interface AlertProps {
 | Категория | Покрытие |
 |---|---|
 | Color | **100%** |
-| Token | 92% |
+| Token | **100%** |
 | Type | **100%** |
-| **Overall** | **95%** |
-
-Hardcoded: `paddingTop=2` у icon-wrapper Div (оптическое выравнивание). Документирован как осознанное исключение.
+| **Overall** | **100%** |
 
 ---
 
 ## 9. История решений
 
-**2026-04-29 — взято от коллег (shadcn UI Alert), завернуто в наши токены.**
+**2026-04-29 — переосмыслили Alert.**
+
+Изначально (утром) был импортирован shadcn Alert (white bg, маленькая 16×16 иконка, кнопка справа). При совместном осмотре пришли к выводу: shadcn-стиль — desktop-pattern, в мобилке плохо работает. Параллельно существовал `Notification` (2270:2558) с правильным mobile-стилем.
+
+**Решение:** объединить — взять Notification-стиль, имя `Alert`, добавить гибкость boolean'ов (Action/Description/Supporting).
 
 Действия:
-1. Цвета `#FFFFFF`, `#E4E4E7`, `#09090B`, `#71717A`, `#DC2626` (shadcn) → Larixon `Background/Primary`, `Border/Default`, `Text/Primary`, `Text/Secondary`, `Accent/Negative`.
-2. shadcn `CheckCircle` 16×16 → наш `16 / ic_check` из библиотеки иконок, fill `Icon/Primary`.
-3. shadcn `Button` (24h) → наш `Button Size=32, Type=Outline, Form=Square`.
-4. Inter Medium 14 / Regular 14 → текстовые стили `Base/Body 2 Medium` / `Base/Body 2`.
-5. Padding/radius/gap привязаны к нашим `spacing/*`, `radius/3`, `border/1`.
-6. Добавлены 3 новых variants: `Info`, `Success`, `Warning` (раньше было только `Default`/`Destructive`).
-7. Для colored-variants использованы `Accent/*` напрямую (Text/Negative и компании резолвятся в #FFFFFF в текущем mode).
+1. Создан новый `Alert` SET с 5 типами (Info / Warning / Good / Tech / Negative).
+2. Добавлены 3 boolean: `Action` (default true), `Description` (default true), `Supporting` (default false).
+3. Иконка 32×32 fill — per type, `Icon/Primary` цвет или дефолтный fill из библиотеки.
+4. Action — наш Button Size=40 Outline, FILL width (40 выбран по балансу: 32 мелковат рядом с 32-иконкой, 48 переутяжелит).
+5. Padding/gap uniform `spacing/3` (12) — единый ритм.
+6. **Старый shadcn Alert** (5 variants Default/Destructive/Info/Success/Warning) → переименован в `.=[deprecated] Alert (shadcn)`, залочен. Существующие инстансы не сломаются.
+7. **Старый Notification** (2270:2558) → переименован в `.=[deprecated] Notification`, залочен. Направлен на новый Alert.
+8. **Tech-иконка** — временно `info_fill` (как было в Notification). Когда появится `cog_fill` или `settings_fill` 32px — подменим через Instance Swap.
+
+**Roadmap:**
+- Добавить 32px `gear_fill` / `settings_fill` в иконочную библиотеку → swap для Tech
+- Возможно `Type=Tech` переименовать в `System` или `Update` (более семантично)
+- Если потребуются compact-варианты (без иконки или с 24-иконкой) — добавить `Size = sm | md` axis

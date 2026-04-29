@@ -34,6 +34,7 @@
 | Dialog | [spec](./dialog-spec.md) | 📝 (✅ Figma) | — | L |
 | Tabs | [spec](./tabs-spec.md) | 📝 (✅ Figma) | — | M |
 | Alert | [spec](./alert-spec.md) | 📝 (✅ Figma) | — | S |
+| ~~Notification~~ | — | superseded → Alert | — | — |
 | Segment Control (Android M3) | — | — | — | копия M3 на странице 🟢 Segment Control |
 | ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) | superseded → Dialog | — | — |
 
