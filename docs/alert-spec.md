@@ -67,7 +67,7 @@ Alert (HORIZONTAL, FIXED 328, padding 12, gap 10, radius 12, align MIN top)
 ### Card
 
 ```
-Alert (VERTICAL, FIXED 328, padding 12, gap 12, radius 16, fill = tinted)
+Alert (VERTICAL, FIXED 328, padding 12, gap 16, radius 16, fill = tinted)
 ├── content-row (HORIZONTAL, FILL/HUG, gap 12, align MIN top)
 │   ├── icon (32×32, ic_*)
 │   └── inner (VERTICAL, FILL, gap 8, paddingTop=4 — оптическая компенсация text-блока)
@@ -105,7 +105,7 @@ Alert (VERTICAL, FIXED 328, padding 12, gap 12, radius 16, fill = tinted)
 |---|---|---|---|
 | Width | 328 | 328 | 328 |
 | Padding | `spacing/3` (12) | `spacing/3` (12) | `spacing/3` (12) |
-| Gap (root) | **10** (hardcoded — между иконкой и текстом) | **10** (hardcoded — между иконкой и текстом) | `spacing/3` (12) — content-row↔action |
+| Gap (root) | **10** (hardcoded — между иконкой и текстом) | **10** (hardcoded — между иконкой и текстом) | `spacing/4` (16) — content-row↔action |
 | Gap (content-row) | — | — | `spacing/3` (12) — icon↔inner |
 | Gap (inner) | — | `spacing/1` (4) — title↔desc | `spacing/2` (8) — title↔desc↔supp |
 | Optical paddingTop | `1` (icon-wrap) | `1` (inner) | `4` (inner) |
@@ -229,3 +229,7 @@ interface AlertProps {
 **Конвенция:** компенсацию задаём на меньшем элементе относительно большего соседа. В Compact иконка (16) меньше текста (Body 2 lineH 20) — двигаем иконку. В Standard/Card иконка (24/32) больше или равна тексту — двигаем текст-блок.
 
 Gap=10 — hardcoded, не на нашей шкале (4/8/12). Зафиксирован как design-decision (визуальный ритм после пиксельного ревью). Если в DS появится `spacing/2.5` — привяжем.
+
+**2026-04-30 (поздно вечер) — Card content↔action gap.**
+
+После ревью Card-варианта: description визуально тяготел к Action-кнопке, а не к title. Причина: line-height H4 Bold даёт «амортизацию» сверху title, а низ description идёт почти впритык к кнопке. Увеличил `Card.root.itemSpacing` с `spacing/3` (12) на **`spacing/4` (16)** — теперь контент (icon+title+desc) визуально един, кнопка отделена воздухом.
