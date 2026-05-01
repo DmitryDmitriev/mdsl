@@ -1,6 +1,8 @@
 # Цветовая палитра — спецификация и правила использования
 
-При работе с цветами в UI (код, превью) используйте только токены из этой спецификации. Семантические привязки зафиксированы в проде и не меняются.
+При работе с цветами в UI (код, превью, дизайн) используйте только семантические токены из этой спецификации. Семантические привязки фиксируются здесь и не меняются без обсуждения с командой.
+
+> **Текущий статус палитры:** идёт миграция с устаревшей структуры на новую. В файле палитры Figma часть токенов ещё имеет суффикс `New` (например, `Background New/Primary`). Целевые имена — без суффикса. Подробности — §4 «Миграция».
 
 ---
 
@@ -9,10 +11,12 @@
 ### 1.1 Alpha Black
 Основа: `#0A0A0A`. Шкала по светлоте: имя 5–90, проценты 95% (самый тёмный) — 10% (самый светлый).
 
+Шаги: `5, 10, 20, 30, 40, 50, 60, 80, 90`.
+
 ### 1.2 Alpha White
 Основа: `#FFFFFF`. Шкала по светлоте: имя 5–90, проценты 95% (самый светлый) — 10% (самый тёмный).
 
-Обязательные шаги для реализации: `5, 10, 20, 40, 50, 60, 80, 90`. Шаг **50 (50% opacity)** используется в `Background/on Photo (Dark)` — см. §2.1.
+Шаги: `5, 10, 20, 30, 40, 50, 60, 80, 90`.
 
 ### 1.3 White
 | Токен    | Hex     | Примечание   |
@@ -22,21 +26,24 @@
 | White 60 | #FFFFFF | 60% opacity  |
 | White 40 | #FFFFFF | 40% opacity  |
 
-### 1.4 Neutral (50–950) — reserved / not in use
-Серый градиент: 50 `#FAFAFA` → 100 `#F5F5F5` → 200 `#E5E5E5` → 300 `#D4D4D4` → 400 `#A3A3A3` → 500 `#737373` → 600 `#525252` → 700 `#404040` → 800 `#262626` → 900 `#171717` → 950 `#0A0A0A`.
-
-**Статус:** палитра зарезервирована, в семантических привязках не используется — все нейтральные роли забинджены на **Zinc** (§1.5). В реализацию (код, Figma library) не добавлять. Может быть задействована в будущем для мультибрендовости или отдельной технической серой шкалы.
-
-### 1.5 Zinc (50–950)
+### 1.4 Zinc (50–950)
 50 `#FAFAFA` → 100 `#F4F4F5` → 200 `#E4E4E7` → 300 `#D4D4D8` → 400 `#A1A1AA` → 500 `#71717A` → 600 `#52525B` → 700 `#3F3F46` → 800 `#27272A` → 900 `#18181B` → 950 `#09090B`.
 
-### 1.6 Gray (именованные ступени)
-Gray 0 `#FFFFFF`, 100 `#F2F3F7`, 200 `#E2E5EB`, 300 `#BBC1C7`, 400 `#969FA8`, 500 `#626C77`, 600 `#434A51`, 700 `#2C3135`, 750 `#24282C`, 800 `#1D2023`, 900 `#000000`.
+### 1.5 Neutral (50–950) — reserved
+Серый градиент: 50 `#FAFAFA` → 100 `#F5F5F5` → 200 `#E5E5E5` → 300 `#D4D4D4` → 400 `#A3A3A3` → 500 `#737373` → 600 `#525252` → 700 `#404040` → 800 `#262626` → 900 `#171717` → 950 `#0A0A0A`.
 
-### 1.7 Red, Blue, Green, Amber, Orange (50–950)
-Стандартные шкалы от светлого к тёмному; базовые референсы: Red 500 `#EF4444`, Blue 500 `#3B82F6`, Green 500 `#22C55E`, Amber 500 `#F59E0B`, Orange 500 `#F97316`. Остальные ступени — по принятым в дизайн-системе значениям.
+**Статус:** палитра зарезервирована, в семантике не используется. Все нейтральные роли — на Zinc (§1.4). В реализацию (Figma library) не добавлять.
 
-### 1.8 Brand (базовые значения)
+### 1.6 Цветные шкалы (50–950)
+- **Red:** 50 `#FEF2F2` → 400 `#F87171` → 500 `#EF4444` → 600 `#DC2626` → 800 `#991B1B`
+- **Blue:** 50 `#EFF6FF` → 100 `#DBEAFE` → 400 `#60A5FA` → 500 `#3B82F6` → 800 `#1E40AF`
+- **Green:** 50 `#F0FDF4` → 100 `#DCFCE7` → 400 `#4ADE80` → 500 `#22C55E` → 600 `#16A34A` → 800 `#166534`
+- **Amber:** 400 `#FBBF24` → 500 `#F59E0B`
+- **Orange:** 50 `#FFF7ED` → 500 `#F97316` → 800 `#9A3412`
+
+Полные шкалы — стандартные shade-ступени.
+
+### 1.7 Brand
 | Бренд    | Light    | Dark      |
 |----------|----------|-----------|
 | Bazaraki | #136938  | #77C98D   |
@@ -44,98 +51,233 @@ Gray 0 `#FFFFFF`, 100 `#F2F3F7`, 200 `#E2E5EB`, 300 `#BBC1C7`, 400 `#969FA8`, 50
 | PinTT    | #990099  | #FFAAF3   |
 | Unegui   | #E60803  | #F22418   |
 
-**Примечание:** бренд Bazaraki пока не использовать в UI.
+**Inverted-пары:** для каждого бренда дополнительная пара, где Primary и Secondary меняются местами.
 
-**Inverted:** для каждого бренда пара Primary/Secondary меняется местами (Secondary становится основным цветом, Primary — дополнительным).
+**Использование:** Brand-цвета **не применяются в системе кнопок и акцентов**. Используются только для брендовых элементов (логотипы, специальные брендовые баннеры, illustrations).
 
 ---
 
 ## 2. Семантические привязки
 
-В UI используются только семантические роли ниже. Прямые ссылки на базовые палитры — только при определении семантики, не в экранах/компонентах.
-
 ### 2.1 Background
-| Роль             | Light          | Dark          |
-|------------------|----------------|---------------|
-| Primary          | White/Main     | Zinc/950      |
-| Secondary        | Zinc/100       | Zinc/900      |
-| Tertiary         | Zinc/200       | Zinc/600      |
+Базовые поверхности: фоны экранов и контейнеров.
+
+| Роль             | Light          | Dark           |
+|------------------|----------------|----------------|
+| Primary          | White/Main     | Zinc/950       |
+| Secondary        | Zinc/100       | Zinc/900       |
+| Tertiary         | Zinc/200       | Zinc/600       |
+| Inverted Primary | Zinc/900       | Zinc/50        |
 | Overlay          | alpha Black/40 | alpha Black/30 |
 | on Photo         | alpha Black/40 | alpha White/50 |
-| Inverted Primary | Zinc/900       | Zinc/50       |
+| **Disabled**     | Zinc/100       | Zinc/800       |
 
-### 2.2 Surface
-Поверхности **над базовым уровнем**: шторки, модалки, выезжающие панели и т.п.
+**Disabled** — единственный фон для всех disabled-controls (кнопки, чипы, плашки и т.п.). См. §3.4.
 
-| Роль              | Light                | Dark                   |
-|-------------------|----------------------|------------------------|
+### 2.2 Background / Tinted
+Цветные подложки для атомарных color-coded элементов: chat bubble, badge, chip с tinted-фоном, soft-кнопки.
+
+| Роль     | Light     | Dark       |
+|----------|-----------|------------|
+| Good     | Green/50  | Green/800  |
+| Info     | Blue/50   | Blue/800   |
+| Warning  | Orange/50 | Orange/800 |
+| Negative | Red/50    | Red/800    |
+| Question | Zinc/100  | Zinc/800   |
+| Admin    | Green/100 | Green/800  |
+
+**Не применять** в структурных компонентах (Alert, Notification, Card, Dialog) для текста — там фон может быть tinted, но текст всегда `Text&Icon/Primary`/`Secondary`. См. §3.3.
+
+### 2.3 Surface
+Поверхности **над базовым уровнем**: модалки, шторки, выезжающие панели.
+
+| Роль              | Light                | Dark                  |
+|-------------------|----------------------|-----------------------|
 | Surface Primary   | Background Primary   | Background Secondary  |
 | Surface Secondary | Background Primary   | Background Tertiary   |
 
-### 2.3 Border
-| Состояние | Light          | Dark        |
-|-----------|----------------|-------------|
-| Default   | Zinc/200       | Zinc/500    |
-| Disabled  | Zinc/100       | Zinc/700    |
-| Active    | Accent/Primary | Zinc/200    |
+В Light обе роли = Background Primary: разделение от фона делается через border (или shadow в редких случаях).
+В Dark разделение делается через **осветление поверхности** относительно фона — тени не используются.
 
-### 2.4 Accent
-Используется в кнопках, ссылках, активных и выделенных состояниях.
+### 2.4 Border
+| Роль         | Light          | Dark        |
+|--------------|----------------|-------------|
+| Default      | Zinc/200       | Zinc/500    |
+| Disabled     | Zinc/100       | Zinc/700    |
+| Active       | Accent/Primary | Zinc/200    |
+| **Negative** | Accent/Negative| Red/400     |
+| **Positive** | Accent/Positive| Green/400   |
+| **Warning**  | Accent/Warning | Amber/400   |
+| **Focus**    | Accent/Link    | Blue/400    |
+
+**Active** — для статичных выделенных контейнеров (выбранная карточка/таб).
+**Focus** — отдельная роль для accessibility focus-ring; контрастный синий не сливается с Active.
+**Negative/Positive/Warning** — для инпутов и других компонентов в соответствующих состояниях.
+
+### 2.5 Accent
+Используется в кнопках, ссылках, активных и выделенных состояниях, а также как источник цвета для семантических ролей в Border, Text&Icon.
 
 | Роль      | Light     | Dark       |
 |-----------|-----------|------------|
+| Primary   | Zinc/900  | Zinc/200   |
+| Secondary | Zinc/200  | Zinc/800   |
 | Link      | Blue/500  | Blue/400   |
+| Negative  | Red/600   | Red/400    |
 | Positive  | Green/600 | Green/400  |
 | Warning   | Amber/400 | Amber/400  |
-| Negative  | Red/600   | Red/400    |
-| Secondary | Zinc/100  | Zinc/800   |
-| Primary   | Zinc/900  | Zinc/200   |
 
-### 2.5 Text & Icon
-| Роль          | Light         | Dark                            |
-|---------------|---------------|---------------------------------|
-| Primary       | Zinc/950      | Zinc/50                         |
-| Secondary     | Zinc/400      | Zinc/400                        |
-| Tertiary      | Zinc/300      | Zinc/500                        |
-| Inverted W-B  | White/Main    | Zinc/950                        |
-| Inverted B-W  | Zinc/950      | White/Main                      |
-| White applied | White/Main    | White/Main                      |
-| Black applied | Zinc/950      | Zinc/950                        |
-| Positive      | Accent/Positive | #74DF8B                       |
-| Negative      | Accent/Negative | #FFA080                       |
-| Warning       | Accent/Warning  | Accent/Warning                 |
-| Link          | Accent/Link     | #45B6FC                        |
+**Primary не брендовый.** В системе намеренно используется нейтральный Zinc/900 (почти-чёрный) вместо брендового цвета — для упрощения поддержки и кросс-бренд переиспользования.
 
-### 2.6 Decor / Bubble
-Бейджи, пузыри, декоративные подложки. Для каждой роли заданы пары **bg + text** в Light и Dark темах. Паттерн text: инверсия по шкале цветовой семьи (светлая подложка → тёмный текст того же цвета, тёмная → светлый).
+### 2.6 Button
+Группа фоновых цветов для filled/tinted-кнопок. Текст и бордер кнопок берутся из `Text&Icon` и `Border` напрямую.
 
-| Роль     | Light bg            | Light text | Dark bg    | Dark text |
-|----------|---------------------|------------|------------|-----------|
-| Good     | Green/50            | Green/800  | Green/800  | Green/50  |
-| Info     | Blue/50             | Blue/800   | Blue/800   | Blue/50   |
-| Warning  | Orange/50           | Orange/800 | Orange/800 | Orange/50 |
-| Negative | Red/50              | Red/800    | Red/800    | Red/50    |
-| Question | Zinc/100            | Zinc/800   | Zinc/800   | Zinc/100  |
-| Answer   | Blue/100            | Blue/800   | Blue/800   | Blue/100  |
-| Admin    | Green/100           | Green/800  | Green/800  | Green/100 |
-| Tech     | Background Tertiary | Zinc/600   | Zinc/600   | Zinc/200  |
+| Тип кнопки      | Background           |
+|-----------------|----------------------|
+| Primary         | Accent/Primary       |
+| Secondary       | Accent/Secondary     |
+| Negative        | Accent/Negative      |
+| Soft Negative   | Background/Tinted/Negative |
 
-### 2.7 Brand Color
-Семантика бренда: обычная и Inverted (см. п. 1.8). В UI использовать семантические имена (Brand/Somon, Brand/PinTT, Brand/Unegui). Бренд Bazaraki пока не использовать.
+**Disabled** для всех кнопок: Background → `Background/Disabled`, Text → `Text&Icon/Disabled`, Border (если есть) → `Border/Disabled`.
+
+**Outline и Ghost-кнопки** не имеют собственных Background-токенов — они используют:
+- **Outline:** Border `Border/Default` (Disabled `Border/Disabled`), Text `Text&Icon/Primary` (Disabled `Text&Icon/Disabled`)
+- **Ghost:** только Text `Text&Icon/Primary` (Disabled `Text&Icon/Disabled`)
+- **Ghost Negative:** Text `Accent/Negative` (Disabled `Text&Icon/Disabled`)
+
+**Текст в filled-кнопках** (Primary, Negative): `Text&Icon/Inverted W-B`.
+
+### 2.7 Text & Icon
+Объединённая группа для цветов текста и иконок. Семантически в подавляющем большинстве случаев иконки и текст в одной роли используют одинаковый цвет — поэтому одна группа.
+
+| Роль          | Light            | Dark            |
+|---------------|------------------|-----------------|
+| Primary       | Zinc/950         | Zinc/50         |
+| Secondary     | Zinc/500         | Zinc/400        |
+| Tertiary      | Zinc/300         | Zinc/500        |
+| **Disabled**  | Zinc/300         | Zinc/600        |
+| Inverted W-B  | White/Main       | Zinc/950        |
+| Inverted B-W  | Zinc/950         | White/Main      |
+| White applied | White/Main       | White/Main      |
+| Black applied | Zinc/950         | Zinc/950        |
+| Positive      | Accent/Positive  | Green/400       |
+| Negative      | Accent/Negative  | Red/400         |
+| Warning       | Accent/Warning   | Amber/400       |
+| Link          | Accent/Link      | Blue/400        |
+
+**Tertiary vs Disabled:**
+- **Tertiary** — *вспомогательный текст 3-го уровня* (placeholders, captions с минимальным весом). Активный, читаемый.
+- **Disabled** — *выключенный control*. Применяется на disabled-кнопках, инпутах, чипах вместе с `Background/Disabled`.
+
+Численно совпадают в Light (Zinc/300), но семантически — разные роли. В Dark разные значения (Zinc/500 vs Zinc/600).
+
+### 2.8 Text & Icon / on Tinted
+Парные цвета текста и иконок **только** для размещения на `Background/Tinted/*` поверхностях.
+
+| Роль     | Light       | Dark         |
+|----------|-------------|--------------|
+| Good     | Green/800   | Green/50     |
+| Info     | Blue/800    | Blue/50      |
+| Warning  | Orange/800  | Orange/50    |
+| Negative | Red/800     | Red/50       |
+| Question | Zinc/800    | Zinc/100     |
+| Admin    | Green/800   | Green/100    |
+
+**Применение:** только в **атомарных color-coded элементах** — Chat Bubble, Badge, Chip с tinted-фоном, Soft-кнопки. Текст в той же цветовой семье усиливает идентичность элемента.
+
+**НЕ применять** в структурных компонентах (Alert, Notification, Snackbar, Card, Dialog) — там фон может быть tinted, но текст всегда `Text&Icon/Primary` / `Secondary`. Иерархия задаётся весом и размером, не цветом текста.
+
+### 2.9 Brand Color
+Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`.
+
+**Bazaraki** — пока не использовать в основных UI-кейсах. Для positive-семантики используется `Accent/Positive` (Green/600), не брендовый зелёный.
 
 ---
 
 ## 3. Правила применения
 
-1. **В макетах и коде** используйте только семантические роли (Background, Surface, Border, Accent, Text & Icon, Decor/Bubble, Brand). Не подставляйте в экраны примитивные токены (Zinc/500, Red/400 и т.д.) кроме случаев, когда семантика явно ссылается на них.
-2. **Surface** — только для элементов выше базового уровня (модалки, шторки, оверлеи).
-3. **Accent** — для кнопок, ссылок, активных и выделенных состояний; выбирать роль по смыслу (Link, Positive, Negative, Primary, Secondary, Warning). Для каждой роли заданы значения Light и Dark темы.
-4. **Семантические привязки** заданы в проде и не изменяются; при добавлении новых компонентов следовать существующим таблицам.
-5. **Тёмная тема:** колонка «Цвет 2» / «Тёмная тема» в таблицах — значения для тёмной темы. Адекватность контраста и читаемости для тёмной темы подлежит отдельной проверке.
+### 3.1 Источники правды
+В макетах и коде используйте **только семантические роли** (Background, Surface, Border, Accent, Button, Text&Icon, Brand). Прямые ссылки на базовые палитры (Zinc/500, Red/400 и т.д.) — только при определении семантики, не в экранах/компонентах.
+
+### 3.2 Surface
+Только для элементов **выше базового уровня**: модалки, шторки, оверлеи, всплывающие панели. На основных экранах используется Background, не Surface.
+
+### 3.3 Tinted-поверхности
+`Background/Tinted/*` + `Text&Icon/on Tinted/*` — это **парный набор** для атомарных color-coded элементов:
+- ✅ Chat Bubble, Badge, Chip с tinted-фоном
+- ✅ Soft-кнопки (Soft Negative)
+
+В **структурных компонентах** (Alert, Notification, Card, Dialog) фон может быть `Background/Tinted/*`, но текст и заголовок — обычные `Text&Icon/Primary` / `Secondary`. Иерархия задаётся типографикой (вес, размер), не цветом.
+
+### 3.4 Disabled vs Tertiary
+- **Disabled** — для **выключенных** controls. Background = `Background/Disabled`, Text = `Text&Icon/Disabled`, Border = `Border/Disabled`. Все три применяются вместе.
+- **Tertiary** — для **вспомогательного текста** (placeholders, минорные подписи). Не использовать как замену Disabled.
+
+### 3.5 Брендовые цвета
+- В **системных** компонентах (кнопки, ссылки, акценты) брендовые цвета **не используются**.
+- Бренд-цвета — только для брендовых элементов: логотипы, фирменные баннеры, иллюстрации, лендинги.
+- Если возникает потребность в брендовом фоне у конкретной кнопки (например, WhatsApp-зелёный) — это локальный override через Swap Instance, не системный паттерн.
+
+### 3.6 Тёмная тема
+- Основной фон — `Background/Primary` (Zinc/950, почти-OLED).
+- Карточки и поверхности **выше базового уровня** разделяются за счёт **осветления** (Surface светлее Background), не теней.
+- Контраст и читаемость для каждой пары bg/text должны проверяться отдельно при появлении новых компонентов.
+
+### 3.7 Семантика, не визуал
+Имена ролей описывают **смысл**, не цвет:
+- `Accent/Primary` ≠ «чёрный». Это «основной CTA-цвет», который сейчас Zinc/900.
+- `Background/Tinted/Good` ≠ «зелёный». Это «положительная подложка».
+
+При смене реализации (например, ввод тёмного бренда) семантика остаётся, меняются только базовые значения.
 
 ---
 
-## 4. Ссылки
+## 4. Миграция (текущий этап)
+
+Палитра в процессе перехода со старой структуры на новую. В файле Figma `App Color Palette` параллельно существуют два набора:
+
+- **Старые токены** (без суффикса) — `Background/*`, `Text/*`, `Decor/Bubble/*`, `Accent/*` со старыми значениями. Используются в тех компонентах, которые ещё не мигрировали.
+- **Новые токены** (с суффиксом `New`) — `Background New/*`, `Text&Icon New/*`, `Border New/*`, `Accent New/*`, `Button New/*` со значениями из этой спецификации.
+
+### Карта миграции
+
+| Старое | Новое |
+|---|---|
+| `Background/Primary`/`/Secondary`/`/Tertiary`/`/Inverted Primary`/`/Overlay`/`/on Photo` | `Background New/*` (то же) |
+| (нет) | `Background New/Disabled` |
+| `Decor/Bubble/Good`/`/Info`/`/Warning`/`/Negative`/`/Question`/`/Admin` | `Background New/Tinted/*` (соответственно) |
+| `Decor/Bubble/Tech` | удалён |
+| `Decor/Bubble/Answer` | удалён |
+| `Surface/*` | `Surface New/*` |
+| `Border/Default`/`/Disabled`/`/Active` | `Border New/*` (то же) |
+| (нет) | `Border New/Negative`/`/Positive`/`/Warning`/`/Focus` |
+| `Accent/Active` (=Brand/Bazaraki) | удалить, заменять на `Accent New/Positive` (= Green/600) |
+| `Accent/Graphite` | `Accent New/Primary` |
+| `Accent/Secondary Btn` | `Accent New/Secondary` |
+| `Accent/Link`/`/Negative`/`/Positive`/`/Warning` | `Accent New/*` (то же) |
+| `Text/*` (вся группа) | `Text&Icon New/*` |
+| `Icon/*` (вся группа) | объединено в `Text&Icon New/*` |
+| `Decor/Bubble/Text/*` | `Text&Icon New/on Tinted/*` |
+| (нет) | `Text&Icon New/Disabled` |
+| (нет) | `Button New/Primary`/`/Secondary`/`/Negative`/`/Soft Negative` |
+
+### Финальный rename
+
+После того как все компоненты переедут на New-токены, в палитре будет выполнен финальный rename:
+1. Старые токены удаляются.
+2. У всех New-токенов снимается суффикс: `Background New/Primary` → `Background/Primary` и т.д.
+3. Опечатка `Tertiery` → `Tertiary` исправляется.
+
+**После финального rename имена в палитре будут совпадать с этой спецификацией.**
+
+### Что мигрировано к настоящему моменту
+
+- ✅ Alert (компонент-сет, 15 вариантов) — пилот.
+- ⏳ Остальные компоненты (Button, Snackbar, Badge, Notification, Chat Bubble, Input, Avatar, Tabs, ListItem, Top App Bar, и др.) — в очереди.
+
+---
+
+## 5. Ссылки
 
 - Отступы, радиусы, высоты: **docs/DESIGN-TOKENS.md**
 - Типографика: **docs/TYPOGRAPHY.md**
