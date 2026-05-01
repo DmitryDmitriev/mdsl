@@ -1,6 +1,6 @@
 # Документация для разработки
 
-Папка `docs/` — **спеки и фундамент** дизайн-системы для кода и Storybook. Материалы исключительно для **Figma** в репозиторий не выкладываются.
+Папка `docs/` — **спеки и фундамент** дизайн-системы. Источник правды для дизайна и разработки. Материалы исключительно для **Figma** в репозиторий не выкладываются.
 
 ## Фундамент
 
@@ -13,32 +13,32 @@
 
 ## Спеки и готовность компонентов
 
-Легенда: ✅ готов (код + Storybook) · 📝 спека · ⏳ нет спеки
+Легенда: 📝 спека готова · ⏳ нет спеки · ✅ Figma — компонент собран в Figma
 
-| Компонент | Спека | Код | Storybook | Сложность |
-|-----------|-------|-----|-----------|-----------|
-| Button | [spec](./button-spec.md) | ✅ | ✅ | M |
-| Avatar | [spec](./avatar-spec.md) | ✅ | ✅ | S |
-| Badge | [spec](./badge-spec.md) | ✅ | ✅ | S |
-| Sheets | [spec](./sheets-spec.md) | ✅ | ✅ | L |
-| Divider | [spec](./divider-spec.md) | 📝 | — | XS |
-| Switch | [spec](./switch-spec.md) | 📝 | — | S |
-| Checkbox | [spec](./checkbox-spec.md) | 📝 | — | S |
-| Radio | [spec](./radio-spec.md) | 📝 | — | S |
-| Chips | [spec](./chips-spec.md) | 📝 | — | M |
-| List Item | [spec](./list-item-spec.md) | 📝 | — | M |
-| FAB Bar | [spec](./fab-bar-spec.md) | 📝 | — | M |
-| Input v2 | [spec](./input-v2-spec.md) | 📝 | — | L |
-| Search v2 | [spec](./search-spec.md) | 📝 | — | L (зависит от Input) |
-| Top App Bar v2 | [spec](./top-app-bar-spec.md) | 📝 | — | L |
-| Dialog | [spec](./dialog-spec.md) | 📝 (✅ Figma) | — | L |
-| Tabs | [spec](./tabs-spec.md) | 📝 (✅ Figma) | — | M |
-| Alert | [spec](./alert-spec.md) | 📝 (✅ Figma) | — | S |
-| ~~Notification~~ | — | superseded → Alert | — | — |
-| Segment Control (Android M3) | — | — | — | копия M3 на странице 🟢 Segment Control |
-| ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) | superseded → Dialog | — | — |
+| Компонент | Спека | Figma | Сложность |
+|-----------|-------|-------|-----------|
+| Button | [spec](./button-spec.md) | ✅ | M |
+| Avatar | [spec](./avatar-spec.md) | ✅ | S |
+| Badge | [spec](./badge-spec.md) | ✅ | S |
+| Sheets | [spec](./sheets-spec.md) | ✅ | L |
+| Alert | [spec](./alert-spec.md) | ✅ | S |
+| Dialog | [spec](./dialog-spec.md) | ✅ | L |
+| Tabs | [spec](./tabs-spec.md) | ✅ | M |
+| Divider | [spec](./divider-spec.md) | — | XS |
+| Switch | [spec](./switch-spec.md) | — | S |
+| Checkbox | [spec](./checkbox-spec.md) | — | S |
+| Radio | [spec](./radio-spec.md) | — | S |
+| Chips | [spec](./chips-spec.md) | — | M |
+| List Item | [spec](./list-item-spec.md) | — | M |
+| FAB Bar | [spec](./fab-bar-spec.md) | — | M |
+| Input v2 | [spec](./input-v2-spec.md) | — | L |
+| Search v2 | [spec](./search-spec.md) | — | L (зависит от Input) |
+| Top App Bar v2 | [spec](./top-app-bar-spec.md) | — | L |
+| ~~Notification~~ | — superseded → Alert | — | — |
+| Segment Control (Android M3) | — | копия M3 на странице 🟢 Segment Control | — |
+| ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) — superseded → Dialog | — | — |
 
-**Итого:** 4 / 15 готово в коде (27%). В Figma готовы как ComponentSets: Dialog `6632:39`, Tabs `6793:696` на странице 🟢 Tabs (с building block `.=Tab Item` `6760:13377`), Android Segment Control `888:7950` на странице 🟢 Segment Control. iOS Apple-native Segment Control упразднён — заменён на Tabs (Radix-стиль). `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).
+В Figma готовы как ComponentSets: Dialog `6632:39`, Tabs `6793:696` на странице 🟢 Tabs (с building block `.=Tab Item` `6760:13377`), Android Segment Control `888:7950` на странице 🟢 Segment Control. iOS Apple-native Segment Control упразднён — заменён на Tabs (Radix-стиль). `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).
 
 ## Очередь реализации (по скорости)
 
