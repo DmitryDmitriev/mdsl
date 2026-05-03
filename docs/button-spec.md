@@ -122,11 +122,11 @@
 
 Применяются для деструктивных действий: «Удалить», «Снять с публикации», «Заблокировать».
 
-| Вариант | Fill | Border | Text / Icon | Disabled |
-|---------|------|--------|-------------|----------|
-| **Negative** | `Button/Negative` (= Accent/Negative, Red/600 / Red/400) | — | `Text&Icon/Inverted W-B` | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
-| **Soft Negative** | `Button/Soft Negative` (= Background/Tinted/Negative, Red/50 / Red/800) | — | `Text&Icon/onTinted/negative` (Red/800 / Red/50) | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
-| **Ghost Negative** | прозрачный | — | `Accent/Negative` (Red/600 / Red/400) | BG **остаётся прозрачным**; Text `Text&Icon/Disabled` |
+| Вариант | Fill | Border | Text / Icon |
+|---------|------|--------|-------------|
+| **Negative** | `Button/Negative` (= Accent/Negative, Red/600 / Red/400) | — | `Text&Icon/Inverted W-B` |
+| **Soft Negative** | `Button/Soft Negative` (= Background/Tinted/Negative, Red/50 / Red/800) | — | `Text&Icon/onTinted/negative` (Red/800 / Red/50) |
+| **Ghost Negative** | прозрачный | — | `Accent/Negative` (Red/600 / Red/400) |
 
 **Когда какой вариант:**
 - **Negative** (filled) — редкие сильные деструктивные действия: «Удалить аккаунт», «Заблокировать пользователя». Громкий визуал.
@@ -138,6 +138,8 @@
 **Размеры, отступы, типографика, обводка** — те же, что у нейтральных вариантов соответствующего типа: Negative ≡ Primary, Soft Negative ≡ Secondary, Ghost Negative ≡ Ghost.
 
 Иконка в кнопке — тот же цвет, что и текст.
+
+**Disabled-state у Negative-вариантов отсутствует** как отдельная вариация — визуально и семантически выключенная destructive-кнопка идентична выключенной нейтральной (серый фон, серый текст). Для disabled destructive-действия используется `Type=Primary/Secondary/Ghost State=Disabled` (визуальный результат — нейтральный disabled). Это сознательное упрощение: «выключенный» статус не несёт семантики действия.
 
 ---
 
