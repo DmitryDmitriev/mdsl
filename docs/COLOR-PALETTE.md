@@ -84,9 +84,13 @@
 | Warning  | Orange/50 | Orange/800 |
 | Negative | Red/50    | Red/800    |
 | Question | Zinc/100  | Zinc/800   |
-| Admin    | Green/100 | Green/800  |
+| Admin    | Green/100 | Green/700  |
+
+**Admin vs Good в Dark:** значения BG специально разнесены по шкале (Good → Green/800, Admin → Green/700) — иначе в Dark они визуально схлопывались бы в один зелёный.
 
 **Не применять** в структурных компонентах (Alert, Notification, Card, Dialog) для текста — там фон может быть tinted, но текст всегда `Text&Icon/Primary`/`Secondary`. См. §3.3.
+
+**Question / Disabled / Secondary** — три семантические роли (`Background/Tinted/Question`, `Background/Disabled`, `Background/Secondary`) сознательно разделяют значение `Zinc/100` (Light) / `Zinc/800` (Dark). Все три претендуют на «самый светлый нейтральный тинт» — на shade-шкале для них нет другой адекватной ступени. В реальных компонентах они не пересекаются: Question — в чат-бабблах, Disabled — в выключенных контролах, Secondary — в общих фонах. Если возникнет сценарий с визуальным конфликтом — пересматриваем точечно.
 
 ### 2.3 Surface
 Поверхности **над базовым уровнем**: модалки, шторки, выезжающие панели.
@@ -131,21 +135,35 @@
 ### 2.6 Button
 Группа фоновых цветов для filled/tinted-кнопок. Текст и бордер кнопок берутся из `Text&Icon` и `Border` напрямую.
 
-| Тип кнопки      | Background           |
-|-----------------|----------------------|
-| Primary         | Accent/Primary       |
-| Secondary       | Accent/Secondary     |
-| Negative        | Accent/Negative      |
-| Soft Negative   | Background/Tinted/Negative |
+| Тип кнопки      | Background                 | Text/Icon                       |
+|-----------------|----------------------------|---------------------------------|
+| Primary         | Accent/Primary             | Text&Icon/Inverted W-B          |
+| Secondary       | Accent/Secondary           | Text&Icon/Primary               |
+| Negative        | Accent/Negative            | Text&Icon/Inverted W-B          |
+| Soft Negative   | Background/Tinted/Negative | Text&Icon/onTinted/negative     |
 
-**Disabled** для всех кнопок: Background → `Background/Disabled`, Text → `Text&Icon/Disabled`, Border (если есть) → `Border/Disabled`.
+**Outline и Ghost** не имеют собственных Background-токенов — фон прозрачный:
 
-**Outline и Ghost-кнопки** не имеют собственных Background-токенов — они используют:
-- **Outline:** Border `Border/Default` (Disabled `Border/Disabled`), Text `Text&Icon/Primary` (Disabled `Text&Icon/Disabled`)
-- **Ghost:** только Text `Text&Icon/Primary` (Disabled `Text&Icon/Disabled`)
-- **Ghost Negative:** Text `Accent/Negative` (Disabled `Text&Icon/Disabled`)
+| Тип кнопки      | Background  | Border         | Text/Icon         |
+|-----------------|-------------|----------------|-------------------|
+| Outline         | прозрачный  | Border/Default | Text&Icon/Primary |
+| Ghost           | прозрачный  | —              | Text&Icon/Primary |
+| Ghost Negative  | прозрачный  | —              | Accent/Negative   |
 
-**Текст в filled-кнопках** (Primary, Negative): `Text&Icon/Inverted W-B`.
+**Disabled state — два разных правила в зависимости от типа кнопки:**
+
+**Filled-кнопки (Primary, Secondary, Negative, Soft Negative):**
+- BG → `Background/Disabled`
+- Text/Icon → `Text&Icon/Disabled`
+
+**Outline в Disabled:**
+- BG **остаётся прозрачным** (не заливать `Background/Disabled` — это ломает семантику Outline'а)
+- Border → `Border/Disabled`
+- Text/Icon → `Text&Icon/Disabled`
+
+**Ghost / Ghost Negative в Disabled:**
+- BG **остаётся прозрачным**
+- Text/Icon → `Text&Icon/Disabled`
 
 ### 2.7 Text & Icon
 Объединённая группа для цветов текста и иконок. Семантически в подавляющем большинстве случаев иконки и текст в одной роли используют одинаковый цвет — поэтому одна группа.
@@ -188,9 +206,16 @@
 **НЕ применять** в структурных компонентах (Alert, Notification, Snackbar, Card, Dialog) — там фон может быть tinted, но текст всегда `Text&Icon/Primary` / `Secondary`. Иерархия задаётся весом и размером, не цветом текста.
 
 ### 2.9 Brand Color
-Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`.
+Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`.
 
-**Bazaraki** — пока не использовать в основных UI-кейсах. Для positive-семантики используется `Accent/Positive` (Green/600), не брендовый зелёный.
+**Структура каждой brand-роли:**
+- `Brand/<name>` — основной brand-цвет, Light/Dark значения по таблице §1.7.
+- `Brand/<name> Inverted` — пара со swap'нутыми Light↔Dark значениями. Использовать когда нужен контрастный brand-цвет на цветной плашке (например, лого на брендовом фоне).
+
+**Где допустимы brand-цвета:**
+- ✅ Логотипы, splash-экраны, фирменные баннеры, иллюстрации.
+- ✅ Брендированные элементы конкретного флейвора (например, `Brand/Bazaraki` в bz-сборке для splash и логотипа).
+- ❌ В системных компонентах (кнопки, ссылки, accent-семантика). Для positive-фидбека — `Accent/Positive` (Green/600), не брендовый зелёный.
 
 ---
 
@@ -214,8 +239,8 @@
 - **Tertiary** — для **вспомогательного текста** (placeholders, минорные подписи). Не использовать как замену Disabled.
 
 ### 3.5 Брендовые цвета
-- В **системных** компонентах (кнопки, ссылки, акценты) брендовые цвета **не используются**.
-- Бренд-цвета — только для брендовых элементов: логотипы, фирменные баннеры, иллюстрации, лендинги.
+- В **системных** компонентах (кнопки, ссылки, accent-семантика) брендовые цвета **не используются** — для positive/negative/warning и accent'ов берутся `Accent/*`.
+- Бренд-цвета **легитимны** в брендовых элементах: логотипы, splash-экраны, фирменные баннеры, иллюстрации, лендинги. Для конкретного флейвора (bz/somon/pinTT/unegui) — соответствующий `Brand/*` остаётся доступным, ничем не «закрыт».
 - Если возникает потребность в брендовом фоне у конкретной кнопки (например, WhatsApp-зелёный) — это локальный override через Swap Instance, не системный паттерн.
 
 ### 3.6 Тёмная тема
