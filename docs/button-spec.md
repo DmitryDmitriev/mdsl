@@ -91,7 +91,7 @@
 - **Цвет** в состоянии Default: **Border/Default** (семантика `semantic.border.default` в коде).
 - **Цвет** в состоянии Disabled: **Border/Disabled** (`semantic.border.disabled`). Толщина **та же**, что и в Default для данного размера.
 
-Варианты **Primary**, **Ghost** и заливка **Secondary** не используют эту шкалу для внешнего контура (см. таблицу цветов ниже); **Secondary** сохраняет обводку **1 px** (`border/default`) по периметру заливки.
+Варианты **Primary**, **Secondary**, **Ghost** не имеют внешней обводки. Шкала «Обводка» применяется только к **Outline** (и **Outline Negative**, см. § Negative-варианты).
 
 ### Типографика
 
@@ -107,14 +107,35 @@
 
 ### Цвета (Semantic)
 
-По **docs/COLOR-PALETTE.md**: кнопки используют **Accent** и **Text & Icon**.
+По **docs/COLOR-PALETTE.md**: кнопки используют **Button**, **Accent**, **Text & Icon**, **Border**.
 
-| Вариант кнопки | Fill | Border | Text / Icon | Disabled |
-|----------------|------|--------|-------------|----------|
-| Primary | Accent/Primary (Zinc/900 light, Zinc/200 dark) | — | Text & Icon / Inverted W-B (White на тёмном) | fill приглушённый, Text & Icon / Tertiary |
-| Secondary | Accent/Secondary (Zinc/100 light, Zinc/800 dark) | — | Accent/Primary или Text & Icon / Primary | Text & Icon / Tertiary |
-| Outline | прозрачный | Border/Default (цвет), толщина по размеру (см. § «Обводка») | Accent/Primary или Text & Icon / Primary | Border/Disabled (та же толщина), Text & Icon / Tertiary |
-| Ghost | прозрачный | — | Accent/Primary или Text & Icon / Primary | Text & Icon / Tertiary |
+#### Нейтральные варианты
+
+| Вариант | Fill | Border | Text / Icon | Disabled |
+|---------|------|--------|-------------|----------|
+| Primary | `Button/Primary` (= Accent/Primary) | — | `Text&Icon/Inverted W-B` | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
+| Secondary | `Button/Secondary` (= Accent/Secondary) | — | `Text&Icon/Primary` | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
+| Outline | прозрачный | `Border/Default`, толщина по размеру (см. § «Обводка») | `Text&Icon/Primary` | BG **остаётся прозрачным**; Border `Border/Disabled` (та же толщина); Text `Text&Icon/Disabled` |
+| Ghost | прозрачный | — | `Text&Icon/Primary` | BG **остаётся прозрачным**; Text `Text&Icon/Disabled` |
+
+#### Negative-варианты (destructive actions)
+
+Применяются для деструктивных действий: «Удалить», «Снять с публикации», «Заблокировать».
+
+| Вариант | Fill | Border | Text / Icon | Disabled |
+|---------|------|--------|-------------|----------|
+| **Negative** | `Button/Negative` (= Accent/Negative, Red/600 / Red/400) | — | `Text&Icon/Inverted W-B` | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
+| **Soft Negative** | `Button/Soft Negative` (= Background/Tinted/Negative, Red/50 / Red/800) | — | `Text&Icon/onTinted/negative` (Red/800 / Red/50) | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
+| **Ghost Negative** | прозрачный | — | `Accent/Negative` (Red/600 / Red/400) | BG **остаётся прозрачным**; Text `Text&Icon/Disabled` |
+
+**Когда какой вариант:**
+- **Negative** (filled) — редкие сильные деструктивные действия: «Удалить аккаунт», «Заблокировать пользователя». Громкий визуал.
+- **Soft Negative** — частые деструктивные: «Удалить объявление», «Снять с публикации». Мягче, не пугает.
+- **Ghost Negative** — inline-действия внутри других контейнеров (в строке списка, в меню), без визуального утяжеления.
+
+**Outline-Negative в системе не делаем** — на мобиле тонкая красная обводка читается хуже, чем tinted-фон Soft Negative. Если нужен «не filled, но заметный» — используем Soft Negative.
+
+**Размеры, отступы, типографика, обводка** — те же, что у нейтральных вариантов соответствующего типа: Negative ≡ Primary, Soft Negative ≡ Secondary, Ghost Negative ≡ Ghost.
 
 Иконка в кнопке — тот же цвет, что и текст.
 
@@ -243,10 +264,12 @@
 
 Для каждого размера (lg, md, sm, xs):
 
-1. **Text:** Primary, Secondary, Outline, Ghost (Default + Disabled); опция «только текст» или «текст + иконка».
-2. **Icon:** Icon Primary, Secondary, Outline, Ghost (Default + Disabled).
+1. **Text — нейтральные:** Primary, Secondary, Outline, Ghost (Default + Disabled); опция «только текст» или «текст + иконка».
+2. **Text — destructive:** Negative, Soft Negative, Ghost Negative (Default + Disabled); опция «только текст» или «текст + иконка».
+3. **Icon — нейтральные:** Icon Primary, Secondary, Outline, Ghost (Default + Disabled).
+4. **Icon — destructive:** Icon Negative, Soft Negative, Ghost Negative (Default + Disabled).
 
-Иконки для демо: lg/md — Phone; sm — Primary/Secondary: Phone, Outline/Ghost: Menu; xs — Menu.
+Иконки для демо: lg/md — Phone; sm — Primary/Secondary: Phone, Outline/Ghost: Menu; xs — Menu. Для Negative-вариантов — Trash / Delete.
 
 ---
 
