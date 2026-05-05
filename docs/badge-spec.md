@@ -2,7 +2,7 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **2xs / xs / sm / md / lg**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **question**, **answer**, **admin** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm** — caption-md (12/16); **md / lg** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm** — 16 px; **md / lg** — 24 px.
+Размеры **2xs / xs / sm / md / lg**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm** — caption-md (12/16); **md / lg** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm** — 16 px; **md / lg** — 24 px.
 
 Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
@@ -10,24 +10,27 @@
 
 ## 1. Семантика (варианты)
 
-Цвета бейджа задаются через **semantic.decor** (docs/COLOR-PALETTE.md, раздел Decor/Bubble). В UI не используются примитивные палитры.
+Цвета бейджа — атомарного color-coded элемента — задаются парным набором `Background/Tinted/*` (фон) + `Text&Icon/on Tinted/*` (текст и иконка), согласно `COLOR-PALETTE.md` §3.3.
 
-| Вариант   | Роль       | Фон (decor)   | Текст (decor) | Использование              |
-|-----------|------------|---------------|----------------|----------------------------|
-| good      | Good       | Green/50      | Green/800      | Успех, подтверждение       |
-| info      | Info       | Blue/50       | Blue/800       | Информация, подсказка       |
-| warning   | Warning    | Orange/50     | Orange/800     | Внимание, предупреждение   |
-| negative  | Negative   | Red/50        | Red/800        | Ошибка, отклонено          |
-| question  | Question   | Zinc/100      | Zinc/800       | Вопрос, нейтральный статус |
-| answer    | Answer     | Blue/100      | Blue/800       | Ответ, решение             |
-| admin     | Admin      | Green/100     | Green/800      | Админ, модерация           |
+| Вариант   | Фон                          | Текст / иконка                  | Использование             |
+|-----------|------------------------------|----------------------------------|----------------------------|
+| good      | `Background/Tinted/Good`     | `Text&Icon/on Tinted/Good`      | Успех, подтверждение       |
+| info      | `Background/Tinted/Info`     | `Text&Icon/on Tinted/Info`      | Информация, подсказка      |
+| warning   | `Background/Tinted/Warning`  | `Text&Icon/on Tinted/Warning`   | Внимание, предупреждение   |
+| negative  | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative`  | Ошибка, отклонено          |
+
+**Нейтральный/default бейдж** (Beta, New, Prerelease — без семантической окраски) — открытый вопрос. Зависит от решения по нейтральному tinted-токену (Zinc-shade сейчас занят `Background/Tinted/Question`, который legacy-используется в чат-бабблах). Решение принимается отдельно при пересмотре чат-токенов; пока — не использовать.
+
+**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Эти shade'ы (Zinc/100, Blue/100, Green/100) были заведены под чат-бабблы и не имеют самостоятельной роли в бейджах. После решения по чат-токенам — могут быть переименованы или удалены вовсе.
 
 ---
 
 ## 2. Токены
 
 ### Цвет
-- **Фон и текст**: только `semantic.decor[variant].bg` и `semantic.decor[variant].text`.
+- **Фон**: `Background/Tinted/{variant}`.
+- **Текст и иконка**: `Text&Icon/on Tinted/{variant}` (тёмный shade — обеспечивает 6:1+ контраст на пастельной плашке).
+- **Не использовать** `Accent/{variant}` (Green/600 и т.п.) для текста на tinted-фоне — контраст на грани WCAG AA, а семантика `Accent/*` принадлежит активным интерактивным элементам, не статичным бейджам.
 
 ### Отступы (spacing)
 - **2xs**: padding `spacing/1` (4 px) по всем сторонам.
@@ -102,7 +105,7 @@
   - **2xs / xs**: 12×12 px
   - **sm**: 16×16 px
   - **md / lg**: 24×24 px
-- **Цвет иконки**: наследует цвет текста бейджа (`semantic.decor[variant].text`).
+- **Цвет иконки**: наследует цвет текста бейджа (`Text&Icon/on Tinted/{variant}`).
 - **Порядок в разметке**: [иконка] → [gap] → [текст].
 
 ### 5.3 Текст + каунтер
@@ -135,10 +138,12 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (40 шт.)
-- **Type**: Good, Warning, Error, Default (маппится на good, warning, negative, question)
+### Варианты
+- **Type**: Good, Info, Warning, Negative
 - **Size**: 2xs, xs, sm, md, lg
 - **Shape**: Pill, Rounded
+
+> **TODO миграция Figma:** текущий компонент содержит `Default` (на Question shade) — будет удалён после решения по нейтральному tinted-токену. Type=Good в Figma исторически мог быть привязан к `Background/Tinted/Admin` — перепривязать на `Background/Tinted/Good` (Green/50). Текст бейджа в Figma — переключить с `Accent/{X}` на `Text&Icon/on Tinted/{X}`. Добавить недостающий Type=Info.
 
 ### Boolean properties
 - **Icon** (default `true`) — показать левую иконку
