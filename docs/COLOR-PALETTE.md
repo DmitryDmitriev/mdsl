@@ -2,7 +2,11 @@
 
 При работе с цветами в UI (код, превью, дизайн) используйте только семантические токены из этой спецификации. Семантические привязки фиксируются здесь и не меняются без обсуждения с командой.
 
-> **Текущий статус палитры:** идёт миграция с устаревшей структуры на новую. В файле палитры Figma часть токенов ещё имеет суффикс `New` (например, `Background New/Primary`). Целевые имена — без суффикса. Подробности — §4 «Миграция».
+> **Текущий статус палитры (с 2026-05-05):** идёт миграция компонентов на новую структуру. В файле палитры Figma две параллельные группы:
+> - **Канонические имена без суффикса** (`Background/Primary`, `Text&Icon/Primary`, `Decor/Bubble Old/...`-нет) — это **новые** токены из этой спецификации. Используем их во всех новых и мигрируемых компонентах.
+> - **С суффиксом `Old`** (`Background Old/Primary`, `Text Old/Primary`, `Decor/Bubble Old/Info`...) — устаревшие токены, остаются ради совместимости с немигрированными компонентами. Будут удалены после завершения Round 6 миграции (см. §4).
+>
+> Если в Figma виден токен с `Old` — компонент ещё не мигрирован. Если без префикса — уже на канонической палитре.
 
 ---
 
@@ -259,46 +263,46 @@
 
 ## 4. Миграция (текущий этап)
 
-Палитра в процессе перехода со старой структуры на новую. В файле Figma `App Color Palette` параллельно существуют два набора:
+В файле Figma `App Color Palette` параллельно существуют два набора:
 
-- **Старые токены** (без суффикса) — `Background/*`, `Text/*`, `Decor/Bubble/*`, `Accent/*` со старыми значениями. Используются в тех компонентах, которые ещё не мигрировали.
-- **Новые токены** (с суффиксом `New`) — `Background New/*`, `Text&Icon New/*`, `Border New/*`, `Accent New/*`, `Button New/*` со значениями из этой спецификации.
+- **Канонические токены без суффикса** — `Background/*`, `Text&Icon/*`, `Border/*`, `Accent/*`, `Button/*`, `Surface/*` — со значениями из этой спецификации. Используем во всех новых и мигрируемых компонентах.
+- **`Old`-токены** — `Background Old/*`, `Text Old/*`, `Icon Old/*`, `Border Old/*`, `Accent Old/*`, `Surface Old/*`, `Decor/Bubble Old/*` — устаревшие. Привязаны к немигрированным компонентам, удалятся после завершения Round 6.
 
-### Карта миграции
+**2026-05-05** — выполнен rename в палитре: `* New/*` → `*/*` (canonical), старые группы получили суффикс `Old`. IDs переменных не менялись, биндинги в компонентах живы.
 
-| Старое | Новое |
+### Карта миграции (для рефакторинга компонентов)
+
+| Old | Canonical |
 |---|---|
-| `Background/Primary`/`/Secondary`/`/Tertiary`/`/Inverted Primary`/`/Overlay`/`/on Photo` | `Background New/*` (то же) |
-| (нет) | `Background New/Disabled` |
-| `Decor/Bubble/Good`/`/Info`/`/Warning`/`/Negative`/`/Question`/`/Admin` | `Background New/Tinted/*` (соответственно) |
-| `Decor/Bubble/Tech` | удалён |
-| `Decor/Bubble/Answer` | удалён |
-| `Surface/*` | `Surface New/*` |
-| `Border/Default`/`/Disabled`/`/Active` | `Border New/*` (то же) |
-| (нет) | `Border New/Negative`/`/Positive`/`/Warning`/`/Focus` |
-| `Accent/Active` (=Brand/Bazaraki) | удалить, заменять на `Accent New/Positive` (= Green/600) |
-| `Accent/Graphite` | `Accent New/Primary` |
-| `Accent/Secondary Btn` | `Accent New/Secondary` |
-| `Accent/Link`/`/Negative`/`/Positive`/`/Warning` | `Accent New/*` (то же) |
-| `Text/*` (вся группа) | `Text&Icon New/*` |
-| `Icon/*` (вся группа) | объединено в `Text&Icon New/*` |
-| `Decor/Bubble/Text/*` | `Text&Icon New/on Tinted/*` |
-| (нет) | `Text&Icon New/Disabled` |
-| (нет) | `Button New/Primary`/`/Secondary`/`/Negative`/`/Soft Negative` |
+| `Background Old/Primary`/`/Secondary`/`/Tertiary`/`/Inverted Primary`/`/Overlay`/`/on Photo` | `Background/*` (то же) |
+| (нет) | `Background/Disabled` |
+| `Decor/Bubble Old/Good`/`/Info`/`/Warning`/`/Negative`/`/Question`/`/Admin` | `Background/Tinted/*` (соответственно) |
+| `Decor/Bubble Old/Tech` | удалён |
+| `Decor/Bubble Old/Answer` | удалён |
+| `Surface Old/*` | `Surface/*` |
+| `Border Old/Default`/`/Disabled`/`/Active` | `Border/*` (то же) |
+| (нет) | `Border/Negative`/`/Positive`/`/Warning`/`/Focus` |
+| `Accent Old/Active` (=Brand/Bazaraki) | удалить, заменять на `Accent/Positive` (= Green/600) |
+| `Accent Old/Graphite` | `Accent/Primary` |
+| `Accent Old/Secondary Btn` | `Accent/Secondary` |
+| `Accent Old/Link`/`/Negative`/`/Positive`/`/Warning` | `Accent/*` (то же) |
+| `Text Old/*` (вся группа) | `Text&Icon/*` |
+| `Icon Old/*` (вся группа) | объединено в `Text&Icon/*` |
+| `Decor/Bubble Old/Text/*` | `Text&Icon/on Tinted/*` |
+| (нет) | `Text&Icon/Disabled` |
+| (нет) | `Button/Primary`/`/Secondary`/`/Negative`/`/Soft Negative` |
 
-### Финальный rename
+### Что осталось до завершения миграции
 
-После того как все компоненты переедут на New-токены, в палитре будет выполнен финальный rename:
-1. Старые токены удаляются.
-2. У всех New-токенов снимается суффикс: `Background New/Primary` → `Background/Primary` и т.д.
-3. Опечатка `Tertiery` → `Tertiary` исправляется.
-
-**После финального rename имена в палитре будут совпадать с этой спецификацией.**
+1. Перевести остальные компоненты на canonical-токены (Round 6 — список ниже).
+2. После полной миграции — удалить группы `* Old/*` из палитры.
+3. Опечатку `Tertiery` → `Tertiary` исправить тогда же.
 
 ### Что мигрировано к настоящему моменту
 
-- ✅ Alert (компонент-сет, 15 вариантов) — пилот.
-- ⏳ Остальные компоненты (Button, Snackbar, Badge, Notification, Chat Bubble, Input, Avatar, Tabs, ListItem, Top App Bar, и др.) — в очереди.
+- ✅ Alert (`6947:14128`, 15 вариантов) — пилот.
+- ✅ Badge (`4523:14`, 40 вариантов) — Default удалён, Info добавлен, Error→Negative, парный набор Tinted+on Tinted.
+- ⏳ В очереди: Snackbar, Notification, Chat Bubble, Input, Avatar, Tabs, ListItem, Top App Bar, Button.
 
 ---
 
