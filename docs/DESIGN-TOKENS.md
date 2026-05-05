@@ -177,12 +177,13 @@
 
 | Token | px | Использование |
 |---|---|---|
-| illustration/sm | 64 | Action chips, info-блоки |
-| illustration/md | 80 | Empty state |
+| illustration/sm | 64 | Action chips, info-блоки, **крупный профильный аватар (XXXL)** |
+| illustration/md | 80 | Empty state, **крупный профильный аватар (XXXXL)** |
 | illustration/lg | 120 | Большие декоративные illustrations |
 
 - В спецификации компонента, если используется illustration, указывать токен размера (`illustration/sm` и т.д.) и source-asset.
 - **Промежуточные размеры (44–56 px)** в системе **не используются**. Если возникает потребность — это либо `size/2xl` для декоративного элемента (56 px), либо иконка 32 px внутри touch-target большего размера (см. `control-height` / `size`).
+- **Крупные профильные аватары** (XXXL=64, XXXXL=80) семантически принадлежат к этой шкале как identity-illustration (profile-header, settings, чат-инфо). Не интерактивны, играют роль visual anchor, не control. Не путать со шкалой `size/*` для control-height.
 
 ---
 

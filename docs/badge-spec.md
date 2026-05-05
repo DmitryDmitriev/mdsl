@@ -19,9 +19,9 @@
 | warning   | `Background/Tinted/Warning`  | `Text&Icon/on Tinted/Warning`   | Внимание, предупреждение   |
 | negative  | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative`  | Ошибка, отклонено          |
 
-**Нейтральный/default бейдж** (Beta, New, Prerelease — без семантической окраски) — открытый вопрос. Зависит от решения по нейтральному tinted-токену (Zinc-shade сейчас занят `Background/Tinted/Question`, который legacy-используется в чат-бабблах). Решение принимается отдельно при пересмотре чат-токенов; пока — не использовать.
+**Нейтральный/default бейдж** (Beta, New, Prerelease — без семантической окраски) в Badge не предусмотрен. Если кейс появится — рассмотрим отдельно (новые токены вводить не планируем; вероятный путь — `Surface/Secondary` + `Text&Icon/Secondary`, без tinted-плашки).
 
-**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Эти shade'ы (Zinc/100, Blue/100, Green/100) были заведены под чат-бабблы и не имеют самостоятельной роли в бейджах. После решения по чат-токенам — могут быть переименованы или удалены вовсе.
+**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Существующие токены `Background/Tinted/Question` и `Background/Tinted/Admin` остаются в палитре — они зарезервированы за **чат-бабблами**. `Answer` как отдельный shade в палитре не реализован и не нужен (для answer-бабла в чате используется существующий tinted-токен — выбор делается в чат-спеке).
 
 ---
 
@@ -138,12 +138,12 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты
+### Варианты (40 шт.)
 - **Type**: Good, Info, Warning, Negative
 - **Size**: 2xs, xs, sm, md, lg
 - **Shape**: Pill, Rounded
 
-> **TODO миграция Figma:** текущий компонент содержит `Default` (на Question shade) — будет удалён после решения по нейтральному tinted-токену. Type=Good в Figma исторически мог быть привязан к `Background/Tinted/Admin` — перепривязать на `Background/Tinted/Good` (Green/50). Текст бейджа в Figma — переключить с `Accent/{X}` на `Text&Icon/on Tinted/{X}`. Добавить недостающий Type=Info.
+Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — `Text&Icon/on Tinted/{Type}`. Покрытие токенами 100% (color/text/spacing/radius).
 
 ### Boolean properties
 - **Icon** (default `true`) — показать левую иконку
@@ -182,9 +182,22 @@
 
 | Категория | Покрытие |
 |---|---|
-| Color | 100% |
+| Color | 100% (на New-токенах после миграции 2026-05-05) |
 | Token | 60% |
 | Type | 100% |
 | **Overall** | **73%** |
 
 Что осталось: text gap ×40, counter paddingLeft ×40 — внутренние spacing на текстовых фреймах. Все цвета и типографика на токенах.
+
+---
+
+## История миграций
+
+**2026-05-05 — миграция Old → New (после апрува палитры разработкой).**
+
+- Все 40 вариантов переведены с `Decor/Bubble/*` + `Accent/*` + `Text/*` на `Background/Tinted/*` + `Text&Icon/on Tinted/*`.
+- **Type=Good** перепривязан с `Background/Tinted/Admin` (Green/100) на `Background/Tinted/Good` (Green/50) — восстановлена семантика.
+- **Type=Default** удалён (10 вариантов). Нейтральный/default бейдж — open.
+- **Type=Info** добавлен (10 новых вариантов, склонированы из Good с привязкой на Info-shade).
+- **Type=Error → Negative** (рефактор имени для согласованности со спекой и палитрой).
+- Финальная матрица: 4 type × 5 size × 2 shape = 40.
