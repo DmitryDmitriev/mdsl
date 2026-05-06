@@ -62,15 +62,19 @@
 
 ## 4. Состояния (цвета — семантика)
 
-| Состояние | Квадрат | Иконка | Текст |
-|-----------|---------|--------|-------|
-| Unchecked | Border/Default, фон Primary | — | Primary |
-| Checked | Заливка Accent/Primary | Inverted / контрастный | Primary |
-| Hover | Подсветка по гайду продукта | — | Primary |
-| Focus | Border/Active или кольцо **border/emphasis** | — | Primary |
-| Disabled | Border/Disabled | приглушённая | Tertiary |
-| Error | Accent/Negative (бордер) | — | Negative (опц.) |
-| Indeterminate | Как checked, иконка «минус» / dash | по продукту | Primary |
+| Состояние | Квадрат (box) | Иконка (галочка) | Текст подписи |
+|-----------|---------------|------------------|---------------|
+| Unchecked, Active=Yes | stroke `Border/Active` (или `Border/Default`) | — | `Text&Icon/Primary` |
+| Unchecked, Active=No (Disabled) | fill `Background/Tertiary` | — | `Text&Icon/Tertiery` |
+| Checked, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** ⚠️ | `Text&Icon/Primary` |
+| Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiery` (приглушённая) | `Text&Icon/Tertiery` |
+| Indeterminate, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** (черта) | `Text&Icon/Primary` |
+| Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiery` (черта) | `Text&Icon/Tertiery` |
+| Hover | Подсветка по гайду продукта (не реализовано в DS) | — | `Text&Icon/Primary` |
+| Focus | Border/Active или ring `Border/Focus` | — | `Text&Icon/Primary` |
+| Error | stroke `Accent/Negative` | — | `Text&Icon/Negative` (опц.) |
+
+**Критично — иконка в Checked/Indeterminate (Active=Yes):** использовать **`Text&Icon/Inverted W-B`** (W в Light, B в Dark), а **не** `Text&Icon/White applied`. Причина: `Accent/Primary` в Light — Zinc/950 (тёмный, белая галочка читается), в Dark — Zinc/50 (почти белый), на нём theme-invariant white текст пропадает и компонент визуально схлопывается с disabled. `Inverted W-B` инвертирует против фона: белый на тёмном Light, чёрный на светлом Dark.
 
 ---
 
@@ -113,3 +117,13 @@
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md)
 - [TYPOGRAPHY.md](./TYPOGRAPHY.md)
 - [button-spec.md](./button-spec.md) (референс по высотам контролов)
+
+---
+
+## 7. История миграций
+
+**2026-05-06 — fix: галочка в Dark theme.**
+
+В Active=Yes (Select=On и Indeterminate) checkmark был привязан к `Text&Icon/White applied` (theme-invariant белый). В Light это работало (белый на Zinc/950 — отличный контраст), но в Dark `Accent/Primary` становится Zinc/50 (почти белый) — белая галочка пропадала, чекбокс визуально становился похож на disabled.
+
+Перепривязано на `Text&Icon/Inverted W-B` (W в Light → B в Dark). Теперь галочка корректно инвертирует против заливки в обеих темах.
