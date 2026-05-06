@@ -53,7 +53,9 @@ Outer Ring всегда присутствует, Inner Dot — только в 
 | Select=No, Enabled=No   | `Border/Disabled` | — (hidden) |
 | Select=Yes, Enabled=No  | `Border/Disabled` | `Border/Disabled` |
 
-**Размеры:** Ring = 20×20, stroke 2px (INSIDE). Dot = 10×10, центрирован внутри ring (offset +5/+5 от позиции ring).
+**Размеры:**
+- **Outer Ring:** 20×20 → `size/xs`. Stroke 2px → `border/emphasis`. Stroke alignment INSIDE.
+- **Inner Dot:** **10×10 — design constant**, не на spacing-шкале (она идёт 4/8/12/16). 10px = ровно 50% от ring 20px — стандартное соотношение для radio. Привязывать к ближайшему токену (8 = `spacing/2` или 12 = `spacing/3`) визуально хуже, поэтому осознанный хардкод. См. правило в `DESIGN-TOKENS.md` §«Когда допустим хардкод».
 
 ---
 
