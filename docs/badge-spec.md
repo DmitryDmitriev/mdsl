@@ -2,7 +2,7 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **2xs / xs / sm / md / lg**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm** — caption-md (12/16); **md / lg** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm** — 16 px; **md / lg** — 24 px.
+Размеры **2xs / xs / sm / md / lg**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm** — caption-md (12/16); **md / lg** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm** — 16 px; **md / lg** — 24 px.
 
 Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
@@ -18,10 +18,11 @@
 | info      | `Background/Tinted/Info`     | `Text&Icon/on Tinted/Info`      | Информация, подсказка      |
 | warning   | `Background/Tinted/Warning`  | `Text&Icon/on Tinted/Warning`   | Внимание, предупреждение   |
 | negative  | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative`  | Ошибка, отклонено          |
+| **neutral** | `Background/Tinted/Neutral` | `Text&Icon/on Tinted/Neutral`   | **Технические бейджи (Low reliability, Beta, New, Draft) — нейтральная плашка без семантической окраски** |
 
-**Нейтральный/default бейдж** (Beta, New, Prerelease — без семантической окраски) в Badge не предусмотрен. Если кейс появится — рассмотрим отдельно (новые токены вводить не планируем; вероятный путь — `Surface/Secondary` + `Text&Icon/Secondary`, без tinted-плашки).
+**Neutral vs Question:** значения `Background/Tinted/Neutral` и `Background/Tinted/Question` в текущей палитре одинаковы (Zinc/100 Light, Zinc/800 Dark). Это **разные семантические токены**: `Neutral` — для бейджей и других нейтральных color-coded элементов, `Question` — за чат-бабблами. В продукте они никогда не встречаются рядом, но раздельные имена позволяют независимо менять оттенок в будущем.
 
-**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Существующие токены `Background/Tinted/Question` и `Background/Tinted/Admin` остаются в палитре — они зарезервированы за **чат-бабблами**. `Answer` как отдельный shade в палитре не реализован и не нужен (для answer-бабла в чате используется существующий tinted-токен — выбор делается в чат-спеке).
+**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Соответствующие токены `Background/Tinted/Question` и `Background/Tinted/Admin` остаются в палитре, зарезервированы за чат-бабблами. `Answer` как отдельный shade не реализован — для answer-бабла используется существующий tinted-токен (выбор делается в чат-спеке).
 
 ---
 
@@ -138,8 +139,8 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (40 шт.)
-- **Type**: Good, Info, Warning, Negative
+### Варианты (50 шт.)
+- **Type**: Good, Info, Warning, Negative, Neutral
 - **Size**: 2xs, xs, sm, md, lg
 - **Shape**: Pill, Rounded
 
@@ -201,3 +202,14 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 - **Type=Info** добавлен (10 новых вариантов, склонированы из Good с привязкой на Info-shade).
 - **Type=Error → Negative** (рефактор имени для согласованности со спекой и палитрой).
 - Финальная матрица: 4 type × 5 size × 2 shape = 40.
+
+**2026-05-06 — добавлен Type=Neutral (технические бейджи).**
+
+Появился use-case «Low reliability» — технические бейджи, нейтральная плашка без semantic-окраски (Good/Info/Warning/Negative не подходят).
+
+- В палитре заведены 2 новых токена: `Background/Tinted/Neutral` (alias на Zinc/100 Light, Zinc/800 Dark) и `Text&Icon/on Tinted/Neutral` (alias на Zinc/800 Light, Zinc/50 Dark).
+- В Badge добавлены 10 вариантов `Type=Neutral` (5 size × 2 shape), склонированы из Good с привязкой на новые токены.
+- **Border/Neutral и Accent/Neutral не вводились** — нет реальных кейсов: Badge без бордеров, `Accent/Primary` (Zinc/950) уже играет роль нейтрального акцента в outline-кнопках/ссылках.
+- Neutral значениями совпадает с Question, но семантически отделён: Neutral для бейджей и color-coded элементов, Question за чат-бабблами.
+
+Финальная матрица: 5 type × 5 size × 2 shape = **50 вариантов**.

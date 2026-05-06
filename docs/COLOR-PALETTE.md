@@ -81,20 +81,23 @@
 ### 2.2 Background / Tinted
 Цветные подложки для атомарных color-coded элементов: chat bubble, badge, chip с tinted-фоном, soft-кнопки.
 
-| Роль     | Light     | Dark       |
-|----------|-----------|------------|
-| Good     | Green/50  | Green/800  |
-| Info     | Blue/50   | Blue/800   |
-| Warning  | Orange/50 | Orange/800 |
-| Negative | Red/50    | Red/800    |
-| Question | Zinc/100  | Zinc/800   |
-| Admin    | Green/100 | Green/700  |
+| Роль     | Light     | Dark       | Где используется |
+|----------|-----------|------------|---|
+| Good     | Green/50  | Green/800  | Badge, soft-кнопки |
+| Info     | Blue/50   | Blue/800   | Badge, soft-кнопки |
+| Warning  | Orange/50 | Orange/800 | Badge, soft-кнопки |
+| Negative | Red/50    | Red/800    | Badge, Soft Negative кнопки |
+| Neutral  | Zinc/100  | Zinc/800   | **Badge (технические бейджи: Low reliability, Beta, New, Draft)** |
+| Question | Zinc/100  | Zinc/800   | Чат-баблы (вопрос) |
+| Admin    | Green/100 | Green/700  | Чат-баблы (admin/модерация) |
 
 **Admin vs Good в Dark:** значения BG специально разнесены по шкале (Good → Green/800, Admin → Green/700) — иначе в Dark они визуально схлопывались бы в один зелёный.
 
+**Neutral vs Question:** значения совпадают (Zinc/100 / Zinc/800), но семантически это разные токены: `Neutral` — для color-coded элементов (Badge), `Question` — за чат-бабблами. В продукте никогда не встречаются рядом, раздельные имена позволяют независимо менять оттенок в будущем.
+
 **Не применять** в структурных компонентах (Alert, Notification, Card, Dialog) для текста — там фон может быть tinted, но текст всегда `Text&Icon/Primary`/`Secondary`. См. §3.3.
 
-**Question / Disabled / Secondary** — три семантические роли (`Background/Tinted/Question`, `Background/Disabled`, `Background/Secondary`) сознательно разделяют значение `Zinc/100` (Light) / `Zinc/800` (Dark). Все три претендуют на «самый светлый нейтральный тинт» — на shade-шкале для них нет другой адекватной ступени. В реальных компонентах они не пересекаются: Question — в чат-бабблах, Disabled — в выключенных контролах, Secondary — в общих фонах. Если возникнет сценарий с визуальным конфликтом — пересматриваем точечно.
+**Neutral / Question / Disabled / Secondary** — четыре семантические роли (`Background/Tinted/Neutral`, `Background/Tinted/Question`, `Background/Disabled`, `Background/Secondary`) сознательно разделяют значение `Zinc/100` (Light) / `Zinc/800` (Dark). Все четыре претендуют на «самый светлый нейтральный тинт» — на shade-шкале для них нет другой адекватной ступени. В реальных компонентах они не пересекаются: Neutral — в бейджах, Question — в чат-бабблах, Disabled — в выключенных контролах, Secondary — в общих фонах. Если возникнет сценарий с визуальным конфликтом — пересматриваем точечно.
 
 ### 2.3 Surface
 Поверхности **над базовым уровнем**: модалки, шторки, выезжающие панели.
@@ -202,6 +205,7 @@
 | Info     | Blue/800    | Blue/50      |
 | Warning  | Orange/800  | Orange/50    |
 | Negative | Red/800     | Red/50       |
+| Neutral  | Zinc/800    | Zinc/50      |
 | Question | Zinc/800    | Zinc/100     |
 | Admin    | Green/800   | Green/100    |
 
