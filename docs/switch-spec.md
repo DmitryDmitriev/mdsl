@@ -90,7 +90,7 @@ Switch (COMPONENT) ← Track
 | **Track** | True | `Accent/Primary` | #2C3135 | *(dark mode TBD)* |
 | **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
 | **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Text&Icon/Tertiery` | #BBC1C7 | *(dark mode TBD)* |
+| **Knob** | False | `Text&Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
 
 ### State = Off (выключен)
 
@@ -99,7 +99,7 @@ Switch (COMPONENT) ← Track
 | **Track** | True | `Background/Tertiary` | #E2E5EB | *(dark mode TBD)* |
 | **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
 | **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Text&Icon/Tertiery` | #BBC1C7 | *(dark mode TBD)* |
+| **Knob** | False | `Text&Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
 
 ### Визуальная таблица
 
@@ -130,7 +130,7 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Text&Icon/Tert(gray)
 | `Background/Primary` | Knob fill (Enabled) |
 | `Background/Tertiary` | Track fill (Off + Enabled) |
 | `Background/Secondary` | Track fill (Disabled) |
-| `Text&Icon/Tertiery` | Knob fill (Disabled) |
+| `Text&Icon/Tertiary` | Knob fill (Disabled) |
 
 ---
 

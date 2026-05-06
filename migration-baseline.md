@@ -202,12 +202,10 @@
 
 ## Что дальше — Round 7
 
-После публикации палитры разработкой и реальной валидации в продукте:
-
-1. **Удалить группы `* Old/*`** из палитры (44 переменные).
-2. Опечатку `Tertiery` → `Tertiary` исправить в `Text&Icon/`.
-3. Удалить deprecated компоненты из файла (⚠️ DEPRECATED Text Field, Search, Top app bar; .=List item_OLD; .=[deprecated] Notification; [deprecated] Basic dialog).
-4. Обновить чат-bubble компонент (отдельный заход) — он использует `Decor/Bubble Old/*` которые останутся для чата.
+1. ✅ **Опечатка `Tertiery` → `Tertiary`** — исправлено 2026-05-06 в палитре (`Text&Icon/Tertiary`, `Text Old/Tertiary`) и во всех спеках.
+2. ⏳ **Удалить группы `* Old/*` из палитры** (~44 переменные) — после реальной валидации продукта на canonical. Не блокирует работу разработки.
+3. **Deprecated компоненты остаются.** ⚠️ DEPRECATED Text Field/Search/Top app bar, .=List item_OLD, .=[deprecated] Notification, [deprecated] Basic dialog и т.д. **не удаляются** — это сломает продуктовые файлы, где они инстанс-используются. Помечены явно (префикс ⚠️ / [deprecated] / суффикс _OLD), новые задачи их не используют. Естественная амортизация по мере чистки продуктовых файлов.
+4. Чат-Bubble компонент в Figma пока не реализован формально — guideline в `docs/chat-bubble-spec.md` зафиксирован для будущей реализации. `Decor/Bubble Old/Question` и `/Admin` остаются за чатом.
 
 ---
 

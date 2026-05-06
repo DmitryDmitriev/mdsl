@@ -298,15 +298,14 @@
 
 ### Что осталось до завершения миграции
 
-1. Перевести остальные компоненты на canonical-токены (Round 6 — список ниже).
-2. После полной миграции — удалить группы `* Old/*` из палитры.
-3. Опечатку `Tertiery` → `Tertiary` исправить тогда же.
+1. ✅ Опечатка `Tertiery` → `Tertiary` исправлена 2026-05-06 (`Text&Icon/Tertiary`, `Text Old/Tertiary`).
+2. ⏳ После валидации продукта на canonical-палитре — удалить группы `* Old/*` из палитры.
 
-### Что мигрировано к настоящему моменту
+**Deprecated компоненты** (`⚠️ DEPRECATED / Text Field`, `Search`, `Top app bar`, `[deprecated] Notification`, `[deprecated] Basic dialog`, `.=List item_OLD`, `.=Txt Field`, `.=Left Icon Input`, `[deprecated] img_container`) — **остаются** в файле UI-Kit-Mobile. Удаление сломает существующие продуктовые файлы, где они используются как инстансы. Они помечены явно (⚠️ префикс / [deprecated] / суффикс _OLD), новые задачи их не используют. Со временем продуктовые файлы будут чиститься естественно.
 
-- ✅ Alert (`6947:14128`, 15 вариантов) — пилот.
-- ✅ Badge (`4523:14`, 40 вариантов) — Default удалён, Info добавлен, Error→Negative, парный набор Tinted+on Tinted.
-- ⏳ В очереди: Snackbar, Notification, Chat Bubble, Input, Avatar, Tabs, ListItem, Top App Bar, Button.
+### Что мигрировано (Round 6, 2026-05-06)
+
+Все 26+ компонентов файла UI-Kit-Mobile переведены на canonical-палитру. Детали и burn-down — в `migration-baseline.md`.
 
 ---
 

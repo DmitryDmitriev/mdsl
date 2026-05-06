@@ -90,14 +90,14 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 | State | Filled BG | Outline Stroke | Input Text | Label | Supporting | Icon |
 |---|---|---|---|---|---|---|
-| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
-| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Accent/Primary` | `Text&Icon/Tertiery` | `Text&Icon/Primary` |
-| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
+| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` |
+| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Accent/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary` |
+| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` |
 | **Error** | `Background/Secondary` | `Accent/Negative` | `Text&Icon/Primary` | `Accent/Negative` | `Accent/Negative` | `Accent/Negative` |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` |
-| **ReadOnly** | `Background/Tertiary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
+| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
+| **ReadOnly** | `Background/Tertiary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` |
 
-**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiery`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiery`.
+**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`.
 
 ---
 

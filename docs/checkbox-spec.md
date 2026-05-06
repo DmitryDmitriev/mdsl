@@ -65,11 +65,11 @@
 | Состояние | Квадрат (box) | Иконка (галочка) | Текст подписи |
 |-----------|---------------|------------------|---------------|
 | Unchecked, Active=Yes | stroke `Border/Active` (или `Border/Default`) | — | `Text&Icon/Primary` |
-| Unchecked, Active=No (Disabled) | fill `Background/Tertiary` | — | `Text&Icon/Tertiery` |
+| Unchecked, Active=No (Disabled) | fill `Background/Tertiary` | — | `Text&Icon/Tertiary` |
 | Checked, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** ⚠️ | `Text&Icon/Primary` |
-| Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiery` (приглушённая) | `Text&Icon/Tertiery` |
+| Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
 | Indeterminate, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** (черта) | `Text&Icon/Primary` |
-| Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiery` (черта) | `Text&Icon/Tertiery` |
+| Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiary` (черта) | `Text&Icon/Tertiary` |
 | Hover | Подсветка по гайду продукта (не реализовано в DS) | — | `Text&Icon/Primary` |
 | Focus | Border/Active или ring `Border/Focus` | — | `Text&Icon/Primary` |
 | Error | stroke `Accent/Negative` | — | `Text&Icon/Negative` (опц.) |

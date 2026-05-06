@@ -43,7 +43,7 @@ ChatBubble (HORIZONTAL container, выравнивание по типу)
 │   ├── content (Body 2 / Body 1 в зависимости от длины)
 │   ├── [attachment] (image/file/quote) — опционально, в общем layout
 │   └── meta-row (HORIZONTAL, gap 4)
-│       ├── timestamp (Caption sm, Text&Icon/Tertiery — для нейтральных или Text&Icon/on Tinted/{type} с opacity 0.6)
+│       ├── timestamp (Caption sm, Text&Icon/Tertiary — для нейтральных или Text&Icon/on Tinted/{type} с opacity 0.6)
 │       └── [status icon] (read/sent/error — только для outgoing)
 └── [status badge] (для admin / negative — иконка слева от bubble)
 ```
@@ -111,9 +111,9 @@ ChatBubble (HORIZONTAL container, выравнивание по типу)
 
 | Статус | Иконка | Цвет |
 |---|---|---|
-| Sending | `ic_clock` | `Text&Icon/Tertiery` |
-| Sent | `ic_check` | `Text&Icon/Tertiery` |
-| Delivered | `ic_check_double` | `Text&Icon/Tertiery` |
+| Sending | `ic_clock` | `Text&Icon/Tertiary` |
+| Sent | `ic_check` | `Text&Icon/Tertiary` |
+| Delivered | `ic_check_double` | `Text&Icon/Tertiary` |
 | Read | `ic_check_double` | `Accent/Link` (синий) |
 | Error | `ic_warning_circle` | `Text&Icon/Negative` |
 

@@ -86,12 +86,12 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 | State | Filled BG | Outline Stroke | Input Text | Icon | Supporting |
 |---|---|---|---|---|---|
-| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiery` |
-| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Text&Icon/Primary` | `Text&Icon/Tertiery` |
-| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` |
+| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiary` |
+| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Text&Icon/Primary` | `Text&Icon/Tertiary` |
+| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` |
+| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
 
-**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiery`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiery`. То же правило, что и в Input v2.
+**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`. То же правило, что и в Input v2.
 
 ---
 

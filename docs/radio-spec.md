@@ -123,7 +123,7 @@ RadioButton(
 Было: один Vector с заливкой одним цветом — ring и dot не разделены.
 
 Проблемы:
-- В Disabled бордер использовал `Text&Icon/Tertiery` — text-token для контура, семантически странно.
+- В Disabled бордер использовал `Text&Icon/Tertiary` — text-token для контура, семантически странно.
 - В Select=Yes Enabled=Yes ring и dot заливались одним `Accent/Primary` — нет визуального разделения, в крупных размерах смотрится как сплошной круг.
 
 Стало: компонент разделён на два ELLIPSE — Outer Ring (stroke) + Inner Dot (fill). Каждый слой использует своё семейство токенов: ring → `Border/*`, dot → `Accent/*`. Disabled теперь корректно использует `Border/Disabled` для обоих слоёв вместо смешивания семейств.
