@@ -132,17 +132,82 @@
 
 ---
 
-## Burn-down (обновляется после каждой миграции)
+## Burn-down
 
-| Дата | Компонент | OLD до | OLD после | Hardcoded до | Hardcoded после |
-|---|---|---|---|---|---|
-| 2026-05-05 | Alert | мигр. ранее | 0 | (нужна ревизия) | 41 |
-| 2026-05-05 | Badge | 200+ | 0 | (мин) | 1 |
-| 2026-05-06 | Avatar v2 | 104 | 0 | 14 | 0 |
-| 2026-05-?? | Button + Buttons Stack | 187 | — | 17 | — |
-| 2026-05-?? | ButtonIcon | 112 | — | 65 | — |
-| 2026-05-?? | Input v2 + Stacked | 372 | — | 98 | — |
-| ... | ... | ... | ... | ... | ... |
+| Дата | Компонент | OLD до | OLD после | Hardcoded |
+|---|---|---|---|---|
+| 2026-05-05 | Alert | (ранее) | 0 | 41 |
+| 2026-05-05 | Badge | 200+ | 0 | 1 |
+| 2026-05-06 | Avatar v2 | 104 | 0 | 0 |
+| **2026-05-06** | **Round 6 batch (23 компонента + building blocks)** | **~1306** | **0** | **391** (анализ ниже) |
+
+### Финальное состояние Round 6 (2026-05-06)
+
+**OLD bindings: 0 во всех 26 проверенных компонентах.** Полная миграция Old→canonical завершена.
+
+**Hardcoded fills: 391 → разобраны по категориям:**
+
+| Категория | Кол-во | Что | Решение |
+|---|---|---|---|
+| `#ffffff` hidden | 301 | Скрытые placeholder fills (clipping masks, leftovers) | Игнор — не рендерятся |
+| Component-set strokes (`#9747ff` / `#6155f5` / `#0097fd`) | 14 | Служебные обводки COMPONENT_SET в редакторе Figma | Игнор — не идут в production |
+| `#000000` на `Union` внутри `ic_*` | 51 | Внутренности SVG icon library | Игнор — swap'ятся целиком |
+| `#1d2023@0.13` детали SVG в Button-иконках | 7 | Декоративные тонкие линии в детализированных иконках | Игнор — часть icon design |
+| `#ffffff` visible на COMPONENT_SET roots | 5 | Фон демо-листов | Игнор — декорация |
+| **`#49454f` × 12 (Segmented)** | 12 | **Material 3 dark gray, недолокализованный импорт** | ✅ **Исправлено: → `Text&Icon/Primary`** |
+| `#000000` × 1 (Alert/icon) | 1 | Дубликат с #51 выше | Часть icon library |
+
+**После фикса Segmented: реальный hardcoded debt в production-рендере = 0.** Остальные 379 — артефакты Figma editor / icon library / decorative SVG, не семантические токены.
+
+---
+
+## Завершение Round 6
+
+✅ **Все компоненты файла `PI2N65xbeJPTc5oWhOP7Bl` (UI-Kit-Mobile) переведены на canonical-палитру.**
+
+**Финальные метрики (per-component):**
+
+| Компонент | Total fills/strokes | Canonical | Hardcoded (effective debt = 0) |
+|---|---|---|---|
+| Avatar v2 | 118 | 118 | 0 |
+| Badge | 201 | 200 | 1 (image fill) |
+| Alert | 108 | 67 | 41 (icon internals) |
+| Button | 187 | 171 | 16 (icon internals + ripple) |
+| Buttons Stack | 31 | 30 | 1 |
+| ButtonIcon | 177 | 112 | 65 (icon internals) |
+| Input v2 | 361 | 288 | 73 (hidden placeholders) |
+| Input v2 Stacked | 109 | 84 | 25 |
+| Segmented control | 227 | 223 | 4 (after fix) |
+| Top App Bar v2 | 193 | 144 | 49 (hidden placeholders) |
+| Search v2 | 121 | 120 | 1 |
+| Tabs | 156 | 120 | 36 (hidden) |
+| Chips | 61 | 48 | 13 |
+| Tab Bar | 42 | 32 | 10 |
+| Snackbar | 47 | 37 | 10 |
+| FAB Bar | 37 | 27 | 10 |
+| Dialog | 24 | 22 | 2 |
+| List item | 29 | 28 | 1 |
+| Switch | 17 | 16 | 1 |
+| Progress | 16 | 15 | 1 |
+| StatusBar Body | 15 | 14 | 1 |
+| Checkbox | 11 | 10 | 1 |
+| Check+Text | 11 | 11 | 0 |
+| Radio | 6 | 5 | 1 |
+| Divider | 4 | 4 | 0 |
+| Top Progress bar | 26 | 10 | 16 (Stories-specific decor) |
+
+**Все «hardcoded» — иконки/декорации/Figma-артефакты, не цветовой долг.**
+
+---
+
+## Что дальше — Round 7
+
+После публикации палитры разработкой и реальной валидации в продукте:
+
+1. **Удалить группы `* Old/*`** из палитры (44 переменные).
+2. Опечатку `Tertiery` → `Tertiary` исправить в `Text&Icon/`.
+3. Удалить deprecated компоненты из файла (⚠️ DEPRECATED Text Field, Search, Top app bar; .=List item_OLD; .=[deprecated] Notification; [deprecated] Basic dialog).
+4. Обновить чат-bubble компонент (отдельный заход) — он использует `Decor/Bubble Old/*` которые останутся для чата.
 
 ---
 
