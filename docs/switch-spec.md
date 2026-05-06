@@ -87,10 +87,10 @@ Switch (COMPONENT) ← Track
 
 | Элемент | Enabled | Token | Light | Dark |
 |---|---|---|---|---|
-| **Track** | True | `Accent/Graphite` | #2C3135 | *(dark mode TBD)* |
+| **Track** | True | `Accent/Primary` | #2C3135 | *(dark mode TBD)* |
 | **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
 | **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
+| **Knob** | False | `Text&Icon/Tertiery` | #BBC1C7 | *(dark mode TBD)* |
 
 ### State = Off (выключен)
 
@@ -99,14 +99,14 @@ Switch (COMPONENT) ← Track
 | **Track** | True | `Background/Tertiary` | #E2E5EB | *(dark mode TBD)* |
 | **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
 | **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
+| **Knob** | False | `Text&Icon/Tertiery` | #BBC1C7 | *(dark mode TBD)* |
 
 ### Визуальная таблица
 
 ```
            On + Enabled       Off + Enabled       Disabled (On/Off)
-Track:     ████ Graphite      ░░░░ Tertiary       ░░░░ Secondary
-Knob:      ○ Primary(white)   ○ Primary(white)    ○ Icon/Tertiary(gray)
+Track:     ████ Accent/Pri    ░░░░ Tertiary       ░░░░ Secondary
+Knob:      ○ Primary(white)   ○ Primary(white)    ○ Text&Icon/Tert(gray)
 ```
 
 ---
@@ -126,11 +126,11 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Icon/Tertiary(gray)
 
 | Токен | Использование |
 |---|---|
-| `Accent/Graphite` | Track fill (On + Enabled) |
+| `Accent/Primary` | Track fill (On + Enabled) |
 | `Background/Primary` | Knob fill (Enabled) |
 | `Background/Tertiary` | Track fill (Off + Enabled) |
 | `Background/Secondary` | Track fill (Disabled) |
-| `Icon/Tertiary` | Knob fill (Disabled) |
+| `Text&Icon/Tertiery` | Knob fill (Disabled) |
 
 ---
 

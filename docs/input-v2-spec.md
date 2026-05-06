@@ -90,14 +90,14 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 | State | Filled BG | Outline Stroke | Input Text | Label | Supporting | Icon |
 |---|---|---|---|---|---|---|
-| **Default** | `Background/Secondary` | `Border/Default` | `Text/Secondary` (placeholder) | `Text/Secondary` | `Text/Tertiary` | `Icon/Secondary` |
-| **Focused** | `Background/Secondary` | `Border/Active` | `Text/Primary` | `Accent/Graphite` | `Text/Tertiary` | `Icon/Primary` |
-| **Filled** | `Background/Secondary` | `Border/Default` | `Text/Primary` | `Text/Secondary` | `Text/Tertiary` | `Icon/Secondary` |
-| **Error** | `Background/Secondary` | `Accent/Negative` | `Text/Primary` | `Accent/Negative` | `Accent/Negative` | `Accent/Negative` |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text/Tertiary` | `Text/Tertiary` | `Text/Tertiary` | `Icon/Tertiary` |
-| **ReadOnly** | `Background/Tertiary` | `Border/Default` | `Text/Primary` | `Text/Secondary` | `Text/Tertiary` | `Icon/Secondary` |
+| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
+| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Accent/Primary` | `Text&Icon/Tertiery` | `Text&Icon/Primary` |
+| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
+| **Error** | `Background/Secondary` | `Accent/Negative` | `Text&Icon/Primary` | `Accent/Negative` | `Accent/Negative` | `Accent/Negative` |
+| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` |
+| **ReadOnly** | `Background/Tertiary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` | `Text&Icon/Secondary` |
 
-**Примечание:** placeholder в Default использует `Text/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text/Tertiary`.
+**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiery`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiery`.
 
 ---
 
@@ -198,7 +198,7 @@ Input v2 Stacked (COMPONENT) — VERTICAL, HUG
 - **Tap-зоны:** lg — 56, md — 48, sm — 40. lg/md соответствуют WCAG/HIG (≥ 44 pt); **sm = 40** — ниже рекомендованных 44 pt, использовать в плотных layout либо оборачивать в контейнер 44 pt.
 - **Клавиатура:** Tab — навигация, Enter — submit, Esc — сброс фокуса/очистка.
 - **Screen reader:** `aria-label` из Label, `aria-describedby` для Supporting, `aria-invalid` для State=Error.
-- **Контраст:** placeholder `Text/Secondary` на `Background/Secondary` — проверить WCAG AA на реальных устройствах.
+- **Контраст:** placeholder `Text&Icon/Secondary` на `Background/Secondary` — проверить WCAG AA на реальных устройствах.
 
 ---
 

@@ -44,9 +44,9 @@ Radio (COMPONENT) ← Круг (circle)
 
 | Состояние | Элемент | Токен | Light | Dark |
 |-----------|---------|-------|-------|------|
-| Select=Yes, Enabled=Yes | Circle fill | `Accent/Graphite` | *(по палитре)* | *(TBD)* |
+| Select=Yes, Enabled=Yes | Circle fill | `Accent/Primary` | *(по палитре)* | *(TBD)* |
 | Select=No, Enabled=Yes | Circle stroke | `Border/Default` | *(по палитре)* | *(TBD)* |
-| Select=Yes, Enabled=No | Circle fill | `Icon/Tertiary` | *(по палитре)* | *(TBD)* |
+| Select=Yes, Enabled=No | Circle fill | `Text&Icon/Tertiery` | *(по палитре)* | *(TBD)* |
 | Select=No, Enabled=No | Circle stroke | `Border/Disabled` | *(по палитре)* | *(TBD)* |
 
 ---

@@ -126,8 +126,8 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 | Элемент | Токен |
 |---|---|
 | Bar background | `Background/Primary` |
-| Headline | `Text/Primary` |
-| Subtitle | `Text/Secondary` |
+| Headline | `Text&Icon/Primary` |
+| Subtitle | `Text&Icon/Secondary` |
 | Shadow (Elevation = Yes) | drop shadow `rgba(0,0,0,0.08)`, offset y = 2, radius = 8, spread = 0 |
 
 Цвета Leading / Trailing кнопок наследуются от ButtonIcon Ghost. Цвета Search — от Search v2.
@@ -157,8 +157,8 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 | **Leading size** | `size/xl` (48) |
 | **Trailing size** | `size/xl` (48) |
 | **Background** | `Background/Primary` |
-| **Headline color** | `Text/Primary` |
-| **Subtitle color** | `Text/Secondary` |
+| **Headline color** | `Text&Icon/Primary` |
+| **Subtitle color** | `Text&Icon/Secondary` |
 
 ---
 
@@ -180,7 +180,7 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 - **Tap-зоны:** Leading и Trailing — 48 × 48. Оба слота проходят WCAG / HIG (≥ 44 pt) с запасом.
 - **Клавиатура:** Tab — навигация Leading → Trailing 1 → Trailing 2 → Trailing 3; Esc — назад.
 - **Screen reader:** `aria-label` для каждой кнопки; Headline — роль `heading` (h1 или контекстный уровень) для корректной структуры страницы.
-- **Контраст:** Headline `Text/Primary` и Subtitle `Text/Secondary` на `Background/Primary` — проверить WCAG AA на реальных устройствах.
+- **Контраст:** Headline `Text&Icon/Primary` и Subtitle `Text&Icon/Secondary` на `Background/Primary` — проверить WCAG AA на реальных устройствах.
 
 ---
 

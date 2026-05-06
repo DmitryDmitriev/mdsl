@@ -112,10 +112,10 @@ Tabs (COMPONENT_SET, варианты Size × Items)
 | Item fill | Active=Off | прозрачный (нет fills) |
 | Item shadow | Active=On | `Elevation/Floating` |
 | Item shadow | Active=Off | нет |
-| Label | Active=On | `Text/Primary` |
-| Label | Active=Off | `Text/Secondary` |
-| Icon | Active=On | `Icon/Primary` |
-| Icon | Active=Off | `Icon/Secondary` |
+| Label | Active=On | `Text&Icon/Primary` |
+| Label | Active=Off | `Text&Icon/Secondary` |
+| Icon | Active=On | `Text&Icon/Primary` |
+| Icon | Active=Off | `Text&Icon/Secondary` |
 
 ---
 
@@ -133,7 +133,7 @@ Tabs (COMPONENT_SET, варианты Size × Items)
 
 Boolean'ы `Icon` и `Badge` управляются на уровне каждого инстанса (override). Можно сделать таб с иконкой+текстом, текст+бейдж или только текст в одной группе.
 
-**Иконки — живые из библиотеки.** Дефолт — `ic_check` (16px для sm, 24px для md/lg). При использовании дизайнер делает Instance Swap на нужную иконку. Цвет привязан к токенам: `Icon/Primary` для Active=On, `Icon/Secondary` для Active=Off.
+**Иконки — живые из библиотеки.** Дефолт — `ic_check` (16px для sm, 24px для md/lg). При использовании дизайнер делает Instance Swap на нужную иконку. Цвет привязан к токенам: `Text&Icon/Primary` для Active=On, `Text&Icon/Secondary` для Active=Off.
 
 **Note:** библиотека Larixon не имеет 20px иконок, поэтому md и lg табы используют одинаковый 24px ассет. При появлении 20px ассетов — обновим md.
 

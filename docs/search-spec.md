@@ -86,12 +86,12 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 | State | Filled BG | Outline Stroke | Input Text | Icon | Supporting |
 |---|---|---|---|---|---|
-| **Default** | `Background/Secondary` | `Border/Default` | `Text/Secondary` (placeholder) | `Icon/Secondary` | `Text/Tertiary` |
-| **Focused** | `Background/Secondary` | `Border/Active` | `Text/Primary` | `Icon/Primary` | `Text/Tertiary` |
-| **Filled** | `Background/Secondary` | `Border/Default` | `Text/Primary` | `Icon/Secondary` | `Text/Tertiary` |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text/Tertiary` | `Icon/Tertiary` | `Text/Tertiary` |
+| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiery` |
+| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Text&Icon/Primary` | `Text&Icon/Tertiery` |
+| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiery` |
+| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` | `Text&Icon/Tertiery` |
 
-**Примечание:** placeholder в Default использует `Text/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text/Tertiary`. То же правило, что и в Input v2.
+**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiery`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiery`. То же правило, что и в Input v2.
 
 ---
 
@@ -132,7 +132,7 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 - **Tap-зоны:** lg — 56, md — 48 соответствуют WCAG/HIG (≥ 44 pt); **sm = 40** — граничный, оборачивать в контейнер 44 pt при возможности.
 - **Клавиатура:** Tab — фокус на input, Enter — submit, Esc — сброс фокуса/очистка.
 - **Screen reader:** `role="search"`, `aria-label="Search"`, `aria-describedby` для Supporting.
-- **Контраст:** placeholder `Text/Secondary` на `Background/Secondary` — проверить WCAG AA на реальных устройствах.
+- **Контраст:** placeholder `Text&Icon/Secondary` на `Background/Secondary` — проверить WCAG AA на реальных устройствах.
 
 ---
 
