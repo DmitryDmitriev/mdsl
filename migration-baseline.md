@@ -151,13 +151,44 @@
 |---|---|---|---|
 | `#ffffff` hidden | 301 | Скрытые placeholder fills (clipping masks, leftovers) | Игнор — не рендерятся |
 | Component-set strokes (`#9747ff` / `#6155f5` / `#0097fd`) | 14 | Служебные обводки COMPONENT_SET в редакторе Figma | Игнор — не идут в production |
-| `#000000` на `Union` внутри `ic_*` | 51 | Внутренности SVG icon library | Игнор — swap'ятся целиком |
+| `#000000` на `Union` внутри `ic_*` (видимые) | ~16 | Иконки без override fill из icon library | ✅ **Исправлено 2026-05-06 (см. ниже)** |
 | `#1d2023@0.13` детали SVG в Button-иконках | 7 | Декоративные тонкие линии в детализированных иконках | Игнор — часть icon design |
 | `#ffffff` visible на COMPONENT_SET roots | 5 | Фон демо-листов | Игнор — декорация |
 | **`#49454f` × 12 (Segmented)** | 12 | **Material 3 dark gray, недолокализованный импорт** | ✅ **Исправлено: → `Text&Icon/Primary`** |
 | `#000000` × 1 (Alert/icon) | 1 | Дубликат с #51 выше | Часть icon library |
 
 **После фикса Segmented: реальный hardcoded debt в production-рендере = 0.** Остальные 379 — артефакты Figma editor / icon library / decorative SVG, не семантические токены.
+
+### 2026-05-06 (вечер) — re-audit и фикс иконок
+
+После повторной проверки выявлены **видимые** hardcoded `#000000` на иконках без override:
+
+| Компонент | Кол-во | Что | Решение |
+|---|---|---|---|
+| Button (Ghost / Ghost Negative, `16/ic_add`) | 8 (4 fills + 4 strokes) | Union/Vector в иконке без binding на цвет | ✅ Привязано: Ghost → `Text&Icon/Primary`, Ghost Negative → `Text&Icon/Negative` |
+| Input v2 Stacked (Leading `24/ic_call`) | 12 | Union в leading icon без binding по состояниям | ✅ Привязано per state: Default/Filled/ReadOnly → `Text&Icon/Secondary`, Focused → `Text&Icon/Primary`, Error → `Accent/Negative`, Disabled → `Text&Icon/Tertiary` |
+
+**Финальная сводка по иконкам (12 компонентов с иконками):**
+
+```
+Avatar v2:   20 bound, 0 hardcoded
+Badge:       50 bound, 0 hardcoded
+Button:      12 bound, 0 hardcoded
+ButtonIcon:  64 bound, 0 hardcoded
+Input v2:   108 bound, 0 hardcoded
+Input v2 Stacked: 36 bound, 0 hardcoded
+Top App Bar: 48 bound, 0 hardcoded
+Tabs:        18 bound, 0 hardcoded
+Chips:       12 bound, 0 hardcoded
+FAB Bar:      9 bound, 0 hardcoded
+Dialog:       2 bound, 0 hardcoded
+List item:    6 bound, 0 hardcoded
+```
+
+**Все иконки во всех компонентах привязаны к canonical токенам палитры.** Hardcoded на иконках = 0.
+
+Остаточный допустимый хардкод (по правилу DESIGN-TOKENS §11):
+- 3× `#1d2023@13%` ripple/state-overlay в Button иконках — декоративные SVG-детали icon library
 
 ---
 
