@@ -76,21 +76,23 @@
 
 ## 6. Токены цветов
 
-| Элемент | Токен | Использование |
-|---------|-------|---------------|
-| Фон аватара | `Background/Tertiary` | Letter, Icon |
-| Инициалы | `Text/Secondary` | Letter type |
-| Иконки | `Icon/Secondary` | Icon type |
-| Pin фон | `Background/Primary` | Белая обводка вокруг точки |
-| Pin статус | `Accent/Graphite` | Точка индикатора |
+| Элемент | Токен (canonical после миграции 2026-05-06) | Использование |
+|---------|----------------------------------------------|---------------|
+| Background аватара (Letter, Icon) | `Accent/Primary` | Тёмная заливка под инициалы и preset-иконки |
+| Background аватара (Photo placeholder) | `Background/Tertiary` | Серый плейсхолдер до загрузки фото |
+| Letter text (инициалы) | `Text&Icon/Secondary` | На фоне `Accent/Primary` остаётся читаемо |
+| Icon (Person preset) | `Text&Icon/Inverted W-B` | Белая в Light, чёрная в Dark — инвертирует против `Accent/Primary` |
+| Pin background (внешнее кольцо) | `Background/Primary` | Контур, отделяющий пин от аватара |
+| Pin status (точка) | `Accent/Primary` | Цвет статуса (нейтральный) |
 
 В коде:
 ```ts
-background: semantic.background.tertiary
-text: semantic.text.secondary
-icon: semantic.icon.secondary
+avatarBg: semantic.accent.primary           // Letter / Icon
+avatarPhotoBg: semantic.background.tertiary // Photo placeholder
+letterText: semantic.textIcon.secondary
+iconFill: semantic.textIcon.invertedWB
 pinBackground: semantic.background.primary
-pinStatus: semantic.accent.graphite
+pinStatus: semantic.accent.primary
 ```
 
 ---
@@ -99,20 +101,22 @@ pinStatus: semantic.accent.graphite
 
 ```
 Avatar (Component)
-├── background (Ellipse) — только для Letter/Icon
-│   └── fills: Background/Tertiary
+├── background (Ellipse) — Letter/Icon: Accent/Primary; Photo placeholder: Background/Tertiary
 │   └── size: привязан к size token
 ├── [content] — зависит от type:
-│   ├── Letter: Text "AB" (Text/Secondary)
-│   ├── Icon: Любая релевантная иконка (Icon/Secondary)
+│   ├── Letter: Text "AB" (Text&Icon/Secondary)
+│   ├── Icon: ic_person preset (Text&Icon/Inverted W-B), swap на любую `ic_*`
 │   └── Photo: Ellipse с image fill
 ├── Pin Background (Ellipse) — если pin=true
 │   └── fills: Background/Primary
 │   └── size: привязан к spacing token
+│   └── offset: PIN_OFFSET = 2dp наружу (design constant, не на spacing-шкале)
 └── Status Indicator (Ellipse) — если pin=true
-    └── fills: Accent/Graphite
+    └── fills: Accent/Primary
     └── size: привязан к spacing token
 ```
+
+**Type=Icon — это «free icon slot».** Default иконка — `ic_person` (для пустого профиля). Для add-flow — swap instance на `ic_plus`. Person и Add — это **icon presets**, не отдельные variant'ы (исторически в description Figma были перечислены 4 типа `Letter | Person | Add | Photo` — поправлено 2026-05-06).
 
 ---
 
@@ -164,12 +168,24 @@ interface AvatarProps {
 
 | Категория | Покрытие |
 |---|---|
-| Color | **100%** |
+| Color | **100%** (на canonical-токенах после миграции 2026-05-06) |
 | Token (size/radius/spacing) | **100%** |
 | Type (типографика) | **100%** |
 | **Overall** | **100%** |
 
 Аудит выполнен по правилам исключения building blocks (`.=` префикс), HUG/FILL размеров, иконок из библиотеки и вычисляемого вертикального padding.
+
+---
+
+## История миграций
+
+**2026-05-06 — миграция на canonical-палитру.**
+
+- Перепривязано **104 binding'а** с OLD на canonical: `Background/Tertiary` (Old) → `Background/Tertiary` (canonical), `Text/Secondary` → `Text&Icon/Secondary`, `Icon/Secondary` → `Text&Icon/Secondary`, `Background/Primary` (Old) → `Background/Primary` (canonical), `Accent/Graphite` → `Accent/Primary`.
+- Заменено **14 hardcoded `#ffffff`** на иконке `ic_person` → `Text&Icon/Inverted W-B`. Закрывает hardcoded fills в Avatar до 0.
+- **Description компонента** обновлено: `Letter | Icon | Photo` (было `Letter | Person | Add | Photo` — устаревшее, Person/Add теперь явно описаны как icon-presets внутри `Type=Icon`).
+- Pin offset = **2dp**, design constant. Не вводим отдельный токен `AppSpacing.Overlap.pin` — переиспользуем хардкод с комментарием в коде. Если появятся другие overlap-сценарии — заведём общий токен и мигрируем.
+- 64/80px размеры (XXXL/XXXXL) — **identity-illustration**, используют `AppIllustration.sm/md`. Уточнено в `DESIGN-TOKENS.md` §Illustrations.
 
 ---
 
