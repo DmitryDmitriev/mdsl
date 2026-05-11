@@ -37,7 +37,7 @@
 | Минимальная высота ряда (touch) | height/xs (32 px) или height/sm (40 px) | Как у контролов в **DESIGN-TOKENS** |
 | Gap (квадрат ↔ текст) | spacing/2 (8 px) | |
 | Сторона квадрата | spacing/4 (16 px) или spacing/5 (20 px) | Выбрать один размер для продукта |
-| Скругление квадрата | **radius/control-sm** → radius/2 (8 px) | См. **DESIGN-TOKENS** §radius |
+| Скругление квадрата | **radius/0_5** (2 px) | M3-спека Checkbox = 2 px. Введён 2026-05-11. |
 | Толщина бордера (покой) | **border/default** → border/1 (1 px) | |
 | Бордер (focus / акцент) | **border/emphasis** → border/2 (2 px) | Кольцо фокуса |
 | Бордер (default) | color: Border/Default | **COLOR-PALETTE** |
@@ -53,10 +53,11 @@
 
 | Роль | Семантика | Core | px |
 |------|-----------|------|-----|
-| Скругление box | **radius/control-sm** | radius/2 | 8 |
-| Плоский вариант (если нужен) | radius/1 | radius/1 | 4 |
+| Скругление box | **radius/0_5** | radius/0_5 | 2 |
 | Обводка (default) | **border/default** | border/1 | 1 |
 | Фокус / акцентная обводка | **border/emphasis** | border/2 | 2 |
+
+**Почему 2 px, а не 4 (radius/1) и не 8 (radius/2):** Material 3 спека для Checkbox задаёт 2 px радиус. На 20×20 квадрате это даёт «почти-острый угол со скруглением, заметным только вблизи» — отличает Checkbox от Radio (full-circle) и от чипов/кнопок (8+). Для этого 2026-05-11 заведён отдельный токен `radius/0_5` (значение 2) между `radius/0` (0) и `radius/1` (4).
 
 ---
 

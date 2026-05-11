@@ -159,6 +159,18 @@
 
 **После фикса Segmented: реальный hardcoded debt в production-рендере = 0.** Остальные 379 — артефакты Figma editor / icon library / decorative SVG, не семантические токены.
 
+### 2026-05-07 — типографика в Segmented control
+
+В building blocks Segmented control текстовые стили были непривязаны (raw 14/16, 14/14, 10/12, 10/10) — наследие импорта M3. Заменены на canonical стили:
+
+| Building block | Было | Стало |
+|---|---|---|
+| `Label only` / `Classic Label only` | 14/14, 10/10 | `Base/Body 2 Medium` (14/20) |
+| `Icon and label` / `Classic Icon and label` | 14/16, 10/12 | `Base/Body 2 Medium` (14/20) для лейбла капсулы; `Caption sm` (10/12 Medium) для подписей под иконками |
+| `Icon only` | — | без текста |
+
+Всё через привязку к стилям `Base/*` и `Caption/*` (TYPOGRAPHY.md §4–5.1). Hardcoded font-size/line-height в Segmented = 0.
+
 ### 2026-05-06 (вечер) — re-audit и фикс иконок
 
 После повторной проверки выявлены **видимые** hardcoded `#000000` на иконках без override:

@@ -35,7 +35,9 @@
 | Search v2 | [spec](./search-spec.md) | — | L (зависит от Input) |
 | Top App Bar v2 | [spec](./top-app-bar-spec.md) | — | L |
 | ~~Notification~~ | — superseded → Alert | — | — |
-| Segment Control (Android M3) | — | копия M3 на странице 🟢 Segment Control | — |
+| Segment Control (Android M3) | [spec](./segment-control-spec.md) | ✅ palette + typography canonical (2026-05-07); копия M3 на странице 🟢 Segment Control | — |
+| Empty State (организм) | [spec](./empty-state-spec.md) | ✅ COMPONENT_SET `7805:74` (Inline / Full-screen × 3 boolean props) на странице 🟢 Empty State в секции Организмы | M |
+| Skeleton | [spec](./skeleton-spec.md) | ✅ Атомы `Skeleton` (`7888:13`, Shape=Block/Circle/Line) + пресеты `Skeleton / Listing Card` (Grid/Wide), `Skeleton / List Item`, `Skeleton / Profile Header` на странице 🟢 Skeleton | S |
 | ~~DialogIllustration~~ | [redirect](./dialog-illustration-spec.md) — superseded → Dialog | — | — |
 
 В Figma готовы как ComponentSets: Dialog `6632:39`, Tabs `6793:696` на странице 🟢 Tabs (с building block `.=Tab Item` `6760:13377`), Android Segment Control `888:7950` на странице 🟢 Segment Control. iOS Apple-native Segment Control упразднён — заменён на Tabs (Radix-стиль). `DialogIllustration` упразднён — это use-case основного `Dialog` (`Image=true`).

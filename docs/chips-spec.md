@@ -79,7 +79,20 @@ Chips (COMPONENT) <- Контейнер (pill)
 
 ## Цвета
 
-По **docs/COLOR-PALETTE.md**. Все цвета привязаны к семантическим токенам палитры. Fills -- 100% покрытие токенами. Типография -- 100% покрытие токенами.
+По **docs/COLOR-PALETTE.md**. Все цвета привязаны к семантическим токенам палитры.
+
+### Состояния (Active)
+
+| State | Fill | Border | Text/Icon |
+|---|---|---|---|
+| **Active=No** (default) | `Background/Tertiary` | — | `Text&Icon/Primary` |
+| **Active=Yes** (configured) | `Background/Tertiary` | `Border/Active` (1 px) | `Text&Icon/Primary` |
+
+**Ключевое решение по элевации.** Fill = `Background/Tertiary` (Zinc/200 Light, Zinc/800 Dark) — даёт 2-шаговую элевацию относительно `Background/Primary` страницы (Zinc/50/Zinc/950). Это критично в Dark theme: с `Background/Secondary` (Zinc/900) chip визуально сливался с фоном.
+
+**Ключевое решение по Active.** Border'ом **не дифференцируется** дефолт (он его не имеет), border — это маркер «настроено» на Active=Yes. Та же поверхность, но рамка показывает что внутри что-то выбрано/применено. Это даёт пользователю быстрое визуальное распознавание «активные фильтры» без отдельного бейджа.
+
+Fills -- 100% покрытие токенами. Типография -- 100% покрытие токенами.
 
 ---
 

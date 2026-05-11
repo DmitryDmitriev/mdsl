@@ -2,7 +2,7 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **2xs / xs / sm / md / lg**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm** — caption-md (12/16); **md / lg** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm** — 16 px; **md / lg** — 24 px.
+Размеры **2xs / xs / sm / md / lg / xl**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm / md** — caption-md (12/16); **lg / xl** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm / md** — 16 px; **lg / xl** — 24 px.
 
 Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
@@ -20,9 +20,7 @@
 | negative  | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative`  | Ошибка, отклонено          |
 | **neutral** | `Background/Tinted/Neutral` | `Text&Icon/on Tinted/Neutral`   | **Технические бейджи (Low reliability, Beta, New, Draft) — нейтральная плашка без семантической окраски** |
 
-**Neutral vs Question:** значения `Background/Tinted/Neutral` и `Background/Tinted/Question` в текущей палитре одинаковы (Zinc/100 Light, Zinc/800 Dark). Это **разные семантические токены**: `Neutral` — для бейджей и других нейтральных color-coded элементов, `Question` — за чат-бабблами. В продукте они никогда не встречаются рядом, но раздельные имена позволяют независимо менять оттенок в будущем.
-
-**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge. Соответствующие токены `Background/Tinted/Question` и `Background/Tinted/Admin` остаются в палитре, зарезервированы за чат-бабблами. `Answer` как отдельный shade не реализован — для answer-бабла используется существующий tinted-токен (выбор делается в чат-спеке).
+**Удалённые варианты:** `question`, `answer`, `admin` исключены из Badge (2026-05-06). Канонические токены `Background/Tinted/Question` и `/Admin` также удалены из палитры (2026-05-07) — нейтральная роль закрыта токеном `Background/Tinted/Neutral`. Чат-баблы используют отдельную легаси-группу `Decor/Bubble Old/*` (Question/Admin/Other) — см. `chat-bubble-spec.md`.
 
 ---
 
@@ -36,22 +34,26 @@
 ### Отступы (spacing)
 - **2xs**: padding `spacing/1` (4 px) по всем сторонам.
 - **xs**: padding `spacing/1` (4 px) по всем сторонам.
-- **sm**: padding `spacing/2` (8 px) по всем сторонам.
-- **md**: padding vertical `spacing/3` (12 px), horizontal `spacing/2` (8 px).
-- **lg**: padding vertical `spacing/4` (16 px), horizontal `spacing/3` (12 px).
+- **sm**: padding `spacing/1` (4 px) по всем сторонам.
+- **md**: padding `spacing/2` (8 px) по всем сторонам.
+- **lg**: padding vertical `spacing/3` (12 px), horizontal `spacing/2` (8 px).
+- **xl**: padding vertical `spacing/4` (16 px), horizontal `spacing/3` (12 px).
 
 > Все отступы привязаны к токенам `spacing/*` в Figma.
 
 ### Радиус (radius)
-- **pill**: `radius.pill` (капсула) — по умолчанию.
-- **rounded**: `radius.controlMd` (8 px) — альтернатива для коротких бейджей (Semantic: control-md → radius/2).
+- **pill**: `radius/pill/pill` (капсула) — по умолчанию.
+- **rounded**: размер-зависимый:
+  - **2xs / xs**: `radius/1` (4 px) — на низких бейджах 8 px смотрится почти как Pill, теряется визуальное различие.
+  - **sm / md / lg / xl**: `radius/2` (8 px).
 
 ### Типографика
 - **2xs**: typography/caption-sm — 10 px / 12 px, weight 500.
 - **xs**: typography/caption-sm — 10 px / 12 px, weight 500.
-- **sm**: typography/caption-md — 12 px / 16 px, weight 500 (docs/TYPOGRAPHY.md).
-- **md**: Body 2 Medium — 14 px / 20 px, weight 500.
+- **sm**: typography/caption-md — 12 px / 16 px, weight 500.
+- **md**: typography/caption-md — 12 px / 16 px, weight 500.
 - **lg**: Body 2 Medium — 14 px / 20 px, weight 500.
+- **xl**: Body 2 Medium — 14 px / 20 px, weight 500.
 - Font-weight: 500.
 
 ---
@@ -73,15 +75,18 @@
 
 ### Таблица размеров
 
-Высота бейджа **фиксирована** и привязана к шкале **size/**. Прогрессия 2xs < xs < sm < md < lg.
+Высота бейджа **фиксирована**. Прогрессия 2xs < xs < sm < md < lg < xl.
 
 | Размер | Высота | Padding X | Padding Y | Font  | Иконка | Область применения |
 |--------|--------|-----------|-----------|-------|--------|---------------------|
-| 2xs    | 16 px (`size/2xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Микро-индикаторы, dot-каунтеры. |
-| xs     | 20 px (`size/xs`) | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Каунтеры в trailing list items. |
-| sm     | 32 px (`size/md`) | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
-| md     | 40 px (`size/lg`) | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
-| lg     | 48 px (`size/xl`) | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
+| 2xs    | 16 px | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Микро-индикаторы, dot-каунтеры. |
+| xs     | 20 px | spacing/1 (4) | spacing/1 (4) | caption-sm (10/12) | 12×12 px | Каунтеры в trailing list items. |
+| **sm** | **24 px** | **spacing/1 (4)** | **spacing/1 (4)** | **caption-md (12/16)** | **16×16 px** | **Компактный бейдж среднего размера, для inline-плашек в плотных строках.** |
+| md     | 32 px | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
+| lg     | 40 px | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
+| xl     | 48 px | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
+
+**История.** До 2026-05-11 шкала была 2xs / xs / sm / md / lg (5 размеров) с шагом xs→sm = 20→32 (+12). Это создавало пустоту между «мини» (≤20) и «среднеформатными» (32+) бейджами. Введён новый **sm = 24 px** — закрывает пробел. Старые `sm/md/lg` повышены до `md/lg/xl`. Структурно: иконка и текст совпадают с теперешним md (16×16 + 12/16 caption-md), отличие только в padding (4 вместо 8) и итоговой высоте.
 
 ---
 
@@ -104,8 +109,8 @@
 - **Зазор**: между иконкой и текстом — `spacing/1` (4 px).
 - **Размеры иконки** по размеру бейджа:
   - **2xs / xs**: 12×12 px
-  - **sm**: 16×16 px
-  - **md / lg**: 24×24 px
+  - **sm / md**: 16×16 px
+  - **lg / xl**: 24×24 px
 - **Цвет иконки**: наследует цвет текста бейджа (`Text&Icon/on Tinted/{variant}`).
 - **Порядок в разметке**: [иконка] → [gap] → [текст].
 
@@ -124,9 +129,10 @@
 ## 6. Использование маленьких размеров
 
 ### 6.1 Каунтеры в trailing list items
-Для отображения количества в trailing-слоте списков используйте размер **xs** (20 px) или **sm** (32 px):
-- Только число: `<Badge size="xs" variant="question">12</Badge>`
-- С текстом: `<Badge size="sm" variant="info">New 5</Badge>`
+Для отображения количества в trailing-слоте списков используйте размер **xs** (20 px), **sm** (24 px) или **md** (32 px):
+- Только число: `<Badge size="xs" variant="neutral">12</Badge>`
+- С текстом, компактно: `<Badge size="sm" variant="info">New 5</Badge>`
+- С текстом, средне: `<Badge size="md" variant="info">New 5</Badge>`
 
 ### 6.2 Микро-индикаторы
 Для notification dots и мини-каунтеров используйте размер **2xs** (16 px):
@@ -210,6 +216,6 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 - В палитре заведены 2 новых токена: `Background/Tinted/Neutral` (alias на Zinc/100 Light, Zinc/800 Dark) и `Text&Icon/on Tinted/Neutral` (alias на Zinc/800 Light, Zinc/50 Dark).
 - В Badge добавлены 10 вариантов `Type=Neutral` (5 size × 2 shape), склонированы из Good с привязкой на новые токены.
 - **Border/Neutral и Accent/Neutral не вводились** — нет реальных кейсов: Badge без бордеров, `Accent/Primary` (Zinc/950) уже играет роль нейтрального акцента в outline-кнопках/ссылках.
-- Neutral значениями совпадает с Question, но семантически отделён: Neutral для бейджей и color-coded элементов, Question за чат-бабблами.
+- Изначально Neutral дублировал значениями старый `Question` (Zinc/100 / Zinc/800). После 2026-05-07 канонический Question удалён из палитры — Neutral остался единственной нейтральной ролью для color-coded элементов, чат-баблы перешли на легаси `Decor/Bubble Old/*`.
 
 Финальная матрица: 5 type × 5 size × 2 shape = **50 вариантов**.

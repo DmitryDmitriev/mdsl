@@ -10,9 +10,9 @@
 |---|---|---|---|
 | **outgoing** | Текущий пользователь | `Background/Tinted/Info` | `Text&Icon/on Tinted/Info` |
 | **incoming** | Собеседник | `Background/Secondary` или `Surface/Surface Primary` | `Text&Icon/Primary` |
-| **question** | Системный вопрос («Уточните детали», FAQ-prompt) | `Background/Tinted/Question` | `Text&Icon/on Tinted/Question` |
+| **question** | Системный вопрос («Уточните детали», FAQ-prompt) | `Decor/Bubble Old/Question` | `Text&Icon/Primary` |
 | **answer** | Системный ответ / решение | `Background/Tinted/Info` | `Text&Icon/on Tinted/Info` |
-| **admin** | Сообщение модератора / системы | `Background/Tinted/Admin` | `Text&Icon/on Tinted/Admin` |
+| **admin** | Сообщение модератора / системы | `Decor/Bubble Old/Admin` | `Text&Icon/Primary` |
 | **negative** | Отклонено / ошибка отправки / red flag от системы | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative` |
 
 **Outgoing vs Answer** — внешне неразличимы (оба Info-shade), потому что в продукте они никогда не появляются в одном экране одновременно: outgoing — мессенджер с собеседником, answer — system-prompt в FAQ/support. Если сценарий смешает их — пересмотрим.
@@ -23,13 +23,14 @@
 
 ## 2. Цветовые токены — почему `Decor/Bubble Old/*`?
 
-`Background/Tinted/Question` и `Background/Tinted/Admin` остались в палитре и **зарезервированы за чат-бабблами**. По решению дизайн-команды:
+Изначально для чат-баблов планировалось переиспользовать канонические `Background/Tinted/Question` и `/Admin`. После 2026-05-07 канонические токены удалены — нейтральная и admin-роли в системных компонентах закрыты `Background/Tinted/Neutral` и `Background/Tinted/Good`. Чат-баблы оставлены на отдельной легаси-группе `Decor/Bubble Old/Question` и `/Admin`:
 
-- **Не вводим новые токены** для чата — переиспользуем существующие `Tinted/*`.
-- **Question shade** (Zinc/100 / Zinc/800) выделен из общего пула: для бейджей и других color-coded элементов используется отдельный токен `Background/Tinted/Neutral` (численно совпадает, но разделён семантически — см. `COLOR-PALETTE.md` §2.2).
-- **Admin shade** (Green/100 / Green/700) исторически ассоциируется с модерацией; формально это «вариация Good shade».
+- **Decor/Bubble Old/Question** (Zinc/100 / Zinc/800) — нейтральный shade для системных вопросов в чате.
+- **Decor/Bubble Old/Admin** (Green/100 / Green/700) — модераторские сообщения. Слегка отличается от `Background/Tinted/Good` по тёмной shade (Green/700 vs Green/800), что даёт лёгкое визуальное различие admin vs success в Dark.
 
-Если в палитре произойдёт rebrand чата (например, заменить Question на Neutral для baseline-баблов) — будет один targeted rename, без побочных эффектов на Badge / Soft-buttons.
+`Decor/Bubble Old/*` — единственное оставшееся легаси-наследство в новой палитре, изолированное за чат-сценарием. Когда чат-bubble будет реализован как формальный COMPONENT_SET — пересмотрим: либо мигрируем на canonical (Neutral / Good / Info), либо переименуем `Decor/Bubble/*` в каноническую группу без суффикса Old.
+
+Текст на этих shade-плашках берётся из обычного `Text&Icon/Primary` (структурный компонент с tinted-фоном — см. `alert-spec.md` принцип цвета текста). Парный `Text&Icon/on Tinted/*` для чата не применяется.
 
 ---
 
@@ -142,6 +143,6 @@ ChatBubble (HORIZONTAL container, выравнивание по типу)
 
 ## 11. Связь с другими компонентами
 
-- `Background/Tinted/Question`, `/Admin` — **только** в чате. Для нейтральных бейджей вне чата — `Background/Tinted/Neutral` (см. `badge-spec.md`).
+- `Decor/Bubble Old/Question`, `/Admin` — **только** в чате. Для нейтральных бейджей и других color-coded элементов вне чата — `Background/Tinted/Neutral` (см. `badge-spec.md`).
 - Avatar в чате — стандартный компонент `Avatar v2`, размеры S/M.
 - Status badge для error — иконка из ic_*-набора.
