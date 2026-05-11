@@ -60,7 +60,7 @@
 | Checkbox (radius 2 px, M3) | 🔍 | [checkbox-spec](./checkbox-spec.md) |
 | Chips | 🔍 | [chips-spec](./chips-spec.md) |
 | Divider | 🔍 | [divider-spec](./divider-spec.md) |
-| Home Indicator | 🔍 | — |
+| Home Indicator | 🔍 | [home-indicator-spec](./home-indicator-spec.md) |
 | Progress | 🔍 | — |
 | Radio | 🔍 | [radio-spec](./radio-spec.md) |
 | Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
