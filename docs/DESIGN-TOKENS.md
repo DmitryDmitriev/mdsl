@@ -115,6 +115,9 @@
 | size/lg | spacing/10 | 40 px | Аватар md, большой бейдж |
 | size/xl | spacing/12 | 48 px | Аватар lg |
 | size/2xl | spacing/14 | 56 px | Большой аватар |
+| size/3xl | spacing/20 | 80 px | Аватар 4XL (identity-illustration tier — см. ниже) |
+
+> **Identity-illustration tier (64 / 80 px).** Avatar `3XL` (64 px) и `4XL` (80 px) находятся на границе между «информационным элементом» и «иллюстрацией». В Figma они подключены через `spacing/16` (64) и `size/3xl` (80) — двойная привязка к разным шкалам, исторически. Для разработки: на этих размерах аватар читается как identity-block, не как контрол; масштабирование иконок и шрифта внутри идёт по illustration-логике, а не по control-логике. См. `docs/avatar-spec.md` §3.
 
 **Когда использовать `size/*` vs `control-height/*`:**
 
@@ -128,14 +131,16 @@
 
 Семантика скруглений (алиасы на Core, коллекция Semantic):
 
-| Semantic | Core (референс) | px | Использование |
-|----------|-----------------|-----|----------------|
-| control-sm | radius/1 | 4 | Мелкие контролы |
-| control-md | radius/2 | 8 | Кнопка **xs**, rounded badge, мелкие кнопки-иконки |
-| control-lg | radius/3 | 12 | Кнопки **sm**, **md**, **lg** |
-| surface | radius/3 | 12 | Карточки, панели |
-| overlay | radius/4 | 16 | Модалки, bottom sheet (открытый край) |
-| pill | radius/full | 999 | Капсулы, чипы-pill |
+| Semantic (short) | Figma path                       | Core      | px  | Использование |
+|------------------|----------------------------------|-----------|-----|----------------|
+| control-sm       | `radius/control/control-sm`      | radius/1  | 4   | Мелкие контролы |
+| control-md       | `radius/control/control-md`      | radius/2  | 8   | Кнопка **xs**, rounded badge, мелкие кнопки-иконки |
+| control-lg       | `radius/control/control-lg`      | radius/3  | 12  | Кнопки **sm**, **md**, **lg** |
+| surface          | `radius/surface/surface`         | radius/3  | 12  | Карточки, панели |
+| overlay          | `radius/surface/overlay`         | radius/4  | 16  | Модалки, bottom sheet (открытый край) |
+| pill             | `radius/pill/pill`               | radius/full | 999 | Капсулы, чипы-pill |
+
+> **Шкала `radius/surface/*`** — два токена (`surface` = 12, `overlay` = 16) под зонтиком одной семьи: разные уровни приподнятости поверхности дают разный «мягкий» радиус. Surface = карточка/панель (12), overlay = модалка/sheet (16) — у overlay край больше, потому что поверхность визуально «оторвана» от фона.
 
 ### border и divider (толщина)
 

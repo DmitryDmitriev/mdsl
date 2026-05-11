@@ -150,7 +150,7 @@
 | Primary         | Accent/Primary             | Text&Icon/Inverted W-B          |
 | Secondary       | Accent/Secondary           | Text&Icon/Primary               |
 | Negative        | Accent/Negative            | Text&Icon/Inverted W-B          |
-| Soft Negative   | Background/Tinted/Negative | Text&Icon/onTinted/negative     |
+| Soft Negative   | Background/Tinted/Negative | `Text&Icon/on Tinted/Negative`  |
 
 **Outline и Ghost** не имеют собственных Background-токенов — фон прозрачный:
 
@@ -308,13 +308,23 @@
    - `Text&Icon/Negative` Light → `Accent/Negative` (раньше через `Accent Old/Negative`).
    - `Text&Icon/Warning` Light → `Accent/Warning` (раньше через `Accent Old/Warning`).
    - `Text&Icon/Link` Light → `Accent/Link` (раньше через `Accent Old/Link`).
-3. ⏳ После валидации продукта на canonical-палитре — удалить группы `* Old/*` из палитры.
+3. ✅ **2026-05-11 — Home Indicator (62:15579) поймали при аудите** — был пропущен в Round 6, остался на `Icon Old/Primary` (#1d2023 legacy). Перепривязан на `Text&Icon/Primary`. См. `docs/home-indicator-spec.md` §7.
+4. ✅ **2026-05-11 — Disabled-токены подключены к компонентам**. Button (60 var.) и ButtonIcon (64 var.) переведены: `Background/Secondary` → `Background/Disabled`, `Text&Icon/Tertiary` → `Text&Icon/Disabled` для State=Disabled. См. `docs/button-spec.md` §«История миграций».
+5. ✅ **2026-05-11 — Outline border синхронизирован**. В Button + ButtonIcon Outline+Default переведены с `Accent/Primary` на canonical `Border/Default` (по спеке §2.4 / §2.6).
+6. ⏳ После валидации продукта на canonical-палитре — удалить группы `* Old/*` из палитры.
+
+**Состояние семейств токенов (на 2026-05-11):**
+- `Background/Disabled`, `Text&Icon/Disabled` — в палитре, подключены к Button + ButtonIcon Disabled.
+- `Border/Negative`, `/Positive`, `/Warning`, `/Focus` — в палитре, используются на инпутах в Error / Focus state (см. `input-v2-spec.md`).
+- `Button/Primary`, `/Secondary`, `/Negative`, `/Soft Negative` — alias-токены в палитре. Компоненты Button подключены напрямую к `Accent/*` и `Background/Tinted/*` (то же значение через alias). При желании можно перепривязать на Button/* для семантической ясности — на визуал не влияет.
 
 **Deprecated компоненты** (`⚠️ DEPRECATED / Text Field`, `Search`, `Top app bar`, `[deprecated] Notification`, `[deprecated] Basic dialog`, `.=List item_OLD`, `.=Txt Field`, `.=Left Icon Input`, `[deprecated] img_container`) — **остаются** в файле UI-Kit-Mobile. Удаление сломает существующие продуктовые файлы, где они используются как инстансы. Они помечены явно (⚠️ префикс / [deprecated] / суффикс _OLD), новые задачи их не используют. Со временем продуктовые файлы будут чиститься естественно.
 
-### Что мигрировано (Round 6, 2026-05-06)
+### Что мигрировано (Round 6, 2026-05-06 → 2026-05-11)
 
 Все 26+ компонентов файла UI-Kit-Mobile переведены на canonical-палитру. Детали и burn-down — в `migration-baseline.md`.
+
+**2026-05-11 — Home Indicator пойман и мигрирован** в рамках аудита component-spec-check. Был единственным компонентом, пропущенным в Round 6 (использовал `Icon Old/Primary` #1d2023). Перепривязан на `Text&Icon/Primary`. Этим Round 6 закрыт окончательно.
 
 ---
 
