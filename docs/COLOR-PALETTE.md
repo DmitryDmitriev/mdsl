@@ -17,10 +17,14 @@
 
 Шаги: `5, 10, 20, 30, 40, 50, 60, 80, 90`.
 
+**Формула:** `opacity(%) = 100 − N`. То есть `alpha Black/5` = 95% (самый плотный), `alpha Black/90` = 10% (самый прозрачный).
+
 ### 1.2 Alpha White
 Основа: `#FFFFFF`. Шкала по светлоте: имя 5–90, проценты 95% (самый светлый) — 10% (самый тёмный).
 
 Шаги: `5, 10, 20, 30, 40, 50, 60, 80, 90`.
+
+**Формула:** `opacity(%) = 100 − N`. То есть `alpha White/5` = 95% (самый плотный белый), `alpha White/90` = 10% (самый прозрачный).
 
 ### 1.3 White
 | Токен    | Hex     | Примечание   |
@@ -102,11 +106,12 @@
 
 | Роль              | Light                | Dark                  |
 |-------------------|----------------------|-----------------------|
-| Surface Primary   | Background Primary   | Background Secondary  |
+| Surface Primary   | Background Primary   | **Zinc/800** (#27272A) |
 | Surface Secondary | Background Primary   | Background Tertiary   |
 
 В Light обе роли = Background Primary: разделение от фона делается через border (или shadow в редких случаях).
-В Dark разделение делается через **осветление поверхности** относительно фона — тени не используются.
+
+В Dark разделение делается через **осветление поверхности** относительно фона — **тени в Dark не видны и не используются**. `Surface Primary` Dark = Zinc/800 (#27272A) — на одну ступень светлее `Background/Primary` (Zinc/950, #09090B) и `Background/Secondary` (Zinc/900, #18181B). Это даёт визуальный elevation cue без тени. Привязка идёт напрямую на raw Zinc/800, не через Background/* — иначе поверхность сольётся с фоном (см. историю 2026-05-11).
 
 ### 2.4 Border
 | Роль         | Light          | Dark        |
@@ -296,7 +301,14 @@
 ### Что осталось до завершения миграции
 
 1. ✅ Опечатка `Tertiery` → `Tertiary` исправлена 2026-05-06 (`Text&Icon/Tertiary`, `Text Old/Tertiary`).
-2. ⏳ После валидации продукта на canonical-палитре — удалить группы `* Old/*` из палитры.
+2. ✅ **2026-05-11 — внутренние aliases палитры через `Old` ликвидированы.** Round 6 чистил bindings компонентов; внутри палитры canonical-токены продолжали указывать на canonical через цепочку `Old`. Перепривязаны напрямую:
+   - `Surface/Surface Primary` Dark → `Zinc/800` (раньше через `Background Old/Secondary` → Greyscale/Gray 100 = #2C3135 legacy).
+   - `Border/Active` Light → `Accent/Primary` (раньше через `Accent Old/Graphite`).
+   - `Text&Icon/Positive` Light → `Accent/Positive` (раньше через `Accent Old/Positive`).
+   - `Text&Icon/Negative` Light → `Accent/Negative` (раньше через `Accent Old/Negative`).
+   - `Text&Icon/Warning` Light → `Accent/Warning` (раньше через `Accent Old/Warning`).
+   - `Text&Icon/Link` Light → `Accent/Link` (раньше через `Accent Old/Link`).
+3. ⏳ После валидации продукта на canonical-палитре — удалить группы `* Old/*` из палитры.
 
 **Deprecated компоненты** (`⚠️ DEPRECATED / Text Field`, `Search`, `Top app bar`, `[deprecated] Notification`, `[deprecated] Basic dialog`, `.=List item_OLD`, `.=Txt Field`, `.=Left Icon Input`, `[deprecated] img_container`) — **остаются** в файле UI-Kit-Mobile. Удаление сломает существующие продуктовые файлы, где они используются как инстансы. Они помечены явно (⚠️ префикс / [deprecated] / суффикс _OLD), новые задачи их не используют. Со временем продуктовые файлы будут чиститься естественно.
 
