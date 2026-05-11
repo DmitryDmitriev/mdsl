@@ -101,3 +101,15 @@ HorizontalDivider(
 - [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — шкалы размеров, spacing
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md) — палитра и семантика цветов
 - [list-item-spec.md](./list-item-spec.md) — основной потребитель разделителей
+
+---
+
+## 8. История миграций
+
+**2026-05-11 — аудит готовности (component-spec-check).**
+
+Все 3 варианта (full-width / inset / middle-inset) — на токенах (`Border/Default`, `Platform/Width`, `spacing/4`, `spacing/0`), структура соответствует §3. Покрытие — 100% (до и после аудита).
+
+Cleanup: на корневом COMPONENT_SET (86:20548) висел orphan-stroke c binding на `Accent/Link` — на визуал не влиял (paint без видимой обводки), но засорял variable_defs при codegen. Paint удалён.
+
+Divider → ✅ готов к разработке.
