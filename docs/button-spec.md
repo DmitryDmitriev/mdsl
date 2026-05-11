@@ -126,7 +126,7 @@
 |---------|------|--------|-------------|
 | **Negative** | `Button/Negative` (= Accent/Negative, Red/600 / Red/400) | — | `Text&Icon/Inverted W-B` |
 | **Soft Negative** | `Button/Soft Negative` (= Background/Tinted/Negative, Red/50 / Red/800) | — | `Text&Icon/onTinted/negative` (Red/800 / Red/50) |
-| **Ghost Negative** | прозрачный | — | `Accent/Negative` (Red/600 / Red/400) |
+| **Ghost Negative** | прозрачный | — | `Text&Icon/Negative` (≡ `Accent/Negative` — оба Red/600 Light / Red/400 Dark) |
 
 **Когда какой вариант:**
 - **Negative** (filled) — редкие сильные деструктивные действия: «Удалить аккаунт», «Заблокировать пользователя». Громкий визуал.
@@ -293,3 +293,20 @@
 | FAB Bar | 100% | 89% | 100% | 91% |
 
 Все основные кнопки полностью на токенах. У FAB Bar остались SiglButton itemSpacing и Tab Bar Buttons width — компенсация iOS UI Kit, см. fab-bar-spec.md.
+
+---
+
+## История миграций
+
+**2026-05-11 — аудит готовности к разработке (component-spec-check).**
+
+Спека внутренне непротиворечива — все правки на стороне Figma:
+
+- **Типографика Size=48 (md) и Size=40 (sm)** — 30 text-вариантов переведены с `Base/Body 1 Medium` (16/24) на **`Base/Body 2 Medium`** (14/20). Body 1 Medium оставлен только для Size=56 (lg) и Size=32 — Caption MD Medium (12/16).
+- **Outline / State=Default border** — 6 вариантов перепривязаны с `Accent/Primary` на **`Border/Default`** (семантика бордера, не accent-токен).
+- **State=Disabled / Fill** (Primary, Secondary) — 12 вариантов перепривязаны с `Background/Secondary` на **`Background/Disabled`**.
+- **State=Disabled / Text+Icon** (Primary, Secondary, Outline, Ghost) — 22 варианта перепривязаны с `Text&Icon/Tertiary` на **`Text&Icon/Disabled`**.
+- **Soft Negative / Text+Icon** — 6 вариантов перепривязаны с `Text&Icon/Negative` (Red/600) на **`Text&Icon/on Tinted/Negative`** (Red/800 / Red/50). Red/600 на пастельном Red/50 фоне давал контраст на грани WCAG AA — по той же логике, что в badge-spec §2.
+- **Ghost Negative / Text+Icon** — оставлено на `Text&Icon/Negative`. По COLOR-PALETTE.md (после миграции 2026-05-11) `Text&Icon/Negative` ≡ `Accent/Negative` в обеих темах (Red/600 Light, Red/400 Dark). Спека §«Цвета — Деструктив» дополнена уточнением.
+
+Итого 76 правок. Button → ✅ готов к разработке.
