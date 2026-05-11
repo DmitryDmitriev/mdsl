@@ -53,19 +53,19 @@
 
 | Компонент | Статус | Спека |
 |-----------|--------|-------|
-| Avatar v2 | 🔍 | [avatar-spec](./avatar-spec.md) |
-| Badge | 🔍 | [badge-spec](./badge-spec.md) |
-| Button | 🔍 | [button-spec](./button-spec.md) |
-| ButtonIcon | 🔍 | [button-spec](./button-spec.md) |
-| Checkbox (radius 2 px, M3) | 🔍 | [checkbox-spec](./checkbox-spec.md) |
-| Chips | 🔍 | [chips-spec](./chips-spec.md) |
-| Divider | 🔍 | [divider-spec](./divider-spec.md) |
-| Home Indicator | 🔍 | [home-indicator-spec](./home-indicator-spec.md) |
-| Progress | 🔍 | [progress-spec](./progress-spec.md) |
-| Radio | 🔍 | [radio-spec](./radio-spec.md) |
-| Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| Avatar v2 | ✅ | [avatar-spec](./avatar-spec.md) |
+| Badge | ✅ | [badge-spec](./badge-spec.md) |
+| Button | ✅ | [button-spec](./button-spec.md) |
+| ButtonIcon | ✅ | [button-spec](./button-spec.md) |
+| Checkbox (radius 2 px, M3) | ✅ | [checkbox-spec](./checkbox-spec.md) |
+| Chips | ✅ | [chips-spec](./chips-spec.md) |
+| Divider | ✅ | [divider-spec](./divider-spec.md) |
+| Home Indicator | ✅ | [home-indicator-spec](./home-indicator-spec.md) |
+| Progress | ✅ | [progress-spec](./progress-spec.md) |
+| Radio | ✅ | [radio-spec](./radio-spec.md) |
+| Skeleton — атомы (Block/Circle/Line) | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | StatusBar Body (design-only mockup) | ✅ | — |
-| Switch | 🔍 | [switch-spec](./switch-spec.md) |
+| Switch | ✅ | [switch-spec](./switch-spec.md) |
 
 ---
 
@@ -77,7 +77,7 @@
 |-----------|--------|--------------------|
 | Alert | 🔍 | [alert-spec](./alert-spec.md) |
 | Buttons Stack | 🔍 | — |
-| Check+Text | 🔍 | [checkbox-spec](./checkbox-spec.md) |
+| Check+Text | ✅ | [checkbox-spec](./checkbox-spec.md) |
 | FAB Bar | 🔍 | [fab-bar-spec](./fab-bar-spec.md) |
 | Input v2 + Input v2 Stacked | 🔍 | [input-v2-spec](./input-v2-spec.md) |
 | List Item | 🔍 | [list-item-spec](./list-item-spec.md) |
@@ -106,9 +106,9 @@
 | Dialog (slots: Title/Description/Buttons Stack/Image) | 🔍 | [dialog-spec](./dialog-spec.md) |
 | Empty State (Inline / Full-screen) | 🔍 | [empty-state-spec](./empty-state-spec.md) |
 | Sheet / Sheets | 🔍 | [sheets-spec](./sheets-spec.md) |
-| Skeleton / Listing Card (Grid + Wide) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
-| Skeleton / List Item | 🔍 | [skeleton-spec](./skeleton-spec.md) |
-| Skeleton / Profile Header | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / Profile Header | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Top App Bar v2 | 🔍 | [top-app-bar-spec](./top-app-bar-spec.md) |
 | Listing Card (Grid + Wide) | ⏳ | — |
 | Image Gallery | ⏳ | — |
