@@ -49,60 +49,60 @@
 
 Простые элементы — одна сущность, не делятся дальше. **Все атомы в одной таблице**, включая планируемые.
 
-| Компонент | Статус | Phase | Спека |
-|-----------|--------|-------|-------|
-| Avatar v2 | 🔍 | — | [avatar-spec](./avatar-spec.md) |
-| Badge | 🔍 | — | [badge-spec](./badge-spec.md) |
-| Button | 🔍 | — | [button-spec](./button-spec.md) |
-| ButtonIcon | 🔍 | — | [button-spec](./button-spec.md) |
-| Checkbox (radius 2 px, M3) | 🔍 | — | [checkbox-spec](./checkbox-spec.md) |
-| Chips | 🔍 | — | [chips-spec](./chips-spec.md) |
-| Divider | 🔍 | — | [divider-spec](./divider-spec.md) |
-| Home Indicator | 🔍 | — | — |
-| Progress | 🔍 | — | — |
-| Radio | 🔍 | — | [radio-spec](./radio-spec.md) |
-| Skeleton — атомы (Block/Circle/Line) | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
-| StatusBar Body | 🔍 | — | — |
-| Switch | 🔍 | — | [switch-spec](./switch-spec.md) |
-| Top Progress bar (Stories indicator) | 🔍 | — | — |
-| Save Icon Button | ⏳ | Phase 2 | — |
-| Star Rating | ⏳ | Phase 3 | — |
-| Stepper | ⏳ | Phase 3 | — |
+| Компонент | Статус | Спека |
+|-----------|--------|-------|
+| Avatar v2 | 🔍 | [avatar-spec](./avatar-spec.md) |
+| Badge | 🔍 | [badge-spec](./badge-spec.md) |
+| Button | 🔍 | [button-spec](./button-spec.md) |
+| ButtonIcon | 🔍 | [button-spec](./button-spec.md) |
+| Checkbox (radius 2 px, M3) | 🔍 | [checkbox-spec](./checkbox-spec.md) |
+| Chips | 🔍 | [chips-spec](./chips-spec.md) |
+| Divider | 🔍 | [divider-spec](./divider-spec.md) |
+| Home Indicator | 🔍 | — |
+| Progress | 🔍 | — |
+| Radio | 🔍 | [radio-spec](./radio-spec.md) |
+| Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| StatusBar Body | 🔍 | — |
+| Switch | 🔍 | [switch-spec](./switch-spec.md) |
+| Top Progress bar (Stories indicator) | 🔍 | — |
+| Save Icon Button | ⏳ | — |
+| Star Rating | ⏳ | — |
+| Stepper | ⏳ | — |
 
 ---
 
 ## Molecules 🧪
 
-Простые комбинации атомов с единой целью. Готовые + Phase 1/2/3 + отказанные — в одной таблице.
+Простые комбинации атомов с единой целью. Готовые + планируемые + отказанные — в одной таблице.
 
-| Компонент | Статус | Phase | Спека / Примечание |
-|-----------|--------|-------|--------------------|
-| Alert | 🔍 | — | [alert-spec](./alert-spec.md) |
-| Buttons Stack | 🔍 | — | — |
-| Check+Text | 🔍 | — | [checkbox-spec](./checkbox-spec.md) |
-| FAB Bar | 🔍 | — | [fab-bar-spec](./fab-bar-spec.md) |
-| Helpers / Info Line | 🔍 | — | — |
-| Input v2 + Input v2 Stacked | 🔍 | — | [input-v2-spec](./input-v2-spec.md) |
-| List Item | 🔍 | — | [list-item-spec](./list-item-spec.md) |
-| Search v2 | 🔍 | — | [search-spec](./search-spec.md) |
-| Segment Control (Android M3) | 🔍 | — | [segment-control-spec](./segment-control-spec.md) |
-| Snackbar | 🔍 | — | — |
-| Tab Bar | 🔍 | — | — |
-| Tabs | 🔍 | — | [tabs-spec](./tabs-spec.md) |
-| Tooltip | ⏳ | Phase 1 | — |
-| Accordion | ⏳ | Phase 1 | — |
-| Filter Chip Group | ⏳ | Phase 2 | — |
-| Banner / Promo | ⏳ | Phase 2 | — |
-| Range Slider | ⏳ | Phase 2 | — |
-| OTP Input | ⏳ | Phase 2 | — |
-| Phone Reveal Button | ⏳ | Phase 3 | — |
-| Currency Input | ⏳ | Phase 3 | — |
-| Phone Input | ⏳ | Phase 3 | — |
-| ~~Notification~~ | ⚠️ | — | Заменён `Alert` |
-| ~~Toggle Group~~ | ⚠️ draft | — | Дублирует `Segment Control` |
-| ~~iOS Segment Control~~ | ⚠️ | — | Заменён `Tabs` (Radix) |
-| Chat Bubble | ❓ | — | [chat-bubble-spec](./chat-bubble-spec.md) — guideline, формального компонента нет |
-| ~~Time Picker~~ | ❌ | — | Используем нативный iOS/Android picker |
+| Компонент | Статус | Спека / Примечание |
+|-----------|--------|--------------------|
+| Alert | 🔍 | [alert-spec](./alert-spec.md) |
+| Buttons Stack | 🔍 | — |
+| Check+Text | 🔍 | [checkbox-spec](./checkbox-spec.md) |
+| FAB Bar | 🔍 | [fab-bar-spec](./fab-bar-spec.md) |
+| Helpers / Info Line | 🔍 | — |
+| Input v2 + Input v2 Stacked | 🔍 | [input-v2-spec](./input-v2-spec.md) |
+| List Item | 🔍 | [list-item-spec](./list-item-spec.md) |
+| Search v2 | 🔍 | [search-spec](./search-spec.md) |
+| Segment Control (Android M3) | 🔍 | [segment-control-spec](./segment-control-spec.md) |
+| Snackbar | 🔍 | — |
+| Tab Bar | 🔍 | — |
+| Tabs | 🔍 | [tabs-spec](./tabs-spec.md) |
+| Tooltip | ⏳ | — |
+| Accordion | ⏳ | — |
+| Filter Chip Group | ⏳ | — |
+| Banner / Promo | ⏳ | — |
+| Range Slider | ⏳ | — |
+| OTP Input | ⏳ | — |
+| Phone Reveal Button | ⏳ | — |
+| Currency Input | ⏳ | — |
+| Phone Input | ⏳ | — |
+| ~~Notification~~ | ⚠️ | Заменён `Alert` |
+| ~~Toggle Group~~ | ⚠️ draft | Дублирует `Segment Control` |
+| ~~iOS Segment Control~~ | ⚠️ | Заменён `Tabs` (Radix) |
+| Chat Bubble | ❓ | [chat-bubble-spec](./chat-bubble-spec.md) — guideline, формального компонента нет |
+| ~~Time Picker~~ | ❌ | Используем нативный iOS/Android picker |
 
 ---
 
@@ -110,20 +110,20 @@
 
 Сложные композиции из атомов и молекул.
 
-| Компонент | Статус | Phase | Спека / Примечание |
-|-----------|--------|-------|--------------------|
-| Dialog (slots: Title/Description/Buttons Stack/Image) | 🔍 | — | [dialog-spec](./dialog-spec.md) |
-| Empty State (Inline / Full-screen) | 🔍 | — | [empty-state-spec](./empty-state-spec.md) |
-| Sheet / Sheets | 🔍 | — | [sheets-spec](./sheets-spec.md) |
-| Skeleton / Listing Card (Grid + Wide) | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
-| Skeleton / List Item | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
-| Skeleton / Profile Header | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
-| Top App Bar v2 | 🔍 | — | [top-app-bar-spec](./top-app-bar-spec.md) |
-| Listing Card (Grid + Wide) | ⏳ | Phase 2 | — |
-| Image Gallery | ⏳ | Phase 2 | — |
-| Carousel | ⏳ | Phase 2 | — |
-| ~~Confirmation preset for Dialog~~ | ⚠️ | — | Покрывается стандартным `Dialog` |
-| ~~DialogIllustration~~ | ⚠️ | — | Use-case основного `Dialog` (Image=true) |
+| Компонент | Статус | Спека / Примечание |
+|-----------|--------|--------------------|
+| Dialog (slots: Title/Description/Buttons Stack/Image) | 🔍 | [dialog-spec](./dialog-spec.md) |
+| Empty State (Inline / Full-screen) | 🔍 | [empty-state-spec](./empty-state-spec.md) |
+| Sheet / Sheets | 🔍 | [sheets-spec](./sheets-spec.md) |
+| Skeleton / Listing Card (Grid + Wide) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / List Item | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / Profile Header | 🔍 | [skeleton-spec](./skeleton-spec.md) |
+| Top App Bar v2 | 🔍 | [top-app-bar-spec](./top-app-bar-spec.md) |
+| Listing Card (Grid + Wide) | ⏳ | — |
+| Image Gallery | ⏳ | — |
+| Carousel | ⏳ | — |
+| ~~Confirmation preset for Dialog~~ | ⚠️ | Покрывается стандартным `Dialog` |
+| ~~DialogIllustration~~ | ⚠️ | Use-case основного `Dialog` (Image=true) |
 
 ---
 
