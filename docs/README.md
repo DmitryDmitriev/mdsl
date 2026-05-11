@@ -66,7 +66,6 @@
 | Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
 | StatusBar Body (design-only mockup) | ✅ | — |
 | Switch | 🔍 | [switch-spec](./switch-spec.md) |
-| Top Progress bar (Stories indicator) | 🔍 | — |
 
 ---
 
@@ -91,17 +90,11 @@
 | Tooltip | ⏳ | — |
 | Accordion | ⏳ | — |
 | Filter Chip Group | ⏳ | — |
-| Banner / Promo | ⏳ | — |
 | Range Slider | ⏳ | — |
 | OTP Input | ⏳ | — |
 | Phone Reveal Button | ⏳ | — |
 | Currency Input | ⏳ | — |
 | Phone Input | ⏳ | — |
-| ~~Notification~~ | ⚠️ | Заменён `Alert` |
-| ~~Toggle Group~~ | ⚠️ draft | Дублирует `Segment Control` |
-| ~~iOS Segment Control~~ | ⚠️ | Заменён `Tabs` (Radix) |
-| Chat Bubble | ❓ | [chat-bubble-spec](./chat-bubble-spec.md) — guideline, формального компонента нет |
-| ~~Time Picker~~ | ❌ | Используем нативный iOS/Android picker |
 
 ---
 
@@ -121,8 +114,6 @@
 | Listing Card (Grid + Wide) | ⏳ | — |
 | Image Gallery | ⏳ | — |
 | Carousel | ⏳ | — |
-| ~~Confirmation preset for Dialog~~ | ⚠️ | Покрывается стандартным `Dialog` |
-| ~~DialogIllustration~~ | ⚠️ | Use-case основного `Dialog` (Image=true) |
 
 ---
 
