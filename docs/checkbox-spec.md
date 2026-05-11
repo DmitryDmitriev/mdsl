@@ -24,9 +24,12 @@
 |---------------|-----------------|------------|
 | `checked`     | true / false    | Заливка + иконка |
 | `indeterminate` | true / false  | Частичный выбор |
-| `disabled`    | true / false    | Border/disabled, текст tertiary |
-| `error`       | true / false    | Обводка Accent/Negative |
+| `disabled`    | true / false    | В Figma реализован как variant property `Active=No`. Border/disabled, текст tertiary |
 | `size`        | sm / md         | При двух размерах — привязка к spacing/radius |
+
+> **Naming в Figma:** variant properties — `Select = Off / On / Indeterminate` и `Active = Yes / No`. **`Active=No` ≡ Disabled state**. Отдельного `Focus` variant нет: визуальный фокус (border/2 + Border/Active) рисуется поверх компонента в коде через focus-ring; spec-таблица состояний §4 описывает Focus как роль, не как Figma variant.
+>
+> **Error state — в Figma не делаем.** В Larixon Mobile UX чекбоксы используются в фильтрах и согласиях («подтверждаю условия»), где error-валидация даётся helpers/info line под группой, не цветом самого квадрата. Если в будущем появится use-case с per-checkbox error — добавим variant `Error=Yes/No`.
 
 ---
 
@@ -34,9 +37,9 @@
 
 | Параметр | Токен / значение | Примечание |
 |----------|------------------|------------|
-| Минимальная высота ряда (touch) | height/xs (32 px) или height/sm (40 px) | Как у контролов в **DESIGN-TOKENS** |
+| Минимальная высота ряда (touch) | для standalone Checkbox — `control-height/xs` (32 px) или `/sm` (40 px); для Check+Text как building block (см. §5) — touch обеспечивает родительский ряд (List Item, Filter Row) | Как у контролов в **DESIGN-TOKENS** |
 | Gap (квадрат ↔ текст) | spacing/2 (8 px) | |
-| Сторона квадрата | spacing/4 (16 px) или spacing/5 (20 px) | Выбрать один размер для продукта |
+| Сторона квадрата | **`spacing/5`** (20 px) | Канон для Larixon Mobile. На 16 px квадрат не используем — на mobile хуже читается. |
 | Скругление квадрата | **radius/0_5** (2 px) | M3-спека Checkbox = 2 px. Введён 2026-05-11. |
 | Толщина бордера (покой) | **border/default** → border/1 (1 px) | |
 | Бордер (focus / акцент) | **border/emphasis** → border/2 (2 px) | Кольцо фокуса |
@@ -71,9 +74,8 @@
 | Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
 | Indeterminate, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** (черта) | `Text&Icon/Primary` |
 | Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiary` (черта) | `Text&Icon/Tertiary` |
-| Hover | Подсветка по гайду продукта (не реализовано в DS) | — | `Text&Icon/Primary` |
-| Focus | Border/Active или ring `Border/Focus` | — | `Text&Icon/Primary` |
-| Error | stroke `Accent/Negative` | — | `Text&Icon/Negative` (опц.) |
+| Hover | Подсветка по гайду продукта (в DS не реализовано — mobile-only) | — | `Text&Icon/Primary` |
+| Focus | Border/Active или ring `Border/Focus` (рисуется в коде поверх, не отдельный variant) | — | `Text&Icon/Primary` |
 
 **Критично — иконка в Checked/Indeterminate (Active=Yes):** использовать **`Text&Icon/Inverted W-B`** (W в Light, B в Dark), а **не** `Text&Icon/White applied`. Причина: `Accent/Primary` в Light — Zinc/950 (тёмный, белая галочка читается), в Dark — Zinc/50 (почти белый), на нём theme-invariant white текст пропадает и компонент визуально схлопывается с disabled. `Inverted W-B` инвертирует против фона: белый на тёмном Light, чёрный на светлом Dark.
 
@@ -92,14 +94,22 @@
 | Indeterminate | Частичный выбор |
 | Disabled | Недоступный |
 
-### Токены (обновлено 2026-04-16)
+### Назначение и touch target
+
+Check+Text — **building block**, не самостоятельный touch-row. Используется внутри List Item / Filter Row / Settings Item, где минимальная высота касания обеспечивается родителем. Сам компонент в Figma имеет высоту `size/sm` (24 px) — равную стороне квадрата + visual breathing room, без собственного padding.
+
+Если нужна standalone-форма (стэк чекбоксов в форме согласий) — оборачивайте в List Item с `control-height/xs` (32) или `/sm` (40).
+
+### Токены (обновлено 2026-05-11)
 
 | Параметр | Значение | Токен |
 |---|---|---|
-| Text width | **FILL** | — (растягивается на родителя) |
+| Высота ряда | 24 px | `size/sm` (building block — см. выше) |
+| Text width | **FILL** | layoutGrow=1 на горизонтальном auto-layout |
+| Text стиль | **Body 2** (14/20 Regular) | `Base/Body 2` — было `Base/Body Dense` (16/20), не из списка допустимых |
 | Gap (чекбокс ↔ текст) | 8 px | `spacing/2` |
 
-> **Изменение:** Text width был FIXED 99 px → переведён на FILL. Текст теперь занимает всю доступную ширину, переносится при длинном содержании.
+> **Изменения 2026-05-11:** Text width 99 fixed → FILL (layoutGrow=1). Text style `Body Dense` (16/20) → `Body 2` (14/20, по spec §3). Высота 24 = `size/sm` — закреплено как building block.
 
 ### Аудит покрытия
 
@@ -122,6 +132,23 @@
 ---
 
 ## 7. История миграций
+
+**2026-05-11 — аудит готовности (component-spec-check), 12 правок.**
+
+В Figma:
+- Checkbox box side: 6+1 нод перепривязаны с `size/xs` (информационная шкала) на **`spacing/5`** (20 px, spacing-шкала). Значение то же, шкала корректная.
+- Checkbox 86:20324 (Select=Off, Active=Yes): `strokeWeight` `border/2` → **`border/1`** (по спеке §3 — обводка покоя должна быть 1 px; border/2 зарезервирован для focus/акцента).
+- Check+Text (4 state-варианта): text style `Base/Body Dense` (16/20) → **`Base/Body 2`** (14/20). Text width 99 fixed → **FILL** (layoutGrow=1).
+
+В спеке:
+- §2 «Семантика»: убран `error` (не делаем сейчас), `disabled` уточнён как `Active=No` в Figma. Добавлено пояснение про naming (Active≠Focus) и Error rationale.
+- §3 «Таблица токенов»: сторона квадрата зафиксирована на **`spacing/5`** (без альтернативы 16); high target уточнён по контексту (standalone vs building block).
+- §4 «Состояния»: удалена строка Error.
+- §5 «Check+Text»: добавлен раздел «Назначение и touch target» — building block, touch на родителе. Токены: text style Body 2, высота 24 = size/sm.
+
+Checkbox + Check+Text → ✅ готовы к разработке.
+
+---
 
 **2026-05-06 — fix: галочка в Dark theme.**
 
