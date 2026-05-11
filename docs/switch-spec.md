@@ -87,19 +87,19 @@ Switch (COMPONENT) ← Track
 
 | Элемент | Enabled | Token | Light | Dark |
 |---|---|---|---|---|
-| **Track** | True | `Accent/Primary` | #2C3135 | *(dark mode TBD)* |
-| **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
-| **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Text&Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
+| **Track** | True | `Accent/Primary` | #09090B (Zinc/950) | #E4E4E7 (Zinc/200) |
+| **Knob** | True | `Background/Primary` | #FFFFFF (White/Main) | #09090B (Zinc/950) |
+| **Track** | False | `Background/Secondary` | #F4F4F5 (Zinc/100) | #18181B (Zinc/900) |
+| **Knob** | False | `Text&Icon/Tertiary` | #D4D4D8 (Zinc/300) | #71717A (Zinc/500) |
 
 ### State = Off (выключен)
 
 | Элемент | Enabled | Token | Light | Dark |
 |---|---|---|---|---|
-| **Track** | True | `Background/Tertiary` | #E2E5EB | *(dark mode TBD)* |
-| **Knob** | True | `Background/Primary` | #FFFFFF | *(dark mode TBD)* |
-| **Track** | False | `Background/Secondary` | #F2F3F7 | *(dark mode TBD)* |
-| **Knob** | False | `Text&Icon/Tertiary` | #BBC1C7 | *(dark mode TBD)* |
+| **Track** | True | `Background/Tertiary` | #E4E4E7 (Zinc/200) | #52525B (Zinc/600) |
+| **Knob** | True | `Background/Primary` | #FFFFFF (White/Main) | #09090B (Zinc/950) |
+| **Track** | False | `Background/Secondary` | #F4F4F5 (Zinc/100) | #18181B (Zinc/900) |
+| **Knob** | False | `Text&Icon/Tertiary` | #D4D4D8 (Zinc/300) | #71717A (Zinc/500) |
 
 ### Визуальная таблица
 
@@ -149,7 +149,7 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Text&Icon/Tert(gray)
 ## Доступность (a11y)
 
 - **Минимальная tap-зона:** Size=32 — 56 × 32 px, Size=24 — 40 × 24 px. Size=24 **меньше** рекомендуемых 44 × 44 pt (WCAG / HIG). При использовании в продакшене обернуть в контейнер с минимальным размером 44 pt.
-- **Контраст:** On-состояние (Graphite на белом фоне) — соответствует WCAG AA. Off-состояние (Tertiary на белом) — проверить на реальных экранах.
+- **Контраст:** On-состояние (`Accent/Primary` Zinc/950 на белом фоне) — соответствует WCAG AA. Off-состояние (`Background/Tertiary` Zinc/200 на белом) — проверить на реальных экранах.
 - **Роль:** `role="switch"` + `aria-checked` (web), `UISwitch` (iOS), `Switch` (Compose).
 
 ---
@@ -182,7 +182,7 @@ CSS-переменные (из существующей шкалы `size/*`):
 **iOS (SwiftUI):**
 ```swift
 Toggle("Label", isOn: $isOn)
-    .toggleStyle(SwitchToggleStyle(tint: Color(.accentGraphite)))
+    .toggleStyle(SwitchToggleStyle(tint: Color.accentPrimary))
 ```
 
 Нативный `UISwitch` — 51 × 31 pt; при кастомизации использовать токены из шкалы `size/*`.
@@ -193,7 +193,7 @@ Switch(
     checked = isOn,
     onCheckedChange = { isOn = it },
     colors = SwitchDefaults.colors(
-        checkedTrackColor = AccentGraphite,
+        checkedTrackColor = AccentPrimary,
         uncheckedTrackColor = BackgroundTertiary,
     )
 )
@@ -206,3 +206,18 @@ Switch(
 - [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — шкалы размеров, spacing, radius
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md) — палитра и семантика цветов
 - [button-spec.md](./button-spec.md) — спецификация кнопок (для сравнения размерной системы)
+
+---
+
+## История миграций
+
+**2026-05-11 — аудит готовности (component-spec-check).**
+
+Компонент чистый — все 8 вариантов на canonical-токенах (`Accent/Primary`, `Background/Primary`, `Background/Tertiary`, `Background/Secondary`, `Text&Icon/Tertiary`), размеры через `size/*`, pill-radius. Правок не потребовалось.
+
+Doc-фиксы:
+- Hex-значения в §«Цвета» переписаны на реальные после миграции 2026-05-06 (`Accent/Primary` Light = Zinc/950 = #09090B, а не legacy Graphite #2C3135). Заполнены dark-варианты — раньше стояли `*(dark mode TBD)*`.
+- Упоминания «Graphite» удалены из §«Доступность» и из code samples (SwiftUI / Compose).
+- Component description в Figma (109:15527) обновлён на canonical-имена токенов (раньше упоминал `Accent/Graphite` и `Icon/Tertiary`).
+
+Switch → ✅ готов к разработке.
