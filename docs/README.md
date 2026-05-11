@@ -4,7 +4,11 @@
 
 ## Структура
 
-Реестр компонентов организован по **atomic design** (Brad Frost): Atoms → Molecules → Organisms → Special / System. Аналогичная разбивка в Figma (страницы-разделители `━━━ ATOMS` / `━━━ MOLECULES` / `━━━ ORGANISMS` / `━━━ SPECIAL`) и в Confluence-странице `🎨 Design System` (space `itdep`, id `4349231142`).
+Реестр компонентов организован по **atomic design** (Brad Frost): Atoms → Molecules → Organisms → Special / System. **Внутри каждой категории — одна таблица со всеми компонентами** (готовые, в планах, отказанные) — статус показан в колонке.
+
+Аналогичная разбивка:
+- **Figma** UI-Kit-Mobile — страницы-разделители `━━━ ATOMS / MOLECULES / ORGANISMS / SPECIAL / DEPRECATED`
+- **Confluence** `🎨 Design System` (space `itdep`, id `4349231142`) — централизованный реестр со статусами Figma / iOS / Android
 
 **Atomic design — глоссарий:**
 
@@ -15,11 +19,18 @@
 
 ## Легенда статусов
 
-- ✅ Figma — компонент собран
-- 🔍 На перепроверке (Figma ↔ docs ↔ код)
-- ⏳ В планах
-- ⚠️ Не делаем / Deprecated
-- ❌ Системный (нативный)
+| Иконка | Значение |
+|---|---|
+| ✅ | Готов |
+| 🔍 | На перепроверке (Figma ↔ docs ↔ код) |
+| 🟡 | В работе |
+| 🔵 | Review / pending merge |
+| ⏳ | В планах |
+| 📋 | To Do (не начат) |
+| ⚠️ | Не делаем / Deprecated |
+| ❌ | Системный (используем нативный) |
+| ❓ | Под вопросом (guideline без формального компонента) |
+| — | Не оценено / не применимо |
 
 ---
 
@@ -36,45 +47,62 @@
 
 ## Atoms 🧬
 
-Простые элементы — одна сущность, не делятся дальше.
+Простые элементы — одна сущность, не делятся дальше. **Все атомы в одной таблице**, включая планируемые.
 
-| Компонент | Спека | Figma | Сложность |
-|-----------|-------|-------|-----------|
-| Avatar | [spec](./avatar-spec.md) | ✅ | S |
-| Badge | [spec](./badge-spec.md) | ✅ | S |
-| Button | [spec](./button-spec.md) | ✅ | M |
-| ButtonIcon | [spec](./button-spec.md) (в button-spec) | ✅ | M |
-| Checkbox | [spec](./checkbox-spec.md) | ✅ | S |
-| Chips | [spec](./chips-spec.md) | ✅ | M |
-| Divider | [spec](./divider-spec.md) | ✅ | XS |
-| Home Indicator | — | ✅ | XS |
-| Progress | — | ✅ | S |
-| Radio | [spec](./radio-spec.md) | ✅ | S |
-| Skeleton — атомы (Block/Circle/Line) | [spec](./skeleton-spec.md) | ✅ | S |
-| StatusBar Body | — | ✅ | XS |
-| Switch | [spec](./switch-spec.md) | ✅ | S |
-| Top Progress bar (Stories indicator) | — | ✅ | S |
+| Компонент | Статус | Phase | Спека |
+|-----------|--------|-------|-------|
+| Avatar v2 | 🔍 | — | [avatar-spec](./avatar-spec.md) |
+| Badge | 🔍 | — | [badge-spec](./badge-spec.md) |
+| Button | 🔍 | — | [button-spec](./button-spec.md) |
+| ButtonIcon | 🔍 | — | [button-spec](./button-spec.md) |
+| Checkbox (radius 2 px, M3) | 🔍 | — | [checkbox-spec](./checkbox-spec.md) |
+| Chips | 🔍 | — | [chips-spec](./chips-spec.md) |
+| Divider | 🔍 | — | [divider-spec](./divider-spec.md) |
+| Home Indicator | 🔍 | — | — |
+| Progress | 🔍 | — | — |
+| Radio | 🔍 | — | [radio-spec](./radio-spec.md) |
+| Skeleton — атомы (Block/Circle/Line) | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
+| StatusBar Body | 🔍 | — | — |
+| Switch | 🔍 | — | [switch-spec](./switch-spec.md) |
+| Top Progress bar (Stories indicator) | 🔍 | — | — |
+| Save Icon Button | ⏳ | Phase 2 | — |
+| Star Rating | ⏳ | Phase 3 | — |
+| Stepper | ⏳ | Phase 3 | — |
 
 ---
 
 ## Molecules 🧪
 
-Простые комбинации атомов с единой целью.
+Простые комбинации атомов с единой целью. Готовые + Phase 1/2/3 + отказанные — в одной таблице.
 
-| Компонент | Спека | Figma | Сложность |
-|-----------|-------|-------|-----------|
-| Alert | [spec](./alert-spec.md) | ✅ | S |
-| Buttons Stack | — | ✅ | XS |
-| Check+Text | [spec](./checkbox-spec.md) | ✅ | XS |
-| FAB Bar | [spec](./fab-bar-spec.md) | ✅ | M |
-| Helpers / Info Line | — | ✅ | XS |
-| Input v2 + Input v2 Stacked | [spec](./input-v2-spec.md) | ✅ | L |
-| List Item | [spec](./list-item-spec.md) | ✅ | M |
-| Search v2 | [spec](./search-spec.md) | ✅ | L (зависит от Input) |
-| Segment Control (Android M3) | [spec](./segment-control-spec.md) | ✅ | M |
-| Snackbar | — | ✅ | S |
-| Tab Bar | — | ✅ | M |
-| Tabs | [spec](./tabs-spec.md) | ✅ | M |
+| Компонент | Статус | Phase | Спека / Примечание |
+|-----------|--------|-------|--------------------|
+| Alert | 🔍 | — | [alert-spec](./alert-spec.md) |
+| Buttons Stack | 🔍 | — | — |
+| Check+Text | 🔍 | — | [checkbox-spec](./checkbox-spec.md) |
+| FAB Bar | 🔍 | — | [fab-bar-spec](./fab-bar-spec.md) |
+| Helpers / Info Line | 🔍 | — | — |
+| Input v2 + Input v2 Stacked | 🔍 | — | [input-v2-spec](./input-v2-spec.md) |
+| List Item | 🔍 | — | [list-item-spec](./list-item-spec.md) |
+| Search v2 | 🔍 | — | [search-spec](./search-spec.md) |
+| Segment Control (Android M3) | 🔍 | — | [segment-control-spec](./segment-control-spec.md) |
+| Snackbar | 🔍 | — | — |
+| Tab Bar | 🔍 | — | — |
+| Tabs | 🔍 | — | [tabs-spec](./tabs-spec.md) |
+| Tooltip | ⏳ | Phase 1 | — |
+| Accordion | ⏳ | Phase 1 | — |
+| Filter Chip Group | ⏳ | Phase 2 | — |
+| Banner / Promo | ⏳ | Phase 2 | — |
+| Range Slider | ⏳ | Phase 2 | — |
+| OTP Input | ⏳ | Phase 2 | — |
+| Phone Reveal Button | ⏳ | Phase 3 | — |
+| Currency Input | ⏳ | Phase 3 | — |
+| Phone Input | ⏳ | Phase 3 | — |
+| ~~Notification~~ | ⚠️ | — | Заменён `Alert` |
+| ~~Toggle Group~~ | ⚠️ draft | — | Дублирует `Segment Control` |
+| ~~iOS Segment Control~~ | ⚠️ | — | Заменён `Tabs` (Radix) |
+| Chat Bubble | ❓ | — | [chat-bubble-spec](./chat-bubble-spec.md) — guideline, формального компонента нет |
+| ~~Time Picker~~ | ❌ | — | Используем нативный iOS/Android picker |
 
 ---
 
@@ -82,15 +110,20 @@
 
 Сложные композиции из атомов и молекул.
 
-| Компонент | Спека | Figma | Сложность |
-|-----------|-------|-------|-----------|
-| Dialog | [spec](./dialog-spec.md) | ✅ | L |
-| Empty State | [spec](./empty-state-spec.md) | ✅ | M |
-| Sheet / Sheets | [spec](./sheets-spec.md) | ✅ | L |
-| Skeleton / Listing Card (Grid + Wide) | [spec](./skeleton-spec.md) | ✅ | M |
-| Skeleton / List Item | [spec](./skeleton-spec.md) | ✅ | S |
-| Skeleton / Profile Header | [spec](./skeleton-spec.md) | ✅ | S |
-| Top App Bar v2 | [spec](./top-app-bar-spec.md) | ✅ | L |
+| Компонент | Статус | Phase | Спека / Примечание |
+|-----------|--------|-------|--------------------|
+| Dialog (slots: Title/Description/Buttons Stack/Image) | 🔍 | — | [dialog-spec](./dialog-spec.md) |
+| Empty State (Inline / Full-screen) | 🔍 | — | [empty-state-spec](./empty-state-spec.md) |
+| Sheet / Sheets | 🔍 | — | [sheets-spec](./sheets-spec.md) |
+| Skeleton / Listing Card (Grid + Wide) | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / List Item | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
+| Skeleton / Profile Header | 🔍 | — | [skeleton-spec](./skeleton-spec.md) |
+| Top App Bar v2 | 🔍 | — | [top-app-bar-spec](./top-app-bar-spec.md) |
+| Listing Card (Grid + Wide) | ⏳ | Phase 2 | — |
+| Image Gallery | ⏳ | Phase 2 | — |
+| Carousel | ⏳ | Phase 2 | — |
+| ~~Confirmation preset for Dialog~~ | ⚠️ | — | Покрывается стандартным `Dialog` |
+| ~~DialogIllustration~~ | ⚠️ | — | Use-case основного `Dialog` (Image=true) |
 
 ---
 
@@ -98,68 +131,22 @@
 
 Имитация ОС, не часть UI-компонентов как таковых.
 
-| Элемент | Спека | Figma |
-|---------|-------|-------|
-| Keyboard iOS / Android | — | ✅ |
-| Stories / Progress Indicator | — | ✅ |
+| Элемент | Статус | Спека |
+|---------|--------|-------|
+| Keyboard iOS / Android | 🔍 | — |
+| Stories / Progress Indicator | 🔍 | — |
 
 ---
 
-## В работе (Phase 1, остатки)
+## Источники правды
 
-| Компонент | Категория | Сложность |
-|-----------|-----------|-----------|
-| Tooltip | Molecule | M |
-| Accordion | Molecule | M |
+- **Confluence-страница** [🎨 Design System](https://larixon.atlassian.net/wiki/spaces/itdep/pages/4349231142/Design+System) — реестр со статусами Figma / iOS / Android (колонки iOS/Android заполняет разработка). Аудиты компонентов и вопросы по дизайну — footer-комментарии на этой странице.
+- **Figma UI-Kit-Mobile** `PI2N65xbeJPTc5oWhOP7Bl` — компоненты сгруппированы по `━━━ ATOMS / MOLECULES / ORGANISMS / SPECIAL / DEPRECATED`.
+- **GitHub `DmitryDmitriev/mdsl`** — markdown-спеки в этом каталоге `docs/`.
 
----
+## Очередь реализации (исторический trail)
 
-## В планах — Phase 2 (classifieds-specific)
-
-Компоненты, специфичные для классифайдов. Дизайн ещё не начат.
-
-| Компонент | Категория | Сложность |
-|-----------|-----------|-----------|
-| Listing Card (Grid + Wide) | Organism | L |
-| Image Gallery | Organism | L |
-| Filter Chip Group | Molecule | M |
-| Banner / Promo | Molecule | M |
-| Range Slider | Molecule | M |
-| Save Icon Button | Atom | S |
-| Carousel | Organism | M |
-| OTP Input | Molecule | M |
-
----
-
-## В планах — Phase 3
-
-| Компонент | Категория | Сложность |
-|-----------|-----------|-----------|
-| Star Rating | Atom | S |
-| Phone Reveal Button | Molecule | M |
-| Currency Input | Molecule | M |
-| Phone Input | Molecule | M |
-| Stepper | Atom | S |
-
----
-
-## Не делаем / Deprecated
-
-| Компонент | Категория | Почему |
-|-----------|-----------|--------|
-| ~~Notification~~ | — | Заменён `Alert` |
-| ~~Toggle Group~~ | — | Дублирует `Segment Control` (DRAFT-страница оставлена как trail) |
-| ~~Confirmation preset for Dialog~~ | — | Покрывается стандартным `Dialog` |
-| ~~Time Picker~~ | — | Используем системный нативный picker |
-| ~~iOS Segment Control~~ | — | Заменён `Tabs` (Radix-стиль) |
-| ~~DialogIllustration~~ | — | Use-case основного `Dialog` (Image=true) |
-| Chat Bubble | под вопросом | Спека есть как guideline ([chat-bubble-spec.md](./chat-bubble-spec.md)), формального компонента нет |
-
----
-
-## Очередь реализации (по скорости)
-
-Логика: сначала атомарные контролы без зависимостей — они дают быстрый прирост покрытия и нужны для составных компонентов (List Item, Dialog, Sheets-контент). Это историческая логика Phase 1; на момент 2026-05-11 почти всё реализовано — здесь оставлено как trail.
+Phase 1 почти завершён; здесь оставлено как исторический контекст порядка реализации:
 
 1. **Divider** — XS, один токен-цвет.
 2. **Switch / Checkbox / Radio** — S, изолированные контролы.
@@ -169,11 +156,3 @@
 6. **Input v2** → **Search v2** — L, Search строится на Input.
 7. **Top App Bar v2** — L, использует Button/Avatar/Badge.
 8. **Dialog** — L, в конце (составной).
-
----
-
-## Источники правды
-
-- **Confluence-страница** [🎨 Design System](https://larixon.atlassian.net/wiki/spaces/itdep/pages/4349231142/Design+System) — с тремя статусами Figma / iOS / Android. Колонки iOS/Android заполняет разработка.
-- **Figma UI-Kit-Mobile** `PI2N65xbeJPTc5oWhOP7Bl` — компоненты сгруппированы по `━━━ ATOMS / MOLECULES / ORGANISMS / SPECIAL / DEPRECATED`.
-- **GitHub `DmitryDmitriev/mdsl`** — markdown-спеки в этом каталоге `docs/`.
