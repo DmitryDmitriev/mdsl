@@ -61,7 +61,7 @@
 | Chips | 🔍 | [chips-spec](./chips-spec.md) |
 | Divider | 🔍 | [divider-spec](./divider-spec.md) |
 | Home Indicator | 🔍 | [home-indicator-spec](./home-indicator-spec.md) |
-| Progress | 🔍 | — |
+| Progress | 🔍 | [progress-spec](./progress-spec.md) |
 | Radio | 🔍 | [radio-spec](./radio-spec.md) |
 | Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
 | StatusBar Body (design-only mockup) | ✅ | — |
