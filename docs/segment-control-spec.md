@@ -104,7 +104,7 @@ Segmented control (HORIZONTAL, FILL width)
 
 | Элемент | Токен |
 |---|---|
-| Background | `Background/Primary` (Surface/Surface Primary) |
+| Background | `Background/Primary` |
 | Border | `Border/Default` |
 
 ### Сегмент (Primary)
