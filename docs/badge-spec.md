@@ -145,9 +145,9 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (50 шт.)
+### Варианты (60 шт.)
 - **Type**: Good, Info, Warning, Negative, Neutral
-- **Size**: 2xs, xs, sm, md, lg
+- **Size**: 2xs, xs, sm, md, lg, xl
 - **Shape**: Pill, Rounded
 
 Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — `Text&Icon/on Tinted/{Type}`. Покрытие токенами 100% (color/text/spacing/radius).
@@ -170,7 +170,7 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 ### Привязка токенов
 | Property | Токен |
 |----------|-------|
-| height | `size/2xs`, `size/xs`, `size/md`, `size/lg`, `size/xl` |
+| height | `size/2xs`, `size/xs`, `size/sm`, `size/md`, `size/lg`, `size/xl` |
 | paddingLeft/Right | `spacing/1`, `spacing/2`, `spacing/3` |
 | paddingTop/Bottom | `spacing/1`, `spacing/2`, `spacing/3`, `spacing/4` |
 
@@ -189,12 +189,10 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 
 | Категория | Покрытие |
 |---|---|
-| Color | 100% (на New-токенах после миграции 2026-05-05) |
-| Token | 60% |
-| Type | 100% |
-| **Overall** | **73%** |
-
-Что осталось: text gap ×40, counter paddingLeft ×40 — внутренние spacing на текстовых фреймах. Все цвета и типографика на токенах.
+| Color | **100%** (на canonical-токенах после миграции 2026-05-05) |
+| Token | **100%** (после фиксов 2026-05-11: Rounded sm/md/lg/xl → `radius/2`, Size=sm height → `size/sm`) |
+| Type | **100%** |
+| **Overall** | **100%** |
 
 ---
 
@@ -219,3 +217,12 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 - Изначально Neutral дублировал значениями старый `Question` (Zinc/100 / Zinc/800). После 2026-05-07 канонический Question удалён из палитры — Neutral остался единственной нейтральной ролью для color-coded элементов, чат-баблы перешли на легаси `Decor/Bubble Old/*`.
 
 Финальная матрица: 5 type × 5 size × 2 shape = **50 вариантов**.
+
+---
+
+**2026-05-11 — добавлен Size=xl + чистка radius / height bindings.**
+
+- Введён новый размер **xl = 48 px** (cascade rename: старые `sm/md/lg` → `md/lg/xl`, новый `sm = 24 px` закрывает разрыв 20 → 32). 10 новых вариантов (5 type × 2 shape), финальная матрица: **5 × 6 × 2 = 60**.
+- **Radius для Shape=Rounded** (sm/md/lg/xl, 20 вариантов) перепривязан с `radius/control/control-md` (8 px, control-токен) на **`radius/2`** (8 px, статичная шкала). Значение то же, но Badge — не интерактив (§3), control-токен здесь неуместен.
+- **Height для Size=sm** (10 вариантов, оба shape) — раньше HUG content, теперь явный binding на `size/sm` (24 px). Фиксированная высота требуется §3 спеки.
+- Покрытие токенами: 73% → **100%**.
