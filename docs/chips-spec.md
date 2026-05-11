@@ -43,6 +43,16 @@ Chips (COMPONENT) <- Контейнер (pill)
 
 Все размеры привязаны к существующим токенам `size/*` и `spacing/*` из шкалы дизайн-системы. Компонентно-специфичные токены не создавались.
 
+### Почему `size/*`, а не `control-height/*`
+
+Chips — двойственный элемент: используются и как **статичные теги** (метки «Promo», «Новое» на карточке), и как **интерактивные фильтр-чипы** (нажимаются для применения фильтра). Шкала `control-height/*` (32–56) семантически закрывает только интерактив, `size/*` (16–48) — оба случая.
+
+Для интерактивного использования touch target обеспечивается **не визуальной высотой чипа**, а:
+- hit-slop / extended hit area в коде (на mobile chip с visual height 32 имеет таппаемую область 44+ через padding слот);
+- контекстом ряда — в Filter Chip Group / горизонтальном скролле родитель задаёт вертикальный padding.
+
+Это даёт компактный визуальный размер 32/40, но соответствие WCAG / HIG (≥44 pt) — в продакшен-обёртке. См. §«Доступность» ниже.
+
 ### Size = 32 (compact)
 
 | Подвариант | Height | paddingLeft | paddingRight | itemSpacing | paddingTop/Bottom |
@@ -102,14 +112,18 @@ Fills -- 100% покрытие токенами. Типография -- 100% п
 
 | Параметр | Size=32 | Size=40 |
 |---|---|---|
-| **Height** | 32 -> `size/md` (`spacing/8`) | 40 -> `size/lg` (`spacing/10`) |
-| **paddingLeft (text+icon)** | 12 -> `spacing/3` | 12-16 -> `spacing/3`-`spacing/4` |
-| **paddingRight (text+icon)** | 12 -> `spacing/3` | 12-16 -> `spacing/3`-`spacing/4` |
-| **paddingLeft/Right (text)** | 12 -> `spacing/3` | 16 -> `spacing/4` |
-| **paddingLeft/Right (icon only)** | 8 -> `spacing/2` | 12 -> `spacing/3` |
-| **itemSpacing (с иконкой)** | 4 -> `spacing/1` | 4-8 -> `spacing/1`-`spacing/2` |
-| **itemSpacing (без иконки)** | 8 -> `spacing/2` | 8 -> `spacing/2` |
+| **Height** | 32 → `size/md` | 40 → `size/lg` |
+| **paddingLeft (Icon=Left)** | 12 → `spacing/3` | 12 → `spacing/3` |
+| **paddingRight (Icon=Left)** | 12 → `spacing/3` | 16 → `spacing/4` |
+| **paddingLeft (Icon=Right)** | 12 → `spacing/3` | 16 → `spacing/4` |
+| **paddingRight (Icon=Right)** | 12 → `spacing/3` | 12 → `spacing/3` |
+| **paddingLeft/Right (Text only)** | 12 → `spacing/3` | 16 → `spacing/4` |
+| **paddingLeft/Right (Icon only)** | 8 → `spacing/2` | 12 → `spacing/3` |
+| **itemSpacing (Text+Icon)** | 4 → `spacing/1` | 4 → `spacing/1` |
+| **itemSpacing (Text-only / Icon-only)** | 8 → `spacing/2` | 8 → `spacing/2` |
 | **Radius** | `radius/pill/pill` | `radius/pill/pill` |
+
+**Logic асимметричных padding'ов для Icon=Left / Icon=Right:** padding со стороны иконки всегда меньше (text-side больше), чтобы иконка визуально «прижималась» к краю чипа, а текст имел воздух с противоположной стороны.
 
 ---
 
@@ -192,3 +206,20 @@ Chip(
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md) -- палитра и семантика цветов
 - [switch-spec.md](./switch-spec.md) -- спецификация Switch (для сравнения размерной системы)
 - [button-spec.md](./button-spec.md) -- спецификация кнопок (для сравнения размерной системы)
+- [badge-spec.md](./badge-spec.md) -- Badge (родственная шкала `size/*`)
+
+---
+
+## История миграций
+
+**2026-05-11 — аудит готовности (component-spec-check), 10 правок.**
+
+В Figma:
+- **Size=32 height** (8 вариантов): `control-height/xs` → **`size/md`**. Значение то же (32 px), но корректная шкала — Chips на `size/*` как Badge, не на `control-height/*` как Button (см. §«Почему size/*»).
+- **Иконка chevron** (`ic_expand_more`) в 2 вариантах `Active=No, Icon=Right`: fill `Text&Icon/Secondary` → **`Text&Icon/Primary`**. Унификация с остальными 10 icon-вариантами.
+
+В спеке:
+- §«Размеры»: добавлен раздел «Почему `size/*`, а не `control-height/*`» — Chips двойственный (тег + интерактив), touch target обеспечивается hit-slop или родительским рядом.
+- §«Сводная таблица токенов»: расплывчатые записи (`12-16 → spacing/3-4`) разнесены по подвариантам — явные значения для Icon=Left / Icon=Right / Text-only / Icon-only.
+
+Chips → ✅ готов к разработке.
