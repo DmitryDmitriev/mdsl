@@ -64,12 +64,9 @@
 | Progress | 🔍 | — |
 | Radio | 🔍 | [radio-spec](./radio-spec.md) |
 | Skeleton — атомы (Block/Circle/Line) | 🔍 | [skeleton-spec](./skeleton-spec.md) |
-| StatusBar Body | 🔍 | — |
+| StatusBar Body (design-only mockup) | ✅ | — |
 | Switch | 🔍 | [switch-spec](./switch-spec.md) |
 | Top Progress bar (Stories indicator) | 🔍 | — |
-| Save Icon Button | ⏳ | — |
-| Star Rating | ⏳ | — |
-| Stepper | ⏳ | — |
 
 ---
 
