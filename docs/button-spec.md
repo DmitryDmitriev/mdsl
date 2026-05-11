@@ -58,16 +58,16 @@
 
 *Отступ от края кнопки до иконки* = тот же, что и padding horizontal (иконка внутри зоны padding).
 
-### Высота (Semantic: height)
+### Высота (Semantic: control-height)
 
-| Размер кнопки | Токен     | Значение |
-|---------------|-----------|----------|
-| lg            | height/lg | 56 px   |
-| md            | height/md | 48 px   |
-| sm            | height/sm | 40 px   |
-| xs            | (height/xs или spacing/8) | 32 px |
+| Размер кнопки | Токен              | Значение |
+|---------------|--------------------|----------|
+| lg            | control-height/lg  | 56 px   |
+| md            | control-height/md  | 48 px   |
+| sm            | control-height/sm  | 40 px   |
+| xs            | control-height/xs  | 32 px   |
 
-Текстовые кнопки: высота фрейма = **height/lg** | **height/md** | **height/sm**. Иконные (квадратные): размер стороны = тот же токен.
+**Текстовые и иконные кнопки используют одну и ту же шкалу `control-height/*`** (интерактивный контрол, touch target ≥32 px). У иконной кнопки квадратный фрейм — `width` и `height` биндятся к одному и тому же `control-height/{size}`. Шкала `size/*` для кнопок **не используется** — она для информационных элементов (Avatar, Badge), см. `DESIGN-TOKENS.md` §«Когда `size/*` vs `control-height/*`».
 
 ### Иконки (размер)
 
@@ -266,12 +266,12 @@
 
 Для каждого размера (lg, md, sm, xs):
 
-1. **Text — нейтральные:** Primary, Secondary, Outline, Ghost (Default + Disabled); опция «только текст» или «текст + иконка».
-2. **Text — destructive:** Negative, Soft Negative, Ghost Negative (Default + Disabled); опция «только текст» или «текст + иконка».
-3. **Icon — нейтральные:** Icon Primary, Secondary, Outline, Ghost (Default + Disabled).
-4. **Icon — destructive:** Icon Negative, Soft Negative, Ghost Negative (Default + Disabled).
+1. **Text — нейтральные:** Primary, Secondary, Outline, Ghost (Default + Disabled); опция «только текст» или «текст + иконка». Form: `Square` | `Rounded`.
+2. **Text — destructive:** Negative, Soft Negative, Ghost Negative (Default + Disabled); опция «только текст» или «текст + иконка». Form: `Square` | `Rounded`.
+3. **Icon — нейтральные:** Icon Primary, Secondary, Outline, Ghost (Default + Disabled). Form: `Square` | `Rounded`. Итого 4 × 4 × 2 × 2 = **64 варианта** в COMPONENT_SET `ButtonIcon`.
+4. **Icon — destructive: не делаем.** В UI деструктивные действия без текстовой подписи опасны (пользователь не понимает, что произойдёт). Если в продуктовом экране нужен destructive icon-only — это локальный override через Swap Instance на `Ghost` + ручная подмена цвета на `Text&Icon/Negative`, не системный паттерн.
 
-Иконки для демо: lg/md — Phone; sm — Primary/Secondary: Phone, Outline/Ghost: Menu; xs — Menu. Для Negative-вариантов — Trash / Delete.
+Иконки для демо: lg/md — Phone; sm — Primary/Secondary: Phone, Outline/Ghost: Menu; xs — Menu. Для Negative-вариантов в text-Button — Trash / Delete.
 
 ---
 
@@ -310,3 +310,17 @@
 - **Ghost Negative / Text+Icon** — оставлено на `Text&Icon/Negative`. По COLOR-PALETTE.md (после миграции 2026-05-11) `Text&Icon/Negative` ≡ `Accent/Negative` в обеих темах (Red/600 Light, Red/400 Dark). Спека §«Цвета — Деструктив» дополнена уточнением.
 
 Итого 76 правок. Button → ✅ готов к разработке.
+
+**2026-05-11 — аудит ButtonIcon (4603:900), 156 правок:**
+
+- **Height + Width**: все 64 варианта перепривязаны с `size/md|lg|xl|2xl` (информационная шкала) на **`control-height/xs|sm|md|lg`** (интерактивная). ButtonIcon — интерактивный контрол, должен быть на той же шкале, что текстовая Button.
+- **Variant Type "56" → "Secondary"**: 4 ноды (Size=56) переименованы. Раньше variant property давала кривой enum `Primary | Secondary | 56 | Outline | Ghost` — теперь чисто `Primary | Secondary | Outline | Ghost`.
+- **Variant Form "Round" → "Rounded"**: 32 ноды переименованы. Унификация с text-Button (там Form = `Square | Rounded`).
+- **Outline + Default border** (8 вариантов): `Accent/Primary` → **`Border/Default`**.
+- **Primary/Secondary + Disabled fill** (16 вариантов): `Background/Secondary` → **`Background/Disabled`**.
+- **All + Disabled icon-fill** (32 варианта): `Text&Icon/Tertiary` → **`Text&Icon/Disabled`**.
+- **Negative-варианты для ButtonIcon — зафиксировано «не делаем»** (см. §«Варианты», пункт 4). Деструктив icon-only опасен без подписи; для локальных случаев — Swap Instance на Ghost с ручным цветом.
+
+Спека §«Высота» уточнена: токены `control-height/*` (раньше `height/*`), §«Варианты» уточнена: явные Form-значения, фиксация по Negative.
+
+ButtonIcon → ✅ готов к разработке.
