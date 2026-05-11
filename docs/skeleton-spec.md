@@ -208,6 +208,24 @@ CSS-переменные:
 
 ---
 
+## История миграций
+
+**2026-05-11 — аудит готовности (component-spec-check), 9 правок в Figma.**
+
+Цвета атомов (`Background/Tertiary`) и размеры — на 100% соответствовали спеке. Правки касались только hardcoded размеров фреймов-пресетов:
+
+- **Skeleton / List Item** — Texts frame (`7889:32`): `layoutSizingHorizontal` FIXED 100 → **HUG** (по спеке §«Texts VERTICAL HUG»). Линии 180/120 больше не клипаются.
+- **Skeleton / Profile Header** — Stats frame (`7889:43`): `layoutSizingVertical` FIXED 100 → **HUG**. Убрана лишняя hardcoded высота.
+- **Skeleton / Profile Header** — Stat sub-frames (`7889:36 / :39 / :42`): `layoutSizingHorizontal` FIXED 100 → **HUG**.
+- **Skeleton / Listing Card** Grid + Wide — Meta frames (`7889:17 / :26`): `layoutSizingVertical` FIXED 100 → **HUG**.
+- **Skeleton / Listing Card** Grid + Wide — Listing image rectangles (`7889:11 / :19`): cornerRadius hardcoded 12 → биндинг **`radius/3`** (то же значение, корректная семантика «соответствует card radius»).
+
+Avatar Ellipse (`7889:29 / :44`) — codegen MCP видел SVG-image-fill, но в Figma уже корректный binding на `Background/Tertiary`. Правка не потребовалась.
+
+Skeleton (атомы + 4 пресета) → ✅ готов к разработке.
+
+---
+
 ## Открытые вопросы
 
 1. **Skeleton для Dark theme.** Цвет работает в обеих темах (`Background/Tertiary`), но shimmer-градиент в Dark может потребовать смягчения — gradient от Zinc/800 → Zinc/700 → Zinc/800. Уточнить с командой при имплементации.
