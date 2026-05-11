@@ -42,6 +42,8 @@
 
 **Стандартные размеры иконок:** 16, 24, 32, 40
 
+> **4XL — иконка 40px.** В иконочной библиотеке Larixon отдельного `40 / ic_person` нет (стандартный ряд: 16/24/32/48). В Figma для 4XL используется инстанс `32 / ic_person`, отмасштабированный до 40×40 — SVG, без потерь. В коде разработка может тянуть `ic_person` ближайшего доступного размера (32 или 48) и масштабировать до 40, либо завести `ic_person_40` если потребуется пиксель-перфект.
+
 В коде: `size.sm`, `size.md`, `size.lg`, `size.xl`, `size['2xl']`, `spacing[16]`, `size['3xl']`
 
 ---
@@ -178,6 +180,12 @@ interface AvatarProps {
 ---
 
 ## История миграций
+
+**2026-05-11 — аудит готовности к разработке.**
+
+- Pin sizes — все 84 pin-слоя (`Pin Background` + `Status Indicator` во всех 21 pinned-варианте) подтверждены на variable bindings (`spacing/1`..`spacing/6`). Hardcoded нет.
+- 4XL иконка — задокументировано отсутствие `40 / ic_person` в иконочной библиотеке; в Figma используется `32 / ic_person` scaled до 40×40 (SVG lossless). Указание для кода: подгрузить ближайший размер или завести `ic_person_40` при необходимости.
+- Подтверждены: `Text&Icon/Secondary` для Letter, `Text&Icon/Inverted W-B` для Person preset, Type=Icon как free icon slot (default `ic_person`, swap на `ic_plus` для add-flow). 42 варианта (3 type × 7 size × 2 pin) — все на месте.
 
 **2026-05-06 — миграция на canonical-палитру.**
 
