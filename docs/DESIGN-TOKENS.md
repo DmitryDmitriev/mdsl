@@ -115,9 +115,11 @@
 | size/lg | spacing/10 | 40 px | Аватар md, большой бейдж |
 | size/xl | spacing/12 | 48 px | Аватар lg |
 | size/2xl | spacing/14 | 56 px | Большой аватар |
-| size/3xl | spacing/20 | 80 px | Аватар 4XL (identity-illustration tier — см. ниже) |
+| size/3xl | — (off-scale) | 80 px | Аватар 4XL (identity-illustration tier — см. ниже) |
 
-> **Identity-illustration tier (64 / 80 px).** Avatar `3XL` (64 px) и `4XL` (80 px) находятся на границе между «информационным элементом» и «иллюстрацией». В Figma они подключены через `spacing/16` (64) и `size/3xl` (80) — двойная привязка к разным шкалам, исторически. Для разработки: на этих размерах аватар читается как identity-block, не как контрол; масштабирование иконок и шрифта внутри идёт по illustration-логике, а не по control-логике. См. `docs/avatar-spec.md` §3.
+> **`size/3xl` — off-scale, identity-tier constant** (зеркалит `illustration/md`). На этом узле шкала `size/*` покидает spacing-core: 80 px не используется как padding/gap в продукте, и плодить `spacing/18` / `spacing/20` ради единственного аватара — orphan-токены, провоцирующие «64 или 80?» при следующем макете. То, что `size/2xs..2xl` ложатся на `spacing/*` — следствие плотности нижней части шкалы, а не правило системы; на `3xl` size-шкала переходит из «layout dimension» в «identity asset».
+>
+> **Identity-illustration tier (64 / 80 px).** Avatar `3XL` (64 px) и `4XL` (80 px) — на границе между «информационным элементом» и «иллюстрацией». В Figma они подключены через `spacing/16` (64) и `size/3xl` (80, off-scale). Для разработки: на этих размерах аватар читается как identity-block, не как контрол; масштабирование иконок и шрифта идёт по illustration-логике, а не по control-логике. См. `docs/avatar-spec.md` §3.
 
 **Когда использовать `size/*` vs `control-height/*`:**
 
