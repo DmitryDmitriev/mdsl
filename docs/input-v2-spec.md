@@ -254,3 +254,17 @@ CSS-переменные (из существующих токенов):
 - [switch-spec.md](./switch-spec.md) — размерные токены
 
 Input Leading — сопутствующий компонент, отдельной спеки не имеет.
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 100% соответствие, 0 правок.**
+
+Самый чистый компонент за сессию аудитов. Проверено ~50 параметров (10 представительных вариантов × ~5 параметров): структура (36 Input v2 + 12 Stacked + 3 Input Leading), высоты (`control-height/lg|md|sm`), padding-H (`spacing/4` для lg, `spacing/3` для md/sm/Stacked), gap внутри Field, root gap, radius (`radius/control/control-lg`), border (`border/default` / `border/emphasis`), fills (`Background/Secondary` Filled, transparent Outline + token strokes), text styles (Body 1 / Body 2 / Body 2 Medium / Caption md / Caption md Medium), иконки (`size/sm` 24×24), Input Leading sizes (`size/sm/md/lg` 24/32/40). Состояния (Default / Focused / Filled / Error / Disabled / ReadOnly) корректно используют canonical цветовую модель.
+
+**Hardcoded значений:** 0. **Missing states:** 0. **M3-leftover'ов:** 0.
+
+**Foundation-observation (не блокирующее):** `Accent/Primary` в Focused-Label резолвится в Zinc/950 (#09090B Light, Zinc/200 Dark), а не в «брендовый красный». Это **established canonical** Larixon DS — Accent это основной CTA-цвет (тёмный), бренд-цвета живут в `Brand Color/*` и применяются только в брендовых элементах (логотипы, splash, иллюстрации). См. `COLOR-PALETTE.md §3.5` «Брендовые цвета» и §3.7 «Семантика, не визуал». Использование `Accent/Primary` в Input v2 корректно — это «акцент системного компонента», не Brand.
+
+Input v2 → ✅ готов к разработке.

@@ -79,7 +79,7 @@
 | Buttons Stack | ✅ | [buttons-stack-spec](./buttons-stack-spec.md) |
 | Check+Text | ✅ | [checkbox-spec](./checkbox-spec.md) |
 | FAB Bar | ✅ | [fab-bar-spec](./fab-bar-spec.md) |
-| Input v2 + Input v2 Stacked | 🔍 | [input-v2-spec](./input-v2-spec.md) |
+| Input v2 + Input v2 Stacked | ✅ | [input-v2-spec](./input-v2-spec.md) |
 | List Item | ✅ | [list-item-spec](./list-item-spec.md) |
 | Search v2 | ✅ | [search-spec](./search-spec.md) |
 | Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
