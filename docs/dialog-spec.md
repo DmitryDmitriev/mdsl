@@ -85,8 +85,8 @@ Dialog (root, 328 wide, radius 16, clipsContent)
 |----------|----------|
 | Padding | `20/16/0/16` (top/right/bottom/left) |
 | Gap внутри | stack-sm (16 px) |
-| Цвет заголовка | `semantic.text.primary`, typography 16–18 px / weight 600 |
-| Цвет описания | `semantic.text.secondary`, typography 14 px / weight 400 |
+| Заголовок | `Text&Icon/Primary` + **`Heading/H3 Bold`** (20/28, w700) |
+| Описание | `Text&Icon/Primary` + **`Base/Body 1`** (16/24, w400) — диалог короткий и важный, читаемость идёт первым приоритетом (Body 1 = «multi-line читаемый абзац» из `TYPOGRAPHY.md` §4) |
 
 #### Header row
 
@@ -237,3 +237,28 @@ interface DialogProps {
 Deprecated `[deprecated] Basic dialog` и `[deprecated] img_container` — исключены из аудита (помечены `.=` префиксом для скрытия из Assets).
 
 **Roadmap:** проработать токены пропорций изображений (`image/hero-ratio`, `image/avatar-ratio` и т.п.) в рамках отдельной итерации развития ДС.
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 2 правки Figma + sync спеки.**
+
+Базовая модель совпадает со спекой (2 варианта `Alignment=Left/Center` + booleans `Image`/`Close`). Проверено ~25 параметров, расхождений 3 + 1 структурная аномалия + 1 foundation-typo.
+
+**Figma (2 правки):**
+
+- **`Buttons Stack` width** в обоих вариантах Dialog (инстансы `4701:343` и `6632:20`): `FIXED 360 px` → **`FILL` (328 px по ширине Dialog)**. Раньше стек был на 32 px шире модалки и срезался через `overflow-clip` — теперь корректно вписан.
+
+**Спека:**
+
+- §3.4 «Content (slot)» — типографика синхронизирована с фактическим Figma: заголовок = **`Heading/H3 Bold`** (20/28, w700) + `Text&Icon/Primary`; описание = **`Base/Body 1`** (16/24, w400) + `Text&Icon/Primary`. Старые формулировки «16–18 px / weight 600», «14 px / weight 400 / semantic.text.secondary» удалены — это были Material-наследие. По UX-логике диалог содержит короткий важный текст, не secondary-supporting → Body 1 + Primary читаемость > Body 2 + Secondary subtle.
+
+**Открытые таски (не Dialog-specific, cross-cutting):**
+
+- **Foundation typo `Fonts/line-hright/{md,lg}` → `Fonts/line-height/{md,lg}`** — затрагивает все стили из семейства `Heading/H*` и `Base/Body 1*`. Живёт в исходном файле типографики (вне UI-Kit-Mobile, недоступен через MCP). Тот же таск, что задокументирован при аудите FAB Bar.
+- **`[deprecated]` префикс** на старых `Basic dialog`, `Dialog_IMG`, `img_container` — оставлен как есть. Для скрытия из Assets picker нужен `.=` префикс. Micro-task на следующую итерацию.
+
+**Foundation-observation (не блокирующее):** `Accent/Primary` в Primary-кнопке Buttons Stack = Zinc/950 — это established canonical Larixon DS (CTA-цвет, не brand-red). См. `COLOR-PALETTE.md §3.5 + §3.7`.
+
+Dialog → ✅ готов к разработке.
