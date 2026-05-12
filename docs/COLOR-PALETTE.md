@@ -236,6 +236,21 @@
 ### 3.2 Surface
 Только для элементов **выше базового уровня**: модалки, шторки, оверлеи, всплывающие панели. На основных экранах используется Background, не Surface.
 
+**Background vs Surface — sticky-контейнеры (Segment Control, Top App Bar, FAB Bar, Snackbar, Tab Bar).**
+
+В Light оба токена = `#ffffff` — визуально неотличимы, но в Dark разница критична:
+
+| Токен | Light | Dark | Когда применять |
+|---|---|---|---|
+| `Background/Primary` | #ffffff | Zinc/950 | **Inline** — бар в обычном потоке, контент не скроллится под ним |
+| `Surface/Surface Primary` | #ffffff | Zinc/800 | **Sticky / Floating** — контент скроллится под баром (sticky-header, sticky-bottom-tab, floating snackbar) |
+
+**Правило по умолчанию:** все sticky-классы компонентов (Segment Control, Top App Bar, FAB Bar, Snackbar, Tab Bar) в библиотеке Figma собраны на **`Background/Primary`** — это inline-кейс, наиболее частый. Variant axis `Elevation` **не вводим** — это переусложнение ради редкого случая.
+
+**Когда используется sticky-сценарий** (контент скроллится под баром) — дизайнер на инстансе вручную делает override fill на `Surface/Surface Primary` через панель Inspect. Это даёт 2 шага elevation в Dark (Zinc/800 над Zinc/950) и визуально отделяет бар от скроллящегося контента.
+
+Альтернатива override-у на каждом инстансе — обернуть продуктовый sticky-узел в общий «Surface Container» wrapper (паттерн на стороне продуктовых файлов), который задаёт Surface для всех вложенных детей.
+
 ### 3.3 Tinted-поверхности
 `Background/Tinted/*` + `Text&Icon/on Tinted/*` — это **парный набор** для атомарных color-coded элементов:
 - ✅ Chat Bubble, Badge, Chip с tinted-фоном
