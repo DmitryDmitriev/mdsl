@@ -128,7 +128,7 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 | Bar background | `Background/Primary` |
 | Headline | `Text&Icon/Primary` |
 | Subtitle | `Text&Icon/Secondary` |
-| Shadow (Elevation = Yes) | drop shadow `rgba(0,0,0,0.08)`, offset y = 2, radius = 8, spread = 0 |
+| Shadow (Elevation = Yes) | Effect Style **`Elevation/Top`** (см. [elevation-spec.md](./elevation-spec.md)). В Dark — `none`. |
 
 Цвета Leading / Trailing кнопок наследуются от ButtonIcon Ghost. Цвета Search — от Search v2.
 
@@ -245,3 +245,25 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 - [button-spec.md](./button-spec.md) — ButtonIcon используется в Leading / Trailing
 - [search-spec.md](./search-spec.md) — Search v2 используется в Content = Search
 - [input-v2-spec.md](./input-v2-spec.md) — согласованный архитектурный паттерн спецификации
+- [elevation-spec.md](./elevation-spec.md) — `Elevation/Top` для bar с Elevation=Yes
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 12 правок Figma.**
+
+Проверено ~30 параметров на 7 представительных вариантах (Title L+T+ / L−T− / Elevation+; Search Elev+; Avatar L+T+; `.=Trailing Slot`). Расхождение было одно — тень, но затрагивало foundation.
+
+**Figma (12 правок):**
+
+- **12 effect styles** на вариантах `Elevation=Yes` (Content × Leading × Trailing комбинации; ноды `6410:205`, `6410:258`, `6430:72`, `6472:49`, `6472:78` и др.): hardcoded single-layer `0 2px 4px rgba(0,0,0,0.08)` → canonical Effect Style **`Elevation/Top`** (двухслойная тень `0 4px 16px rgba(0,0,0,0.08)` + `0 0 6px rgba(0,0,0,0.08)`, см. `elevation-spec.md`). В Dark рендерится как `none` автоматически.
+
+**Спека:**
+
+- §«Цвета по состояниям» — строка про Shadow переписана. Раньше inline-описание `drop shadow rgba(0,0,0,0.08), offset y = 2, radius = 8, spread = 0` (single-layer, противоречило foundation). Теперь ссылка на **Effect Style `Elevation/Top`** + указание «в Dark — `none`». Тройная несогласованность (Figma vs component-spec vs foundation-spec) ликвидирована.
+- §«Связанные документы» — добавлена ссылка на `elevation-spec.md`.
+
+**Не блокирующее (косметика):** default-иконка во всех трёх Trailing-слотах — `24 / ic_arrow_back_long` (та же, что в Leading). При использовании override-ится продуктовым дизайнером. Замена на нейтральную (`ic_more_vert` / `ic_share`) уменьшит путаницу — отложено как micro-task.
+
+Top App Bar v2 → ✅ готов к разработке.

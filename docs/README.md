@@ -102,7 +102,7 @@
 | Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / Profile Header | ✅ | [skeleton-spec](./skeleton-spec.md) |
-| Top App Bar v2 | 🔍 | [top-app-bar-spec](./top-app-bar-spec.md) |
+| Top App Bar v2 | ✅ | [top-app-bar-spec](./top-app-bar-spec.md) |
 
 ---
 
