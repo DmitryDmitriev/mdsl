@@ -186,3 +186,17 @@ CSS-переменные (из существующих токенов):
 - [input-v2-spec.md](./input-v2-spec.md) — родительская архитектура state-модели
 - [top-app-bar-spec.md](./top-app-bar-spec.md) — Search v2 используется в Content=Search
 - [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — шкалы размеров, spacing, radius
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check).**
+
+Компонент чистый — 24/24 варианта на canonical-токенах: padding / gap / radius / border / background / typography / colors / iconography — 100% покрытие.
+
+Field height (`6447:101 … 6447:262`) проверен напрямую через Plugin API: на всех 24 вариантах `boundVariables.height` корректно ссылается на `control-height/lg` (8 lg-вариантов: 56 px), `control-height/md` (8 md: 48 px), `control-height/sm` (8 sm: 40 px). Codegen MCP эмитит `h-[56px]/48/40` как pixel-значения — это артефакт развёртки токенов в плагине, а не отсутствие биндингов в Figma.
+
+Правок ни в Figma, ни в спеке не потребовалось.
+
+Search v2 → ✅ готов к разработке.
