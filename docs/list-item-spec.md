@@ -16,10 +16,12 @@ List Item — контейнер строки списка с опциональ
 
 | Свойство | Значения | Описание |
 |----------|----------|----------|
-| **Type** | `1 str` | Однострочный элемент |
+| **Type** | `1 str` | Однострочный элемент (min-height **56 px**) |
 | **Type** | `2+ str` | Многострочный элемент |
 
 Итого **2 варианта**.
+
+**Touch target.** Для `1 str` минимальная высота строки — **56 px**, что превышает требование WCAG AA (44 × 44 pt) с запасом. Для `2+ str` высота растёт по контенту, нижняя граница не меньше `1 str`.
 
 ---
 
@@ -28,9 +30,13 @@ List Item — контейнер строки списка с опциональ
 ```
 List Item (COMPONENT)
   ├── .=Left Side (instance, опционально)
+  │   └── [Type=2+ str] обёрнут wrap-фреймом с paddingTop=spacing/1 (4 px) — align-top
   ├── .=Content (instance)
   └── .=Right Side (instance, опционально)
+      └── [Type=2+ str] обёрнут wrap-фреймом с paddingTop=spacing/1 (4 px) — align-top
 ```
+
+**Wrap-фреймы для `Type=2+ str`.** В многострочном варианте Left/Right слоты обёрнуты в дополнительные фреймы (`6054:3837`, `6054:3844`) с `paddingTop = spacing/1` (4 px). Это даёт визуальный align-top: икон-слоты прижимаются к верхней строке заголовка, а не центрируются по всему многострочному блоку. Для `1 str` обёрток нет — центрирование по высоте строки.
 
 ### Building blocks (вне аудита)
 
@@ -51,13 +57,21 @@ List Item (COMPONENT)
 | Параметр | Значение | Токен | Примечание |
 |----------|----------|-------|------------|
 | Width (variant root) | iOS: 320 px, Android: 360 px | `Platform/Width` | FIXED |
-| itemSpacing | 8 px | `spacing/2` | Gap между Left/Content/Right |
-| paddingTop | 4 px | `spacing/1` | |
-| paddingBottom | 4 px | `spacing/1` | |
-| paddingLeft | 4 px | `spacing/1` | Скорректирован до 4 px |
-| paddingRight | 4 px | `spacing/1` | Скорректирован до 4 px |
+| itemSpacing | 16 px | `spacing/4` | Gap между Left / Content / Right |
+| paddingTop | 8 px | `spacing/2` | |
+| paddingBottom | 8 px | `spacing/2` | |
+| paddingLeft | 16 px | `spacing/4` | |
+| paddingRight | 16 px | `spacing/4` | |
+| Wrap padding (Left/Right, `Type=2+ str`) | 4 px (top) | `spacing/1` | Align-top для многострочного контента — см. §3 |
 
-> paddingLeft/Right исходно были 2 px, скорректированы (bumped) до 4 px для привязки к `spacing/1`.
+### Content slot
+
+| Content | Состав | Когда брать |
+|---------|--------|-------------|
+| **Основной** | Title + опц. Subtitle | Стандартная строка списка |
+| **С Overline** | Overline + Title + опц. Subtitle | Когда нужна категория/контекст над заголовком (статус, дата, группа) |
+
+Размеры внутренние (line-height текста) — задаются стилями из `docs/TYPOGRAPHY.md`, вне табличной части.
 
 ### Цвета
 
@@ -135,3 +149,20 @@ ListItem(
 - [switch-spec.md](./switch-spec.md) — Switch как building block
 - [badge-spec.md](./badge-spec.md) — Badge как building block
 - [avatar-spec.md](./avatar-spec.md) — Avatar как building block
+
+---
+
+## 8. История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check).**
+
+Figma уже на актуальных значениях; правки только в тексте спеки — синхронизация трёх spacing-параметров с реальным состоянием компонента:
+
+- §4 `paddingLeft/Right`: 4 px → **16 px** (`spacing/1` → `spacing/4`). Убрана устаревшая записка про «исходно 2 px, bumped до 4 px» — это старая история, не актуальна.
+- §4 `paddingTop/Bottom`: 4 px → **8 px** (`spacing/1` → `spacing/2`).
+- §4 `itemSpacing`: 8 px → **16 px** (`spacing/2` → `spacing/4`).
+- §3 «Структура слоёв»: добавлено описание wrap-фреймов (`6054:3837`, `6054:3844`) с `paddingTop = spacing/1` (4 px) для align-top в `Type=2+ str`.
+- §2 «Варианты»: добавлено упоминание min-height = 56 px для `1 str` (WCAG AA touch target с запасом).
+- §4: добавлена под-таблица «Content slot» — фиксирует вариант «с Overline» (упоминался в §3, но без описания).
+
+List Item → ✅ готов к разработке.
