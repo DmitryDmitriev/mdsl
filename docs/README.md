@@ -76,7 +76,7 @@
 | Компонент | Статус | Спека / Примечание |
 |-----------|--------|--------------------|
 | Alert | 🔍 | [alert-spec](./alert-spec.md) |
-| Buttons Stack | 🔍 | — |
+| Buttons Stack | ✅ | [buttons-stack-spec](./buttons-stack-spec.md) |
 | Check+Text | ✅ | [checkbox-spec](./checkbox-spec.md) |
 | FAB Bar | 🔍 | [fab-bar-spec](./fab-bar-spec.md) |
 | Input v2 + Input v2 Stacked | 🔍 | [input-v2-spec](./input-v2-spec.md) |

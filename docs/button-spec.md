@@ -289,10 +289,11 @@
 |---|---|---|---|---|
 | Button | 100% | 100% | 100% | 100% |
 | ButtonIcon | 100% | 100% | — | 100% |
-| Buttons Stack | 100% | 100% | 100% | 100% |
 | FAB Bar | 100% | 89% | 100% | 91% |
 
 Все основные кнопки полностью на токенах. У FAB Bar остались SiglButton itemSpacing и Tab Bar Buttons width — компенсация iOS UI Kit, см. fab-bar-spec.md.
+
+> **Buttons Stack** вынесен в отдельную спеку — см. [buttons-stack-spec.md](./buttons-stack-spec.md) §5 «Аудит покрытия токенами».
 
 ---
 
