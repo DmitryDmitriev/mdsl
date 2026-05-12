@@ -86,14 +86,7 @@
 | Snackbar | 🔍 | — |
 | Tab Bar | 🔍 | — |
 | Tabs | 🔍 | [tabs-spec](./tabs-spec.md) |
-| Tooltip | ⏳ | — |
-| Accordion | ⏳ | — |
-| Filter Chip Group | ⏳ | — |
 | Range Slider | ⏳ | — |
-| OTP Input | ⏳ | — |
-| Phone Reveal Button | ⏳ | — |
-| Currency Input | ⏳ | — |
-| Phone Input | ⏳ | — |
 
 ---
 
@@ -110,9 +103,6 @@
 | Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / Profile Header | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Top App Bar v2 | 🔍 | [top-app-bar-spec](./top-app-bar-spec.md) |
-| Listing Card (Grid + Wide) | ⏳ | — |
-| Image Gallery | ⏳ | — |
-| Carousel | ⏳ | — |
 
 ---
 
