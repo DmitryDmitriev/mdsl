@@ -66,11 +66,15 @@ FAB-кнопки в баре **квадратные** (`width = height = size/fa
 
 ### Отступы (spacing)
 
-| Параметр | Значение | Semantic | Core |
-|---|---|---|---|
-| **itemSpacing** (между FAB) | **−8 px** | **space/fab-bar-gap** | *(отрицательное значение — не из core шкалы, задаётся вручную)* |
-| `paddingRight` бара | 8 px | space/fab-bar-padding-right | spacing/2 |
-| `paddingLeft/Top/Bottom` | 0 | — | — |
+FAB Bar — sticky-floating контейнер у нижнего края экрана. Его внешние отступы задают «дыхание» от краёв экрана и safe-area; внутри между кнопками действует негативный gap (см. выше).
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| **itemSpacing** (между FAB) | **−8 px** | hardcoded — отрицательное значение, не из core-шкалы |
+| `paddingTop` | 16 px | `spacing/4` |
+| `paddingBottom` | 24 px | `spacing/6` (safe-area floor) |
+| `paddingLeft` | 24 px | `spacing/6` |
+| `paddingRight` | 24 px | `spacing/6` |
 
 > В Figma Variables рекомендуется создать связку `fab-touch-padding = 8` и `fab-bar-gap = -(fab-touch-padding)` — тогда изменение одного значения автоматически обновит второе.
 
@@ -136,13 +140,17 @@ FAB-кнопки всегда круглые/скруглённые. Radius за
 
 ## Варианты (variants)
 
-В Figma FAB Bar имеет следующие свойства:
+В текущем COMPONENT_SET одна ось:
 
-- **Size:** lg / md / sm
-- **Width:** 360 / 244 / 200 / 100 (фиксированные демонстрационные)
-- **Content:** только FAB / FAB + текст
+| Свойство | Значения | Описание |
+|---|---|---|
+| **Type** | `1` / `2` / `3` | Количество FAB-кнопок внутри бара |
 
-Для каждой комбинации — два состояния: **Default** и **Disabled**.
+Итого **3 варианта**. Внутри каждого — фиксированный набор кнопок (SinglButton слева + Tab Bar Buttons справа).
+
+Размер FAB-кнопок (lg / md / sm), наличие текста рядом с FAB и destructive/disabled-состояния задаются на инстанс-уровне через **Swap Instance** или override инстанса — не зашиты в variant-матрицу. Это даёт дизайнеру гибкость без раздувания компонент-сета.
+
+**Elevation:** все 3 варианта используют единый shadow-стиль `Elevation/Bottom` (sticky bottom-edge floating bar, см. [elevation-spec.md](./elevation-spec.md) §«Правила применения»).
 
 ---
 
@@ -193,4 +201,32 @@ Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
 | Type | 100% |
 | **Overall** | **91%** |
 
-Что осталось: SiglButton itemSpacing ×3 (центральная кнопка, отрицательный gap), Tab Bar Buttons width ×2. Это паттерн iOS UI Kit (см. раздел "Важное правило: отрицательный itemSpacing").
+Что осталось вне токенов:
+
+- **Negative `itemSpacing = −8`** в обоих внутренних фреймах (`SinglButton`, `Tab Bar Buttons`). Не из core-шкалы, задано вручную. Это компенсация встроенного touch-padding в FAB-кнопке (паттерн iOS UI Kit, см. §«Важное правило: отрицательный itemSpacing»). Переменной для отрицательного gap в системе нет и не планируется.
+- **Tab Bar Buttons `width`** — hardcoded демонстрационные значения (124 / 200 / 244) под количество табов внутри. В продакшене бар адаптируется к содержимому (HUG / FILL по контексту).
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 6 правок shadow + sync спеки.**
+
+### Figma (6 правок)
+
+- **Shadow style на 6 нодах** перепривязан с `[deprecated] Shadow/Sheet Active` (id `S:ed244f90…`) на canonical **`Elevation/Bottom`** (`S:556c1eee…`):
+  - `Tab Bar Buttons` × 3: `5879:827`, `5879:821`, `5879:814`.
+  - `SinglButton` × 3: `5879:829`, `5879:824`, `5879:818`.
+  - Это первая зачистка `[deprecated] Shadow/Sheet *` в DS; визуально результат идентичен (стили в Elevation/Bottom выровнены с теми же drop-shadow параметрами).
+
+### Спека
+
+- §«Отступы» — синхронизирована с реальным Figma: `pt = 16` (spacing/4), `pb = pl = pr = 24` (spacing/6). Старая запись «pr=8, остальное=0» была неактуальной — FAB Bar в Figma — sticky-floating контейнер с safe-area-style отступами от краёв.
+- §«Варианты» — переписан под фактическую axis `Type = 1 | 2 | 3` (количество FAB внутри). Размеры/Content/Disabled выведены на инстанс-override-уровень (Swap Instance), не зашиты в matrix.
+- §«Аудит» — формулировка «SiglButton itemSpacing ×3» уточнена: оба внутренних фрейма (SinglButton + Tab Bar Buttons) используют negative gap −8 как компенсацию touch-padding. Tab Bar Buttons width — отдельный пункт.
+
+### Открытый вопрос (палитра / cross-cutting)
+
+В библиотеке **App Color Palette** (`KUQhruxtJAqD3uwshelCt2`) живёт переменная `Fonts/line-hright/xxxs` — опечатка `hright` вместо `height`. Затрагивает все компоненты с `Caption / caption-sm Medium` (Avatar S, Badge 2xs/xs, FAB-метки). Переименование `Fonts/line-hright/xxxs → Fonts/line-height/xxxs` нужно делать в **исходном файле палитры**, не в UI-Kit-Mobile — rename сохранит все привязки автоматически. Отдельный таск.
+
+FAB Bar → ✅ готов к разработке (с открытым cross-cutting тикетом по палитре).
