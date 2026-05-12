@@ -98,7 +98,7 @@
 |-----------|--------|--------------------|
 | Dialog (slots: Title/Description/Buttons Stack/Image) | ✅ | [dialog-spec](./dialog-spec.md) |
 | Empty State (Inline / Full-screen) | ✅ | [empty-state-spec](./empty-state-spec.md) |
-| Sheet / Sheets | 🔍 | [sheets-spec](./sheets-spec.md) |
+| Sheet / Sheets | ✅ | [sheets-spec](./sheets-spec.md) |
 | Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / Profile Header | ✅ | [skeleton-spec](./skeleton-spec.md) |
