@@ -83,7 +83,7 @@
 | List Item | ✅ | [list-item-spec](./list-item-spec.md) |
 | Search v2 | ✅ | [search-spec](./search-spec.md) |
 | Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
-| Snackbar | 🔍 | — |
+| Snackbar | ✅ | [snackbar-spec](./snackbar-spec.md) |
 | Tab Bar | 🔍 | — |
 | Tabs | 🔍 | [tabs-spec](./tabs-spec.md) |
 | Range Slider | ⏳ | — |
