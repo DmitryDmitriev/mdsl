@@ -261,3 +261,21 @@ CSS-переменные:
 1. **Empty State для Dark theme** — иллюстрации из Assets с собственным окрасом, в Dark выглядят так же как в Light. Если визуальная команда захочет адаптации — создавать парные dark-версии иллюстраций в Assets.
 2. **Inline icon mapping** — дефолт `ic_close`, но семантически для no-results лучше `ic_search_off` (если такая иконка есть в библиотеке). Designer может swap'нуть.
 3. **Pressed/Hover overlay** — пока нет; если введём общий overlay-токен, action buttons его подхватят автоматически.
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 100% соответствие, 0 правок.**
+
+Второй чистый компонент за сессию (после Input v2). Проверено ~22 параметра на 4 представительных вариантах (2 master + 2 с Actions): структура (`Layout=Inline/Full-screen` + 3 boolean), все размеры (visual 96/140, gaps `spacing/4` / `spacing/6` / `spacing/2`), цвета (`Background/Primary`, `Background/Tertiary`, `Text&Icon/Primary`/`/Secondary`, `Accent/Primary`, `Text&Icon/Inverted W-B`), типографика (`Heading/H3 Medium`, `Base/Body 2`, `Base/Body 2 Medium`), action buttons (Button Primary + Ghost Size=48 на `control-height/md` + `radius/control/control-lg`).
+
+**Hardcoded:** 0. **Missing states:** 0. **M3-leftover'ов:** 0.
+
+**Foundation-bypass:** Empty State **не затронут** open-task'ом `Fonts/line-hright/*` (typo в lh-токенах), потому что использует `Heading/H3 Medium` и `Base/Body 2` — это lh-токены без опечатки (`line-height/lg|sm`). Typo живёт в `line-hright/md|lg|xxxs`, затрагивая `Heading/H*` Bold/Semi-Bold, `Base/Body 1*`, `Caption/caption-sm Medium` — но не текущую палитру Empty State.
+
+**Не блокирующие наблюдения:**
+- Demo-скриншоты в секции `Empty States` (`7827:2215`) используют `⚠️ DEPRECATED / Top app bar` вместо нового Top App Bar v2. Иллюстративные превью, не сам компонент — обновить при следующей итерации demo-страницы.
+- `Accent/Primary` = Zinc/950 (established canonical) — Action 1 кнопка тёмно-серая, не brand-red. См. `COLOR-PALETTE.md §3.5 + §3.7`.
+
+Empty State → ✅ готов к разработке.
