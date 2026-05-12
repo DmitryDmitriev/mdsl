@@ -237,3 +237,22 @@ Building blocks (`.=Tab Item`) залочены и скрыты из Assets че
 - Добавить вариант `Items=5` если потребуется
 - Добавить `Disabled` state по запросу (сейчас не блокирующий)
 - Анимация перехода между активными табами (CSS transition `transform` для pill)
+
+---
+
+## 12. История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 9 правок Figma.**
+
+Базовая модель полностью совпадает со спекой: 6 вариантов Tabs (sm/md/lg × Hug/Fill), 6 вариантов `.=Tab Item` (sm/md/lg × On/Off), все размеры / радиусы / spacing / типографика — на canonical токенах. Прошли ~34 параметра, расхождений было 3.
+
+**Figma (9 правок):**
+
+- **3 effect styles** на Active=On вариантах `.=Tab Item` (`6760:13311` sm, `6760:13333` md, `6760:13355` lg): hardcoded soft-shadow (radius=2 / 1, opacity 0.06 / 0.04) → canonical **`Elevation/Floating`**. По правилу `elevation-spec.md`, в Dark theme `Elevation/Floating` рендерится как `none` автоматически.
+- **6 Badge instances** внутри Tab Item (по одной на каждый из 6 вариантов): дефолтная конфигурация изменена с «`Icon=true, Label=true, Counter=false`, текст “Low reliability”» на **`Counter=true, Icon=false, Label=false`, текст “8”** (паттерн «Notifications 8» из §2). Изменение на уровне instance-override (children visibility: `16 / ic_check` → hidden, `text` → hidden, `counter` → visible). Main `Badge/Default/2xs/Pill` не тронут — глобально остаётся универсальным.
+
+**Открытое:**
+
+- **Slot статус фрейма `Items` внутри Tabs.** Plugin API не отдаёт metadata о Slot (open beta). Визуально нужно проверить в Figma UI: правая панель → должен быть Slot badge на фрейме `Items` с `preferredValues = .=Tab Item`. Если Slot не помечен — ПКМ → «Create Slot» при следующей итерации. Не блокирует разработку: текущая реализация через auto-layout + instances работает.
+
+Tabs → ✅ готов к разработке.

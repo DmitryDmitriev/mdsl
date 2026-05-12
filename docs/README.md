@@ -85,7 +85,7 @@
 | Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
 | Snackbar | ✅ | [snackbar-spec](./snackbar-spec.md) |
 | Tab Bar | ✅ | [tab-bar-spec](./tab-bar-spec.md) |
-| Tabs | 🔍 | [tabs-spec](./tabs-spec.md) |
+| Tabs | ✅ | [tabs-spec](./tabs-spec.md) |
 | Range Slider | ⏳ | — |
 
 ---
