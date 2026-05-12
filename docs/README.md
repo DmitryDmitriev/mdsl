@@ -82,7 +82,7 @@
 | Input v2 + Input v2 Stacked | 🔍 | [input-v2-spec](./input-v2-spec.md) |
 | List Item | ✅ | [list-item-spec](./list-item-spec.md) |
 | Search v2 | ✅ | [search-spec](./search-spec.md) |
-| Segment Control (Android M3) | 🔍 | [segment-control-spec](./segment-control-spec.md) |
+| Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
 | Snackbar | 🔍 | — |
 | Tab Bar | 🔍 | — |
 | Tabs | 🔍 | [tabs-spec](./tabs-spec.md) |

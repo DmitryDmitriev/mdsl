@@ -84,15 +84,16 @@ Segmented control (HORIZONTAL, FILL width)
 
 ## Радиусы
 
-Внешний контейнер сегментед-контрола имеет общий радиус, индивидуальные сегменты — без радиуса (вертикальные сепараторы между ними рисуются через `border-left`).
+В Figma на корневом контейнере и индивидуальных сегментах `cornerRadius = 0`. Сегменты — плоские, со сплошным нижним indicator-line для Primary и заливкой для Secondary. Вертикальные сепараторы между сегментами рисуются через `border-left`.
 
-| Элемент | Токен | Значение |
-|---|---|---|
-| Контейнер (внешний) | `radius/control-md` (или соответствующий M3 capsule) | по согласованию с шкалой radius |
-| Indicator (Primary) | прямоугольник 2 × ширина текста | без радиуса |
-| Капсула (Secondary, активный) | по контейнеру | наследуется |
+| Элемент | Радиус |
+|---|---|
+| Контейнер (внешний) | 0 |
+| Сегмент | 0 |
+| Indicator (Primary) | 0 (прямоугольник 2 × ширина текста) |
+| Капсула (Secondary, активный) | 0 (плоский прямоугольник с заливкой `Background/Tertiary`) |
 
-> **Замечание.** Точная привязка radius-токена к контейнеру зависит от utility-вызова в коде; в Figma на корне используется фиксированный радиус M3 (выясняется на этапе кода).
+> **Без скруглений по дизайн-решению.** Если в продукте понадобится capsule-вариант (M3 default), добавлять отдельным variant'ом или паттерном, не модифицируя текущий компонент.
 
 ---
 
@@ -113,7 +114,6 @@ Segmented control (HORIZONTAL, FILL width)
 |---|---|---|---|
 | **Default** | `Text&Icon/Secondary` | hidden | `transparent` |
 | **Active** | `Accent/Primary` | `Accent/Primary` (line 2 px снизу) | `transparent` |
-| **Disabled** | `Text&Icon/Tertiary` | hidden | `transparent` |
 
 ### Сегмент (Secondary)
 
@@ -121,9 +121,10 @@ Segmented control (HORIZONTAL, FILL width)
 |---|---|---|
 | **Default** | `Text&Icon/Secondary` | `transparent` |
 | **Active** | `Accent/Primary` | `Background/Tertiary` |
-| **Disabled** | `Text&Icon/Tertiary` | `transparent` |
 
-**Замечание про hover/pressed.** Pressed/Hover-состояний пока нет (см. project_larixon_mds.md §«Ключевые архитектурные решения» п.5). Если вернёмся к overlay-токену — добавим в обе Style.
+**Disabled-state — не зашит в variant-матрицу.** В Figma COMPONENT_SET оси `State` нет (Default ↔ Active передаётся не через variant, а через override иконки/индикатора). Disabled-режим рендерится **на стороне продукта** через родительский контейнер: `aria-disabled="true"` + `pointer-events: none` + `opacity: 0.4`. На самом сегменте отдельных Disabled-токенов не существует — это упрощает variant matrix и согласуется с тем, что Segment Control обычно либо весь активен, либо весь disabled (групповой контрол).
+
+**Замечание про hover/pressed.** Pressed/Hover-состояний нет (см. project_larixon_mds.md §«Ключевые архитектурные решения» п.5). Если вернёмся к overlay-токену — добавим в обе Style.
 
 ---
 
@@ -134,8 +135,7 @@ Segmented control (HORIZONTAL, FILL width)
 | Configuration | Стиль | Размер | Когда |
 |---|---|---|---|
 | **Label-only / Classic Label only** | `Base/Body 2 Medium` | 14/20 | Подпись на сегменте без иконки |
-| **Label & Icon (нижняя подпись)** | `Caption sm` (Medium) | 10/12 | Подпись под иконкой в компактной капсуле |
-| **Icon and label (расширенный)** | `Base/Body 2 Medium` | 14/20 | Тексты в дополнительных вариациях с иконкой рядом |
+| **Label & Icon — нижняя подпись** | `Caption/caption-sm Medium` | 10/12 | Подпись под иконкой в компактной капсуле (building blocks `Icon and label` и `Classic Icon and label`) |
 
 **Никаких raw-значений.** Если в задаче не хватает существующего типографического стиля — поднимать в TYPOGRAPHY.md, не вводить локальный hardcode.
 
@@ -159,7 +159,7 @@ Segmented control (HORIZONTAL, FILL width)
 | Gap (icon→label) | — | — | `spacing/1` (4) |
 | Icon size | — | `size/sm` (24) | `size/sm` (24) |
 | Border width | `border/1` (1) | `border/1` (1) | `border/1` (1) |
-| Label style | `Base/Body 2 Medium` | — | `Caption sm` |
+| Label style | `Base/Body 2 Medium` (14/20) | — | `Caption/caption-sm Medium` (10/12) |
 
 ---
 
@@ -182,7 +182,7 @@ Hardcoded в Segmented control = 0 (артефакты Figma editor / icon libra
 - **Семантика.** `role="tablist"` на контейнере (если используется как навигация) или `role="radiogroup"` (если как фильтр), `role="tab"` / `role="radio"` на сегментах. Активный — `aria-selected="true"` / `aria-checked="true"`.
 - **Клавиатура.** ←/→ — переключение между сегментами, Tab — выход из группы. На активном — Enter/Space.
 - **Контраст.** `Text&Icon/Secondary` на `Background/Primary` — WCAG AA (≥ 4.5:1) проверен в палитре.
-- **Disabled.** Не маршрутизируется клавиатурой, `aria-disabled="true"`.
+- **Disabled.** Управляется на родителе: `aria-disabled="true"` + `pointer-events: none` + `opacity: 0.4`. На самом сегменте отдельных Disabled-вариантов нет.
 
 ---
 
@@ -237,9 +237,32 @@ CSS-переменные (из существующих токенов):
 |---|---|---|
 | 12 hardcoded `#49454f` (Material 3 dark gray) | `Text&Icon/Primary` (canonical) | 2026-05-06 |
 | Текстовые стили raw 14/16, 14/14, 10/12, 10/10 | `Base/Body 2 Medium` 14/20 + `Caption sm` 10/12 | 2026-05-07 |
+| 36 fills на `Surface/Surface Primary` (root + Tab + Building Blocks) | **`Background/Primary`** — Surface оставлен под модалки/шторки | 2026-05-12 |
+| 6 text nodes на `M3/title/small` (Material 3 library) | **`Base/Body 2 Medium`** (canonical Larixon) | 2026-05-12 |
+| Подпись под иконкой (Label & Icon) — `Base/Body 2 Medium` 14/20 в building blocks `Icon and label` и `Classic Icon and label` | **`Caption/caption-sm Medium`** 10/12 — компактная нижняя подпись по M3 паттерну | 2026-05-12 |
 | iOS Segment Control (Apple-native) | заменён на **Tabs** | до DS-консолидации |
 
 API-breaking изменений не было — варианты сохранены, можно swap'ать инстансы в продуктовых файлах без пересборки.
+
+---
+
+## История миграций
+
+**2026-05-12 — аудит готовности (component-spec-check), 48 правок в Figma.**
+
+- **36 fills** переведены с `Surface/Surface Primary` на canonical `Background/Primary` во всём COMPONENT_SET + во всех building-block instance'ах. Оба токена в Light = #ffffff, визуально идентично; семантически Surface зарезервирован за модальными/шторочными контейнерами, Segment Control живёт на screen-background.
+- **6 text nodes** на корнях Tab 4/5 / Tab 4/5 / Tab 4/5 (Label & Icon, Primary + Secondary) переведены с `M3/title/small` на `Base/Body 2 Medium` — устранена смесь из двух библиотек typography (M3 + canonical Larixon).
+- **6 Label texts** в COMPONENT_SET'ах building-block'ов (`888:8068` — `.=Building Blocks/Icon and label`, `888:8244` — `.=Building Blocks/Classic Icon and label`) переведены с `Base/Body 2 Medium` (14/20) на **`Caption/caption-sm Medium`** (10/12). Изменения автоматически пропагировались на все instance'ы внутри Segment Control вариантов — спека и Figma теперь согласованы.
+
+### Спека
+
+- §«Радиусы» — конкретизирована: `cornerRadius = 0` на всех элементах. Удалены неконкретные формулировки «по согласованию с шкалой radius».
+- §«Цвета по состояниям» — убран Disabled из таблиц состояний сегмента (нет такой оси в Figma SET). Добавлено пояснение: Disabled рендерится на стороне продукта через родительский контейнер (`aria-disabled` + `opacity: 0.4`), не зашит в компонент.
+- §«Типографика» — удалена строка про несуществующий «Icon and label (расширенный)» вариант с Body 2 Medium; зафиксировано, что под-иконковая подпись использует `Caption/caption-sm Medium`.
+- §«A11y → Disabled» — синхронизировано с новой Disabled-моделью.
+- §«Миграция со старого M3» — добавлены 3 строки про правки 2026-05-12.
+
+Segment Control → ✅ готов к разработке.
 
 ---
 
