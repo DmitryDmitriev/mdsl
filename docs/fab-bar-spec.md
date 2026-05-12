@@ -50,15 +50,20 @@ Figma: страница **🟢 Button**, набор **FAB Bar** (COMPONENT_SET).
 
 ## Размеры FAB внутри бара
 
-В FAB Bar используется три размера FAB-кнопок:
+В FAB Bar используются canonical-токены из шкал `size/*` и `control-height/*`. Отдельного семейства `size/fab-*` в системе нет — оно не нужно, размеры FAB полностью покрываются основными шкалами.
 
-| Размер FAB | Semantic (size) | Core референс | Значение |
+| Фрейм | Что | Размер | Токен |
 |---|---|---|---|
-| lg | **size/fab-lg** | spacing/24 | 96 × 96 px |
-| md | **size/fab-md** | spacing/14 | 56 × 56 px |
-| sm | **size/fab-sm** | spacing/12 | 48 × 48 px |
+| `Tab Bar Buttons` | Wrap-фрейм для группы Tab-кнопок (Tab 1…N) | h = 56 | `control-height/lg` |
+| `SinglButton` | Wrap-фрейм центральной/одиночной FAB-кнопки | 56 × 56 | `size/2xl` (w + h) |
+| `.=Tab Bar SinglButton` | Сама круглая FAB-кнопка (48 × 48) | 48 × 48 | `size/xl` (w + h) |
+| Tab item (`Tab 1…N`) | Один Tab-инстанс внутри Tab Bar Buttons | h = 48, w = FILL | `size/xl` (h) |
 
-FAB-кнопки в баре **квадратные** (`width = height = size/fab-*`).
+**Почему такая комбинация:**
+- `Tab Bar Buttons` оборачивает горизонтальный ряд тач-целей с приёмом гестов — это «контрол», поэтому height на `control-height/lg`.
+- `SinglButton` и его внутренний инстанс — иконочные/identity-блоки без отдельного touch-padding-контракта, поэтому `size/*`.
+
+FAB-кнопки в баре **квадратные** (`width = height`). Visualно read как чипы / иконочные действия, не как полноценные кнопки с текстом.
 
 ---
 
@@ -80,13 +85,11 @@ FAB Bar — sticky-floating контейнер у нижнего края экр
 
 ### Радиусы (radius)
 
-FAB-кнопки всегда круглые/скруглённые. Radius задаётся на самой FAB-кнопке, не на баре.
+FAB-кнопки всегда круглые. Radius задаётся на самой FAB-кнопке, не на баре.
 
-| Размер FAB | Semantic | Core | Значение |
-|---|---|---|---|
-| lg (96) | **radius/pill** | radius/full | 9999 (pill) или `size/2` |
-| md (56) | **radius/pill** | radius/full | 9999 или `size/2` |
-| sm (48) | **radius/pill** | radius/full | 9999 или `size/2` |
+| Элемент | Токен | Значение |
+|---|---|---|
+| Внутренняя FAB-кнопка (48 × 48) | `radius/pill/pill` | 999 (pill) |
 
 ### Ширина самого бара
 
@@ -101,7 +104,9 @@ FAB-кнопки всегда круглые/скруглённые. Radius за
 
 ### Высота бара
 
-Высота бара = высоте FAB внутри: `size/fab-lg`, `size/fab-md` или `size/fab-sm`.
+Высота бара — **HUG**, считается по внутренним фреймам: высота FAB-контента (`control-height/lg` = 56 для `Tab Bar Buttons`, `size/2xl` = 56 для `SinglButton`) + `paddingTop` (`spacing/4` = 16) + `paddingBottom` (`spacing/6` = 24) = **96 px**.
+
+На root-варианте `FAB Bar` (`5879:813 / :820 / :826`) собственного height-токена нет — это HUG-фрейм, высота производна от детей и paddings.
 
 ### Цвета (semantic)
 
@@ -127,14 +132,13 @@ FAB-кнопки всегда круглые/скруглённые. Radius за
 
 ## Сводная таблица
 
-| Параметр | FAB lg | FAB md | FAB sm |
+| Параметр | Tab Bar Buttons | SinglButton (внешний) | FAB (внутренний) |
 |---|---|---|---|
-| **Size** | 96 × 96 | 56 × 56 | 48 × 48 |
-| **Token** | size/fab-lg | size/fab-md | size/fab-sm |
-| **Radius** | pill | pill | pill |
-| **Icon size** | 32 px | 24 px | 24 px |
-| **Touch-padding (встроенный)** | ~12 px | ~8 px | ~8 px |
-| **itemSpacing в баре** | **−8 px** | **−8 px** | −8 px |
+| **Размер** | h = 56, w = HUG | 56 × 56 | 48 × 48 |
+| **Токен** | `control-height/lg` (h) | `size/2xl` (w, h) | `size/xl` (w, h) |
+| **Radius** | — (контейнер) | — (контейнер) | `radius/pill/pill` (999) |
+| **Icon size внутри** | 24 px | — | 24 px |
+| **itemSpacing с соседями** | −8 px | −8 px | — |
 
 ---
 
@@ -210,20 +214,22 @@ Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
 
 ## История миграций
 
-**2026-05-12 — аудит готовности (component-spec-check), 6 правок shadow + sync спеки.**
+**2026-05-12 — аудит готовности (component-spec-check), 7 правок Figma + sync спеки.**
 
-### Figma (6 правок)
+### Figma (7 правок)
 
 - **Shadow style на 6 нодах** перепривязан с `[deprecated] Shadow/Sheet Active` (id `S:ed244f90…`) на canonical **`Elevation/Bottom`** (`S:556c1eee…`):
   - `Tab Bar Buttons` × 3: `5879:827`, `5879:821`, `5879:814`.
   - `SinglButton` × 3: `5879:829`, `5879:824`, `5879:818`.
   - Это первая зачистка `[deprecated] Shadow/Sheet *` в DS; визуально результат идентичен (стили в Elevation/Bottom выровнены с теми же drop-shadow параметрами).
+- **`5879:814` (Tab Bar Buttons, w=244)** — height перепривязан с `spacing/14` на **`control-height/lg`** (оба = 56 px, но семантически height контейнера тач-зоны должен идти через `control-height/*`). Два соседних `Tab Bar Buttons` (`5879:827`, `5879:821`) уже были корректные.
 
 ### Спека
 
 - §«Отступы» — синхронизирована с реальным Figma: `pt = 16` (spacing/4), `pb = pl = pr = 24` (spacing/6). Старая запись «pr=8, остальное=0» была неактуальной — FAB Bar в Figma — sticky-floating контейнер с safe-area-style отступами от краёв.
 - §«Варианты» — переписан под фактическую axis `Type = 1 | 2 | 3` (количество FAB внутри). Размеры/Content/Disabled выведены на инстанс-override-уровень (Swap Instance), не зашиты в matrix.
 - §«Аудит» — формулировка «SiglButton itemSpacing ×3» уточнена: оба внутренних фрейма (SinglButton + Tab Bar Buttons) используют negative gap −8 как компенсацию touch-padding. Tab Bar Buttons width — отдельный пункт.
+- §«Размеры FAB внутри бара», §«Сводная таблица», §«Высота бара» — переписаны под реальные canonical-токены (`control-height/lg`, `size/2xl`, `size/xl`, `radius/pill/pill`). Удалена выдуманная семья `size/fab-lg/md/sm` — в палитре её нет и не нужна. FAB-кнопки полностью покрываются основными шкалами `size/*` и `control-height/*`. Высота root-фрейма FAB Bar — HUG (96 px = 56 контента + 16 pt + 24 pb), отдельного height-токена на варианте нет и не требуется.
 
 ### Открытый вопрос (палитра / cross-cutting)
 
