@@ -168,6 +168,64 @@
 | Border radius | 12 px | radius/control-lg → radius/3 |
 | Icon size  | 24×24 px | |
 
+### Двухстрочные кнопки (Label + Subtitle) — **только Size lg**
+
+Применение: главный CTA, где смысл строится из **действия + результата** — Apply-фильтра со счётчиком, кнопка покупки со скрытой ценой, подтверждение операции с суммой и т.п.
+
+**Доступно только для Size lg.** На md/sm/xs не разрешено — стек двух строк не помещается в высоту, теряется читаемость.
+
+**Доступно только для Type:** Primary, Secondary, Outline (CTA-типы). На Ghost / Negative / Soft Negative / Ghost Negative — не делаем (вспомогательные/destructive не требуют составного содержимого).
+
+#### Размеры
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| Height | 56 px | height/lg |
+| Padding horizontal | 24 px | space/button-padding-x-lg → spacing/6 |
+| Padding vertical | 8 / 8 px | spacing/2 |
+| Border radius | 12 px | radius/control-lg → radius/3 |
+| Vertical gap label ↔ subtitle | 0 px | — (line-heights дают воздух) |
+| Иконка (если есть) | 24×24 px | — |
+| Отступ иконка ↔ текстовый блок | 12 px | space/button-gap-lg → spacing/3 |
+
+**Высота не меняется — остаётся 56 px.** Линии-height label + subtitle ровно укладываются в `8 + 24 + 16 + 8 = 56`.
+
+#### Типографика
+
+| Слой | Стиль | Назначение |
+|---|---|---|
+| Label (верх) | `Body 1 Medium` — 16 / 24 | Основное действие («Применить») |
+| Subtitle (низ) | `Caption md` — 12 / 16 | Результат / контекст («4 762 объявления») |
+
+Subtitle — **не альтернатива длинному названию действия.** Если действие требует 2 слов («Очистить корзину») — оставлять однострочно с правильной формулировкой, а не дробить.
+
+#### Цвета (по Type)
+
+| Type | Label | Subtitle |
+|---|---|---|
+| Primary | Text&Icon/Inverted W-B | Text&Icon/Inverted W-B (та же, full opacity) |
+| Secondary | Text&Icon/Primary | Text&Icon/Primary (та же) |
+| Outline | Text&Icon/Primary | Text&Icon/Primary (та же) |
+
+Иерархия строится **размером шрифта** (16 vs 12), а не цветом. Subtitle с пониженной opacity / Secondary-цветом не делать — на цветных подложках Primary subtitle станет нечитаемым.
+
+#### Поведение
+
+- **Subtitle опционален.** Boolean property `Subtitle` в компоненте: `false` (default) — обычная однострочная кнопка; `true` — добавляет subtitle.
+- **Label обрезается ellipsis при overflow**, subtitle — тоже на 1 строку с ellipsis. Никаких переносов на 2+ строки в subtitle.
+- **Иконка размещается слева от текстового блока (обе строки).** Не делать отдельную иконку у subtitle.
+- **Disabled state** — оба текста принимают Text&Icon/Disabled, фон/обводка по правилам кнопки.
+- **Pressed / hover** — без особых отличий, ripple на всю поверхность.
+
+#### Когда **не** использовать
+
+| Сценарий | Почему | Что использовать |
+|---|---|---|
+| Title + опциональный hint вне CTA-контекста | Subtitle ≠ helper-text | List Item с overline / supporting |
+| Длинное название действия | Subtitle должен быть результатом, не уточнением | Однострочная кнопка + правильная формулировка |
+| Текст помощи под кнопкой | Это не часть кнопки | Helper-text как отдельный TEXT-узел |
+| Стек двух равнозначных значений (цена + старая цена) | Кнопка не место для прайс-сравнений | Strikethrough-pattern в карточке |
+
 ---
 
 ## Блок 2: Размер md (48 px)
@@ -325,3 +383,17 @@
 Спека §«Высота» уточнена: токены `control-height/*` (раньше `height/*`), §«Варианты» уточнена: явные Form-значения, фиксация по Negative.
 
 ButtonIcon → ✅ готов к разработке.
+
+**2026-05-15 — добавлен Subtitle для Size lg (2-line CTA).**
+
+Расширение Button для двухстрочных CTA-кнопок («Применить · 4 762 объявления», «Получить · бесплатно»). Высота не меняется — остаётся 56 px (math: `8 + 24 (Body 1 Medium LH) + 16 (Caption md LH) + 8 = 56`).
+
+- **Новая BOOLEAN property `Subtitle`** (default false) на компоненте `Button` в UI-Kit-Mobile (key `Subtitle#9069:0`).
+- **6 variants получили subtitle layer:** Size=56 × Form=Square × (Primary/Secondary/Outline) × (Default/Disabled). Rounded и другие Type-ы (Ghost/Negative/Soft Negative/Ghost Negative) — не делаем (см. §«Двухстрочные кнопки», подсекция «Когда не использовать»).
+- **Padding vertical 16 → 8** на этих 6 variants — освобождает место для второй строки без увеличения высоты.
+- **Label-text обёрнут в `Label Block`** (VERTICAL auto-layout) внутри каждой 56-Square variants. Subtitle visibility привязана к новой boolean через `componentPropertyReferences`.
+- **Цвета** — оба текста одинаковые (Inverted W-B для Primary, Text&Icon/Primary для Secondary/Outline, Text&Icon/Disabled для Disabled). Иерархия строится размером (16 vs 12), не цветом.
+
+Спека §«Блок 1: Размер lg (56 px)» расширена секцией «Двухстрочные кнопки (Label + Subtitle) — только Size lg» — типографика, цвета, поведение, ограничения «когда не использовать».
+
+Button → ✅ обновлён, требуется Publish library из UI-Kit-Mobile (`PI2N65xbeJPTc5oWhOP7Bl`).
