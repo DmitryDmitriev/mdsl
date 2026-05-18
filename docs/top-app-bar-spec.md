@@ -238,6 +238,44 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 
 ---
 
+## Композиционное правило: Header = StatusBar + Top App Bar — неразделимы
+
+**StatusBar и Top App Bar — это один логический блок «Header».** Они всегда идут парой, без `gap` между ними. Никакая фоновая полоса, разделитель или вертикальный отступ между ними не вставляется.
+
+### В макете
+
+В Figma эти два компонента должны быть обёрнуты в общий `VERTICAL` frame **«Header»** с `itemSpacing = 0` и подаваться как **один** child экранного контейнера:
+
+```
+Screen (VERTICAL, gap = section/gap)
+├── Header (VERTICAL, gap = 0)           ← один child
+│   ├── StatusBar (instance)
+│   └── Top App Bar v2 (instance)
+├── Section 1
+├── Section 2
+└── ...
+```
+
+### В коде
+
+В нативной реализации шапка экрана (`SystemBars` insets + AppBar) рендерится как одна композиция, без вертикального промежутка. На Android: `Surface` от верха экрана до конца Top App Bar — сплошной. На iOS: статусная зона и navigation bar — одна `UINavigationBar` область.
+
+### Почему
+
+- **StatusBar** — это системная зона устройства (часы, батарея, нотификации).
+- **Top App Bar** — это начало контента приложения (заголовок экрана, навигация).
+
+Визуально граница между ними должна быть невидимой. Любой разрыв читается пользователем как «контент начинается не сразу», ломает иерархию экрана и создаёт ощущение «два разных приложения».
+
+### Анти-паттерн
+
+| Неправильно | Правильно |
+|---|---|
+| `Screen → [StatusBar, Top App Bar, Section1, ...]` с `screen.itemSpacing = 8` (разрыв между StatusBar и Top App Bar) | `Screen → [Header(gap=0)→[StatusBar, Top App Bar], Section1, ...]` с `screen.itemSpacing = 8` (разрыв только между Header и Section1) |
+| Разная фоновая заливка StatusBar и Top App Bar | Одна заливка `Surface/Surface Primary` на оба, или прозрачный StatusBar поверх той же поверхности |
+
+---
+
 ## Связанные документы
 
 - [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — шкалы размеров, spacing, radius
