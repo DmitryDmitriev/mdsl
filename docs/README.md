@@ -44,6 +44,8 @@
 | [COLOR-PALETTE.md](./COLOR-PALETTE.md) | Цветовая семантика, Tinted-роли, Brand, правила Light/Dark |
 | [TYPOGRAPHY.md](./TYPOGRAPHY.md) | Шрифт, стили текста, Heading / Body / Caption |
 | [elevation-spec.md](./elevation-spec.md) | Elevation (3 токена: Top / Floating / Bottom) |
+| [composition-rules.md](./composition-rules.md) | **Композиционные правила** — как компоненты складываются в экран (Header, Section card, отступы, размерная консистенция, Bottom CTA) |
+| [spacing-semantic.md](./spacing-semantic.md) | Семантические токены отступов (`section/*`, `stack/*`, `row/*`, `chip/*`, `cta/*`, `screen/*`, `list/*`) поверх primitives |
 
 ---
 
