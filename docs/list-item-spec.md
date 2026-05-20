@@ -44,9 +44,32 @@ List Item (COMPONENT)
 
 | Слот | Доступные типы |
 |------|----------------|
-| **Left Side** (8 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch |
+| **Left Side** (9 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Checkbox + Brand** |
 | **Right Side** (8 типов) | Icon, Trailing text, Checkbox, Radio, Switch, Icon button, Accordion, Badge |
 | **Content** (2 типа) | Основной (Title + Subtitle), с Overline |
+
+#### Composite Type=Checkbox + Brand
+
+Для multiselect-списков, где каждой строке нужен и чекбокс выбора, и брендированный маркер (логотип марки авто, категории, и т.п.) — см. [brand-mark-spec.md](./brand-mark-spec.md).
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| Размер | 84 × 40 | — |
+| Layout | HORIZONTAL | — |
+| paddingLeft | 8 | `spacing/2` |
+| paddingRight | 0 | — |
+| itemSpacing (gap чекбокс ↔ Brand) | 12 | `row/gap-loose` |
+| Состав | [Checkbox 24] + gap + [Brand Mark 40] | — |
+| primaryAxisAlignItems | MIN | — |
+| counterAxisAlignItems | CENTER | — |
+
+**Зачем paddingLeft=8 и не CENTER:** чтобы чекбокс этого варианта попал на ту же абсолютную X-координату, что чекбокс варианта `Type=Checkbox` (где он центрирован в 40-px слоте → x=8). При использовании в смешанном списке (некоторые row с брендом, некоторые без) — чекбоксы выровнены в одну колонку.
+
+**⚠️ Gotcha (учитывать при имплементации):** в Figma при смене Type вариант'а Left Side инстанса (например, из `Checkbox` → `Checkbox + Brand`) — Figma НЕ автоматически меняет gap/padding/sizing-mode инстанса на дефолты нового variant'а. Нужно вручную:
+- Поставить `layoutSizingHorizontal = HUG`
+- При необходимости explicit'но обновить itemSpacing и padding
+
+Это известный bug инстанс-override'ов. В коде проблемы нет — там значения берутся из variant'а напрямую.
 
 ---
 
@@ -149,10 +172,24 @@ ListItem(
 - [switch-spec.md](./switch-spec.md) — Switch как building block
 - [badge-spec.md](./badge-spec.md) — Badge как building block
 - [avatar-spec.md](./avatar-spec.md) — Avatar как building block
+- [brand-mark-spec.md](./brand-mark-spec.md) — Brand Mark как building block (для composite Type=Checkbox + Brand)
+- [composition-rules.md](./composition-rules.md) — правила композиции экрана со списками
 
 ---
 
 ## 8. История миграций
+
+**2026-05-20 — добавлен composite Type=Checkbox + Brand.**
+
+- §3 «Building blocks»: Left Side получил 9-й тип `Checkbox + Brand` для multiselect-списков с брендированными маркерами
+- Добавлена под-секция «Composite Type=Checkbox + Brand» с размерами и токенами
+- Зафиксирован gotcha с override'ами Figma при смене Type variant'а
+- Введён новый атом [Brand Mark](./brand-mark-spec.md), на котором строится composite
+- Контекст: задача PB-876 (multiselect марок авто), но паттерн универсальный для любых брендированных списков
+
+---
+
+
 
 **2026-05-12 — аудит готовности (component-spec-check).**
 
