@@ -1,10 +1,16 @@
 # Decorative Color Palette
 
-**Статус:** ✅ **RATIFIED 2026-05-25** (Phase 1 — палитра). Финальная спека — [COLOR-PALETTE.md](../COLOR-PALETTE.md) §1.6 (Decor primitives), §2.10 (Decor semantic), §3.8 (Decor vs Semantic). Hex-значения подтверждены пользователем как Tailwind v3. Этот документ оставлен как trail обсуждения.
+**Статус:** ⚠️ **Phase 1a RATIFIED 2026-05-25 (только primitives).** Hex-значения подтверждены как Tailwind v3. В палитре заведены: Purple, Pink, Cyan, Teal, Indigo полные шкалы + дополнения Orange. Финальная часть spec'а — [COLOR-PALETTE.md §1.6](../COLOR-PALETTE.md#16-цветные-шкалы-50950).
 
-**Phase 2 (компоненты) — отдельные proposals по мере задач:** Badge получит Decor type'ы первым, далее Chips и Alerts.
+**Phase 1b (semantic Decor tokens `Background/Decor/*`, `Text&Icon/on Decor/*`) — НЕ ratified.** Решение пользователя 2026-05-25: «это ситуативные решения, когда они станут паттерновые, тогда и заведём». До этого пользоваться primitives напрямую. См. [COLOR-PALETTE.md §2.10](../COLOR-PALETTE.md) — статус «в тестах».
 
-⚠️ **Figma не обновлён.** Variables в App Color Palette library пока не заведены — это отдельный шаг (требует решения про публикацию library, т.к. изменения ripple на консьюмеров).
+**Правило `Decor vs Semantic` (§3.8) — НЕ ratified.** Решение пользователя 2026-05-25: «сейчас идут тесты, нельзя привязывать». В spec оставлен только anchor-раздел с текущей мыслью; жёсткие анти-паттерны и mapping'и — не зафиксированы.
+
+**Phase 2 (компоненты)** — будет позже, когда semantic mapping устаканится.
+
+⚠️ **Figma library** — primitives будут заведены отдельным шагом (после согласования стратегии публикации; см. вопрос в чате).
+
+Этот документ оставлен как trail исходного предложения. Текущая версия decor — см. [COLOR-PALETTE.md §1.6, §2.10, §3.8](../COLOR-PALETTE.md).
 
 **Контекст:** текущая палитра — функционально-семантическая (good/info/warning/negative/neutral). Для marketing/promo/decorative-меток (VIP, Hot, New, Most viewed, Featured, Sale) её не хватает — нет нейтрально-декоративных оттенков. Дизайнеры либо хакают семантические токены (VIP красят в `warning` «потому что жёлтый» — ломая семантику для разработки), либо хардкодят hex.
 

@@ -230,36 +230,18 @@
 
 **НЕ применять** в структурных компонентах (Alert, Notification, Snackbar, Card, Dialog) — там фон может быть tinted, но текст всегда `Text&Icon/Primary` / `Secondary`. Иерархия задаётся весом и размером, не цветом текста.
 
-### 2.10 Decor
+### 2.10 Decor — статус «в тестах»
 
-Декоративная палитра для категоризации/маркетинговых меток. **Не семантика.** См. §3.8 «Decor vs Semantic» — когда применять, когда нельзя.
+Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Orange — см. §1.6) введены, но **семантическая обвязка ещё не зафиксирована**. То есть нет канонических токенов уровня `Background/Decor/*` / `Text&Icon/on Decor/*` и нет жёсткого правила «когда decor, когда semantic».
 
-Парный набор `Background/Decor/*` + `Text&Icon/on Decor/*` — по тому же принципу, что для semantic Tinted (§2.2 / §2.8).
+**Причина:** ситуативные кейсы (VIP, Hot, Most viewed, Sale и т.п.) сейчас в фазе экспериментов в продуктовых задачах. До того как mapping `decor color ↔ semantic role` устаканится в реальных паттернах, преждевременно кодифицировать его в spec'е — иначе получим жёсткую привязку, которую потом тяжело отвязать.
 
-| Роль | Light | Dark |
-|------|-------|------|
-| `Background/Decor/Purple` | Purple/50  | Purple/900 |
-| `Background/Decor/Pink`   | Pink/50    | Pink/900   |
-| `Background/Decor/Orange` | Orange/50  | Orange/900 |
-| `Background/Decor/Cyan`   | Cyan/50    | Cyan/900   |
-| `Background/Decor/Teal`   | Teal/50    | Teal/900   |
-| `Background/Decor/Indigo` | Indigo/50  | Indigo/900 |
-| `Text&Icon/on Decor/Purple` | Purple/700 | Purple/50 |
-| `Text&Icon/on Decor/Pink`   | Pink/700   | Pink/50   |
-| `Text&Icon/on Decor/Orange` | Orange/700 | Orange/50 |
-| `Text&Icon/on Decor/Cyan`   | Cyan/700   | Cyan/50   |
-| `Text&Icon/on Decor/Teal`   | Teal/700   | Teal/50   |
-| `Text&Icon/on Decor/Indigo` | Indigo/700 | Indigo/50 |
+**Как пользоваться сейчас:**
+- В Figma — через primitives (`Purple/700`, `Cyan/50` и т.п.) напрямую.
+- В коде — ссылаться на хексы или primitives без semantic-роли.
+- Контраст текста на плашке проверять руками (типичная пара — `*/50` фон + `*/700` текст в Light; `*/900` фон + `*/50` текст в Dark — даёт 6:1+).
 
-**Принцип симметрии Light ↔ Dark** соблюдён — тот же подход, что для semantic Tinted (§2.2).
-
-**Контраст `Text&Icon/on Decor/*` на `Background/Decor/*`:** все пары проходят WCAG AA (6:1+) — Tailwind v3 примитивы изначально спроектированы под accessibility-проверки.
-
-**Hue-distance от semantic:** Decor-цвета подобраны так, чтобы визуально не пересекаться с semantic (`good`=Green, `info`=Blue, `warning`=Amber, `negative`=Red, `neutral`=Zinc). Hue-distance ≥ 30° от ближайшего semantic-цвета. Например, Cyan (190°) против Info-Blue (220°) — 30°, различимо.
-
-**Outline-вариант** компонентов (Badge, и т.п.) использует `Text&Icon/on Decor/{Color}` как border — без введения отдельной группы `Border/Decor/*`. Тот же подход, что для semantic Tinted после 2026-05-25 (см. badge-spec.md §2).
-
-**Расширение:** новые decor-цвета добавляются по запросу с обоснованием. Кандидаты второй очереди: `Lime`, `Fuchsia`, `Rose`, `Yellow`.
+**Что будет потом:** когда применение decor стабилизируется (одни и те же цвета используются для одних и тех же ролей в нескольких независимых задачах) — заведём semantic Decor tokens отдельным апдейтом палитры.
 
 ### 2.9 Brand Color
 Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`.
@@ -326,26 +308,16 @@
 
 При смене реализации (например, ввод тёмного бренда) семантика остаётся, меняются только базовые значения.
 
-### 3.8 Decor vs Semantic
+### 3.8 Decor vs Semantic — обсуждается
 
-Палитра расщеплена на два слоя:
+Decor-примитивы введены, но правило «когда decor, когда semantic» **ещё не зафиксировано** — см. §2.10. Сейчас в фазе тестов.
 
-- **Semantic** (`good` / `info` / `warning` / `negative` / `neutral`) — функциональный смысл. Состояние системы или элемента. В коде — через semantic-роли.
-- **Decor** (`Purple` / `Pink` / `Orange` / `Cyan` / `Teal` / `Indigo`) — категоризация / маркетинг / визуальное выделение. Без функционального смысла. В коде — через явный выбор цвета.
+Текущая мысль (которая может ещё меняться):
+- **Semantic** — функциональный смысл (состояние системы).
+- **Decor** — категоризация/маркетинг (VIP, Hot, New и т.п.).
+- **Brand** — отдельный слой, не смешивается с Decor.
 
-**Решающий вопрос при выборе:**
-
-> «Этот цвет несёт информацию о состоянии системы или элемента?»
-> - **Да** → semantic palette (`good`/`info`/`warning`/`negative`/`neutral`)
-> - **Нет, это marketing-label / категория / "выделить"** → decor palette
-
-**Анти-паттерны:**
-- ❌ `warning` для VIP/Premium-меток. Это marketing-label, не системное warning. → `Decor/Purple`
-- ❌ `negative` для Hot/Sale. Это promo, не error. → `Decor/Orange` или `Decor/Pink`
-- ❌ `info` для New. Это маркетинговая метка свежести, не информация о системе. → `Decor/Cyan`
-- ❌ `good` для Verified. «Verified» — это категория, не системный success. → `Decor/Teal`
-
-**Brand vs Decor:** brand-цвета (`Brand/Somon`, `Brand/Bazaraki` и т.п.) — отдельный слой. **Не смешивать** с decor-палитрой: brand остаётся для брендовых элементов (логотипы, splash, фирменные баннеры), Decor — для marketing/category-меток в обычных компонентах. См. §3.5.
+Конкретные mapping'и («VIP = Decor/Purple» и т.п.) — пока эмпирически в продуктовых задачах. Когда устаканится — закрепим в §3.
 
 ---
 
