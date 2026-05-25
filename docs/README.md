@@ -120,6 +120,16 @@
 
 ---
 
+## Patterns 🧩
+
+Композиционные паттерны — часто повторяющиеся куски интерфейсов, собранные из существующих компонентов. **Не Figma-компоненты**, только спецификации в markdown. См. [patterns/README.md](./patterns/README.md) — чем паттерн отличается от компонента и когда что выбирать.
+
+| Паттерн | Где используется | Спека |
+|---|---|---|
+| Category Grid | Меню подкатегорий внутри вертикали (Real estate, Motors, Electronics, …) | [patterns/category-grid.md](./patterns/category-grid.md) |
+
+---
+
 ## Источники правды
 
 - **Confluence-страница** [🎨 Design System](https://larixon.atlassian.net/wiki/spaces/itdep/pages/4349231142/Design+System) — реестр со статусами Figma / iOS / Android (колонки iOS/Android заполняет разработка). Аудиты компонентов и вопросы по дизайну — footer-комментарии на этой странице.
