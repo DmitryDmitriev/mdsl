@@ -61,11 +61,12 @@
 | **Cyan**   | `#ECFEFF` | `#CFFAFE` | `#22D3EE` | `#06B6D4` | `#0E7490` | `#155E75` | `#164E63` |
 | **Teal**   | `#F0FDFA` | `#CCFBF1` | `#2DD4BF` | `#14B8A6` | `#0F766E` | `#115E59` | `#134E4A` |
 | **Indigo** | `#EEF2FF` | `#E0E7FF` | `#818CF8` | `#6366F1` | `#4F46E5` | `#3730A3` | `#312E81` |
-| **Orange** *(дополнения)* | — | `#FFEDD5` | — | — | `#C2410C` | — | `#7C2D12` |
 
 Источник: Tailwind CSS v3 palette (de-facto industry baseline). При появлении brand-aesthetic требований — пересматриваем точечно.
 
-Полные шкалы — стандартные shade-ступени.
+Полные шкалы (`50/100/200/300/400/500/600/700/800/900/950`) заведены в Figma `App Color Palette` (collection «Base Color», single Light mode) — 2026-05-25.
+
+Orange уже имеет полную шкалу в палитре (введён до 2026-05-25) — добавлений не требовалось.
 
 ### 1.7 Brand
 | Бренд    | Light    | Dark      |
