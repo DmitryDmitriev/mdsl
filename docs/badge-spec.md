@@ -33,11 +33,23 @@
 | Layer | `Fill=Filled` | `Fill=Outline` |
 |---|---|---|
 | Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
-| Border | — (нет) | 1px solid `Text&Icon/on Tinted/{variant}`, stroke align **INSIDE** |
+| Border | — (нет) | 1px solid (см. mapping ниже), stroke align **INSIDE** |
 | Text | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
 | Icon | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
 
-**Почему `Text&Icon/on Tinted/*` как border для Outline:** один тон для border, текста, иконки → бейдж читается как монохромная плашка. Не вводим новых токенов в палитру (`Border/Tinted/*` не понадобился).
+**Border mapping для Outline** — переиспользует существующие `Border/*` токены (см. COLOR-PALETTE.md §2.4):
+
+| Variant | Border token | Light | Dark |
+|---|---|---|---|
+| `good` | `Border/Positive` | Green/600 | Green/400 |
+| `info` | `Border/Focus` | Blue/500 | Blue/400 |
+| `warning` | `Border/Warning` | Amber/400 | Amber/400 |
+| `negative` | `Border/Negative` | Red/600 | Red/400 |
+| `neutral` | `Border/Default` | Zinc/200 | Zinc/500 |
+
+**Почему `Border/*` а не `Text&Icon/on Tinted/*`:** border средней насыщенности (Color/400-600) даёт читаемый контур, который не конкурирует с текстом (Color/700/50). В dark mode mid-tone границы остаются различимы между типами; tinted text shade (Color/50) в dark делал бы все outline почти-белыми и сливал бы их визуально.
+
+**Семантическое переиспользование:** `Border/Positive` / `Negative` / `Warning` / `Focus` / `Default` изначально под input states (active/error/focus). Visual-семантика совпадает с outline-badge'ами (border средней насыщенности под цвет состояния). Новые `Border/Tinted/*` токены **не вводились**.
 
 **Stroke align INSIDE** — визуальные границы Outline-бейджа не растут на 2px относительно Filled. Размеры (§3) идентичны.
 
@@ -226,9 +238,11 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 **2026-05-25 — добавлен `Fill` axis (Filled / Outline).**
 
 - Добавлен новый variant axis `Fill` с двумя значениями. Матрица: 5 × 6 × 2 × 2 = **120 вариантов** (было 60).
-- Outline собран как `fills = []` + 1px stroke (align INSIDE), привязанный к `Text&Icon/on Tinted/{Type}` — тот же токен, что и для текста/иконки. Coherent монохромный вид, новых токенов в палитру не вводилось.
+- Outline собран как `fills = []` + 1px stroke (align INSIDE).
+- **Итерация 1** (откатана в тот же день): border привязан к `Text&Icon/on Tinted/{Type}` — visual-coherent, но в Dark mode все outline-бейджи сливались в почти-белые контуры (tinted-text shade в Dark = Color/50), а в Light border равнялся тексту — слишком сильно.
+- **Итерация 2 (текущая):** border переведён на существующие `Border/*` токены (`Border/Positive` / `Negative` / `Warning` / `Focus` / `Default`) — mid-tone цвета, не конкурируют с текстом и остаются различимы в обеих темах. Новых токенов в палитру не вводилось. См. §2 «Цвет».
 - Use case: бейджи поверх цветных изображений (карточки объявлений), визуальная иерархия «primary + secondary метки», dark mode на ярких фонах. См. §7 «Когда Filled, когда Outline».
-- Покрытие токенами: **100%** (без изменений).
+- Покрытие токенами: **100%**.
 - Proposal: [proposals/badge-outline-variant.md](./proposals/badge-outline-variant.md) (RATIFIED).
 
 ---
