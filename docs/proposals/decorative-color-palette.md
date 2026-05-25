@@ -1,6 +1,10 @@
 # Decorative Color Palette
 
-**Статус:** proposal, ждёт обсуждения. После апрува — правки в `COLOR-PALETTE.md`, затем расширение компонентов (Badge → Chips → Alerts) отдельными шагами.
+**Статус:** ✅ **RATIFIED 2026-05-25** (Phase 1 — палитра). Финальная спека — [COLOR-PALETTE.md](../COLOR-PALETTE.md) §1.6 (Decor primitives), §2.10 (Decor semantic), §3.8 (Decor vs Semantic). Hex-значения подтверждены пользователем как Tailwind v3. Этот документ оставлен как trail обсуждения.
+
+**Phase 2 (компоненты) — отдельные proposals по мере задач:** Badge получит Decor type'ы первым, далее Chips и Alerts.
+
+⚠️ **Figma не обновлён.** Variables в App Color Palette library пока не заведены — это отдельный шаг (требует решения про публикацию library, т.к. изменения ripple на консьюмеров).
 
 **Контекст:** текущая палитра — функционально-семантическая (good/info/warning/negative/neutral). Для marketing/promo/decorative-меток (VIP, Hot, New, Most viewed, Featured, Sale) её не хватает — нет нейтрально-декоративных оттенков. Дизайнеры либо хакают семантические токены (VIP красят в `warning` «потому что жёлтый» — ломая семантику для разработки), либо хардкодят hex.
 
