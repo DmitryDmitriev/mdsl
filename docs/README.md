@@ -2,7 +2,9 @@
 
 Папка `docs/` — **спеки и фундамент** дизайн-системы. Источник правды для дизайна и разработки. Материалы исключительно для **Figma** в репозиторий не выкладываются.
 
-> ⚠️ **Единственный источник правды — ветка `main` репозитория [`DmitryDmitriev/mdsl`](https://github.com/DmitryDmitriev/mdsl).** Любые другие копии — локальные клоны, выгрузки в Confluence, описания компонентов в Figma, скриншоты в Jira — **производные**. При расхождении верить только `main` через `raw.githubusercontent.com/DmitryDmitriev/mdsl/main/docs/...` или GitHub web.
+> ⚠️ **Единственный источник правды — ветка `main` репозитория [`larixon-mobile/mdsl`](https://gitlab.com/larixon-mobile/mdsl) на GitLab.** Любые другие копии — локальные клоны, выгрузки в Confluence, описания компонентов в Figma, скриншоты в Jira, старое GitHub-зеркало `DmitryDmitriev/mdsl` — **производные**. При расхождении верить только `main` на GitLab через `gitlab.com/larixon-mobile/mdsl/-/raw/main/docs/...` или GitLab web.
+>
+> 📦 **Миграция:** репо переехал с GitHub на GitLab 2026-05-25. Старый адрес `github.com/DmitryDmitriev/mdsl` сохранён, но больше не обновляется.
 
 ## Структура
 
@@ -134,7 +136,7 @@
 
 - **Confluence-страница** [🎨 Design System](https://larixon.atlassian.net/wiki/spaces/itdep/pages/4349231142/Design+System) — реестр со статусами Figma / iOS / Android (колонки iOS/Android заполняет разработка). Аудиты компонентов и вопросы по дизайну — footer-комментарии на этой странице.
 - **Figma UI-Kit-Mobile** `PI2N65xbeJPTc5oWhOP7Bl` — компоненты сгруппированы по `━━━ ATOMS / MOLECULES / ORGANISMS / SPECIAL / DEPRECATED`.
-- **GitHub `DmitryDmitriev/mdsl`** — markdown-спеки в этом каталоге `docs/`.
+- **GitLab `larixon-mobile/mdsl`** — markdown-спеки в этом каталоге `docs/` (источник правды). Старое GitHub-зеркало `DmitryDmitriev/mdsl` — read-only, не обновляется.
 
 ## Очередь реализации (исторический trail)
 
