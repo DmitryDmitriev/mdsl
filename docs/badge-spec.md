@@ -2,7 +2,7 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **2xs / xs / sm / md / lg / xl**, формы **Pill / Rounded**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm / md** — caption-md (12/16); **lg / xl** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm / md** — 16 px; **lg / xl** — 24 px.
+Размеры **2xs / xs / sm / md / lg / xl**, формы **Pill / Rounded**, заливка **Filled / Outline**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm / md** — caption-md (12/16); **lg / xl** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm / md** — 16 px; **lg / xl** — 24 px.
 
 Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
@@ -27,8 +27,20 @@
 ## 2. Токены
 
 ### Цвет
-- **Фон**: `Background/Tinted/{variant}`.
-- **Текст и иконка**: `Text&Icon/on Tinted/{variant}` (тёмный shade — обеспечивает 6:1+ контраст на пастельной плашке).
+
+Зависит от `Fill`:
+
+| Layer | `Fill=Filled` | `Fill=Outline` |
+|---|---|---|
+| Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
+| Border | — (нет) | 1px solid `Text&Icon/on Tinted/{variant}`, stroke align **INSIDE** |
+| Text | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
+| Icon | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
+
+**Почему `Text&Icon/on Tinted/*` как border для Outline:** один тон для border, текста, иконки → бейдж читается как монохромная плашка. Не вводим новых токенов в палитру (`Border/Tinted/*` не понадобился).
+
+**Stroke align INSIDE** — визуальные границы Outline-бейджа не растут на 2px относительно Filled. Размеры (§3) идентичны.
+
 - **Не использовать** `Accent/{variant}` (Green/600 и т.п.) для текста на tinted-фоне — контраст на грани WCAG AA, а семантика `Accent/*` принадлежит активным интерактивным элементам, не статичным бейджам.
 
 ### Отступы (spacing)
@@ -145,12 +157,25 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (60 шт.)
+### Варианты (120 шт.)
 - **Type**: Good, Info, Warning, Negative, Neutral
 - **Size**: 2xs, xs, sm, md, lg, xl
 - **Shape**: Pill, Rounded
+- **Fill**: Filled, Outline
 
-Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — `Text&Icon/on Tinted/{Type}`. Покрытие токенами 100% (color/text/spacing/radius).
+Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline через stroke на `Text&Icon/on Tinted/*` без заливки. Текст и иконка — всегда `Text&Icon/on Tinted/{Type}`. Покрытие токенами 100% (color/text/spacing/radius/border).
+
+### Когда Filled, когда Outline (guidance для дизайнеров)
+
+| Сценарий | Filled | Outline |
+|---|---|---|
+| Бейдж на нейтральной поверхности (Card, List) | ✅ | OK |
+| Бейдж на цветной картинке / image-фоне (ad card) | ⚠️ сливается | ✅ |
+| Несколько бейджей в ряд (visual rhythm) | primary | secondary |
+| Counter / notification dot | ✅ | ⚠️ слабее заметен |
+| Dark mode на ярком фоне | ⚠️ | ✅ |
+
+**Решающее правило:** если непонятно — выбрать `Filled` (исторический дефолт).
 
 ### Boolean properties
 - **Icon** (default `true`) — показать левую иконку
@@ -197,6 +222,18 @@ Bindings: фон — `Background/Tinted/{Type}`, текст и иконка — 
 ---
 
 ## История миграций
+
+**2026-05-25 — добавлен `Fill` axis (Filled / Outline).**
+
+- Добавлен новый variant axis `Fill` с двумя значениями. Матрица: 5 × 6 × 2 × 2 = **120 вариантов** (было 60).
+- Outline собран как `fills = []` + 1px stroke (align INSIDE), привязанный к `Text&Icon/on Tinted/{Type}` — тот же токен, что и для текста/иконки. Coherent монохромный вид, новых токенов в палитру не вводилось.
+- Use case: бейджи поверх цветных изображений (карточки объявлений), визуальная иерархия «primary + secondary метки», dark mode на ярких фонах. См. §7 «Когда Filled, когда Outline».
+- Покрытие токенами: **100%** (без изменений).
+- Proposal: [proposals/badge-outline-variant.md](./proposals/badge-outline-variant.md) (RATIFIED).
+
+---
+
+
 
 **2026-05-05 — миграция Old → New (после апрува палитры разработкой).**
 
