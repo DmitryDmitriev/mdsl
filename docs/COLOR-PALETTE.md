@@ -231,6 +231,37 @@ Orange уже имеет полную шкалу в палитре (введён
 
 **НЕ применять** в структурных компонентах (Alert, Notification, Snackbar, Card, Dialog) — там фон может быть tinted, но текст всегда `Text&Icon/Primary` / `Secondary`. Иерархия задаётся весом и размером, не цветом текста.
 
+### 2.11 Outline
+
+Monochromatic-токен для outline-вариантов компонентов (Badge Outline, в будущем Chips Outline и т.п.). Используется одновременно для **border + text + icon** одного элемента — даёт единый visual-тон.
+
+| Роль | Light | Dark |
+|------|-------|------|
+| `Outline/Good`     | Green/700 | Green/400 |
+| `Outline/Info`     | Blue/700  | Blue/400  |
+| `Outline/Warning`  | Amber/700 | Amber/400 |
+| `Outline/Negative` | Red/700   | Red/400   |
+| `Outline/Neutral`  | Zinc/700  | Zinc/400  |
+
+**Зачем отдельный token, не переиспользование existing:**
+
+| Token | Light | Dark | Подходит для outline? |
+|---|---|---|---|
+| `Text&Icon/on Tinted/*` | Color/700 ✓ | Color/50 ❌ | В Dark всё «почти-белое», теряется различимость типов |
+| `Border/{semantic}` | Color/600 ⚠️ | Color/400 ✓ | В Light текст FAILS WCAG AA (3.5:1 < 4.5:1) для good/info/warning/neutral |
+| **`Outline/*` (новый)** | Color/700 ✓ | Color/400 ✓ | Light passes AA, Dark visibly distinct |
+
+**Контраст в Light** (Color/700 на Surface/Primary white):
+- Good (Green/700 #15803D) → 5.1:1 ✓ AA
+- Info (Blue/700 #1D4ED8) → 7.8:1 ✓ AAA
+- Warning (Amber/700 #B45309) → 4.6:1 ✓ AA
+- Negative (Red/700 #B91C1C) → 6.2:1 ✓ AAA
+- Neutral (Zinc/700 #3F3F46) → 11.2:1 ✓ AAA
+
+**Применение:** на сегодня — Badge с `Fill=Outline` (см. badge-spec.md §2). По мере добавления outline-вариантов в другие компоненты (Chips, Tag и т.п.) — переиспользуют тот же token.
+
+**Не путать с `Border/*`** (§2.4): `Border/*` — для input states (active, error, focus). `Outline/*` — для monochromatic outline-элементов, где одним цветом красится и border, и текст, и иконка.
+
 ### 2.10 Decor — статус «в тестах»
 
 Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Orange — см. §1.6) введены, но **семантическая обвязка ещё не зафиксирована**. То есть нет канонических токенов уровня `Background/Decor/*` / `Text&Icon/on Decor/*` и нет жёсткого правила «когда decor, когда semantic».

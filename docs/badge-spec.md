@@ -33,25 +33,29 @@
 | Layer | `Fill=Filled` | `Fill=Outline` |
 |---|---|---|
 | Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
-| Border | — (нет) | 1px solid `Border/{semantic}` (см. mapping ниже), stroke align **INSIDE** |
-| Text | `Text&Icon/on Tinted/{variant}` | **`Text&Icon/Primary`** (нейтральный) |
-| Icon | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` (остаётся цветной) |
+| Border | — (нет) | 1px solid **`Outline/{variant}`**, stroke align **INSIDE** |
+| Text | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
+| Icon (Union fill) | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
+| Icon (container) | — | прозрачный (`fills = []`) |
 
-**Outline pattern — гибридная схема (от 2026-05-26):** border + icon несут semantic-цвет, текст нейтральный. Это даёт чистый «лёгкий» outline-look (Material 3 / Atlassian secondary lozenge style), сохраняя redundant цветовой сигнал через иконку — страховка от color-blindness и компенсация слабого 1px-border на малых размерах.
+**Outline pattern — monochromatic (от 2026-05-26):** border, text, icon — **одним токеном** `Outline/{variant}` (см. COLOR-PALETTE.md §2.11). Это даёт согласованный «monoцветный» outline-look, как в Adobe Spectrum / Carbon / Tailwind UI.
 
-**Border mapping для Outline** — переиспользует существующие `Border/*` токены (см. COLOR-PALETTE.md §2.4):
+**Token `Outline/{variant}` значения:**
 
-| Variant | Border token | Light | Dark |
-|---|---|---|---|
-| `good` | `Border/Positive` | Green/600 | Green/400 |
-| `info` | `Border/Focus` | Blue/500 | Blue/400 |
-| `warning` | `Border/Warning` | Amber/400 | Amber/400 |
-| `negative` | `Border/Negative` | Red/600 | Red/400 |
-| `neutral` | `Border/Default` | Zinc/200 | Zinc/500 |
+| Variant | Light (Color/700) | Dark (Color/400) |
+|---|---|---|
+| `good` | Green/700 | Green/400 |
+| `info` | Blue/700 | Blue/400 |
+| `warning` | Amber/700 | Amber/400 |
+| `negative` | Red/700 | Red/400 |
+| `neutral` | Zinc/700 | Zinc/400 |
 
-**Почему `Border/*` а не `Text&Icon/on Tinted/*`:** border средней насыщенности (Color/400-600) даёт читаемый контур, который не конкурирует с текстом. В dark mode mid-tone границы остаются различимы между типами; tinted text shade (Color/50) в dark делал бы все outline почти-белыми.
+**Почему отдельный `Outline/*` токен, а не переиспользование существующих:**
+- В Light нужен Color/700 для контраста текста ≥4.5:1 (WCAG AA). Существующий `Text&Icon/on Tinted/*` даёт Color/700 — подошёл бы.
+- В Dark нужен Color/400 для visible distinction между типами (Color/50 от `Text&Icon/on Tinted/*` в dark делал бы все outline-бейджи почти-белыми, нет различимости).
+- Ни один existing token не покрывает обе моды одновременно (Color/700 light + Color/400 dark) — поэтому введён новый `Outline/*` (см. COLOR-PALETTE.md §2.11).
 
-**Семантическое переиспользование:** `Border/Positive` / `Negative` / `Warning` / `Focus` / `Default` изначально под input states (active/error/focus). Visual-семантика совпадает с outline-badge'ами (border средней насыщенности под цвет состояния). Новые `Border/Tinted/*` токены **не вводились**.
+**Иконка — особенность binding'а:** Container иконки-инстанса (`16 / ic_check`, `24 / ic_*` и т.п.) имеет `fills = []` (прозрачный). Цвет иконки задаётся через **inner Union** (BOOLEAN_OPERATION) — её `fills` биндятся к `Outline/{variant}`. Если поставить fill на сам инстанс — весь 16×16/24×24 квадрат закрасится solid'ом, чекмарк исчезнет.
 
 **Stroke align INSIDE** — визуальные границы Outline-бейджа не растут на 2px относительно Filled. Размеры (§3) идентичны.
 
@@ -243,7 +247,8 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 - Outline собран как `fills = []` + 1px stroke (align INSIDE).
 - **Итерация 1** (откатана в тот же день): border привязан к `Text&Icon/on Tinted/{Type}` — visual-coherent, но в Dark mode все outline-бейджи сливались в почти-белые контуры (tinted-text shade в Dark = Color/50), а в Light border равнялся тексту — слишком сильно.
 - **Итерация 2** (откатана 2026-05-26): border переведён на `Border/*` токены — фикс по dark-mode и Light. Text и Icon оставались на `Text&Icon/on Tinted/*`.
-- **Итерация 3 (текущая, 2026-05-26):** text переведён на `Text&Icon/Primary` (нейтральный). Icon остаётся на `Text&Icon/on Tinted/{type}` — гибрид: border + icon несут semantic-цвет, текст чистый. Современный outline-pattern (Material 3 / Atlassian secondary lozenge). См. §2 «Цвет».
+- **Итерация 3** (откатана 2026-05-26): text переведён на `Text&Icon/Primary`, icon остался цветным. Гибрид border+icon=semantic / text=neutral. Архитектурно чисто, но визуально дизайнер ожидал monochromatic, как в Adobe Spectrum / Carbon / Tailwind UI (text=border=icon одного цвета).
+- **Итерация 4 (текущая, 2026-05-26):** введён новый token `Outline/{variant}` в палитре (см. COLOR-PALETTE.md §2.11) = Color/700 light + Color/400 dark. Border + text + icon (через inner Union) — все привязаны к этому одному токену. Monochromatic outline-look. WCAG AA в light (Color/700 ≥4.5:1), visible distinction в dark (Color/400 mid-tone). Открыт gotcha: иконку нужно биндить через inner Union, не через container — иначе solid square вместо checkmark.
 - Use case: бейджи поверх цветных изображений (карточки объявлений), визуальная иерархия «primary + secondary метки», dark mode на ярких фонах. См. §7 «Когда Filled, когда Outline».
 - Покрытие токенами: **100%**.
 - Proposal: [proposals/badge-outline-variant.md](./proposals/badge-outline-variant.md) (RATIFIED).
