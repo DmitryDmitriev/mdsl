@@ -33,9 +33,11 @@
 | Layer | `Fill=Filled` | `Fill=Outline` |
 |---|---|---|
 | Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
-| Border | — (нет) | 1px solid (см. mapping ниже), stroke align **INSIDE** |
-| Text | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
-| Icon | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` |
+| Border | — (нет) | 1px solid `Border/{semantic}` (см. mapping ниже), stroke align **INSIDE** |
+| Text | `Text&Icon/on Tinted/{variant}` | **`Text&Icon/Primary`** (нейтральный) |
+| Icon | `Text&Icon/on Tinted/{variant}` | `Text&Icon/on Tinted/{variant}` (остаётся цветной) |
+
+**Outline pattern — гибридная схема (от 2026-05-26):** border + icon несут semantic-цвет, текст нейтральный. Это даёт чистый «лёгкий» outline-look (Material 3 / Atlassian secondary lozenge style), сохраняя redundant цветовой сигнал через иконку — страховка от color-blindness и компенсация слабого 1px-border на малых размерах.
 
 **Border mapping для Outline** — переиспользует существующие `Border/*` токены (см. COLOR-PALETTE.md §2.4):
 
@@ -47,7 +49,7 @@
 | `negative` | `Border/Negative` | Red/600 | Red/400 |
 | `neutral` | `Border/Default` | Zinc/200 | Zinc/500 |
 
-**Почему `Border/*` а не `Text&Icon/on Tinted/*`:** border средней насыщенности (Color/400-600) даёт читаемый контур, который не конкурирует с текстом (Color/700/50). В dark mode mid-tone границы остаются различимы между типами; tinted text shade (Color/50) в dark делал бы все outline почти-белыми и сливал бы их визуально.
+**Почему `Border/*` а не `Text&Icon/on Tinted/*`:** border средней насыщенности (Color/400-600) даёт читаемый контур, который не конкурирует с текстом. В dark mode mid-tone границы остаются различимы между типами; tinted text shade (Color/50) в dark делал бы все outline почти-белыми.
 
 **Семантическое переиспользование:** `Border/Positive` / `Negative` / `Warning` / `Focus` / `Default` изначально под input states (active/error/focus). Visual-семантика совпадает с outline-badge'ами (border средней насыщенности под цвет состояния). Новые `Border/Tinted/*` токены **не вводились**.
 
@@ -240,7 +242,8 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 - Добавлен новый variant axis `Fill` с двумя значениями. Матрица: 5 × 6 × 2 × 2 = **120 вариантов** (было 60).
 - Outline собран как `fills = []` + 1px stroke (align INSIDE).
 - **Итерация 1** (откатана в тот же день): border привязан к `Text&Icon/on Tinted/{Type}` — visual-coherent, но в Dark mode все outline-бейджи сливались в почти-белые контуры (tinted-text shade в Dark = Color/50), а в Light border равнялся тексту — слишком сильно.
-- **Итерация 2 (текущая):** border переведён на существующие `Border/*` токены (`Border/Positive` / `Negative` / `Warning` / `Focus` / `Default`) — mid-tone цвета, не конкурируют с текстом и остаются различимы в обеих темах. Новых токенов в палитру не вводилось. См. §2 «Цвет».
+- **Итерация 2** (откатана 2026-05-26): border переведён на `Border/*` токены — фикс по dark-mode и Light. Text и Icon оставались на `Text&Icon/on Tinted/*`.
+- **Итерация 3 (текущая, 2026-05-26):** text переведён на `Text&Icon/Primary` (нейтральный). Icon остаётся на `Text&Icon/on Tinted/{type}` — гибрид: border + icon несут semantic-цвет, текст чистый. Современный outline-pattern (Material 3 / Atlassian secondary lozenge). См. §2 «Цвет».
 - Use case: бейджи поверх цветных изображений (карточки объявлений), визуальная иерархия «primary + secondary метки», dark mode на ярких фонах. См. §7 «Когда Filled, когда Outline».
 - Покрытие токенами: **100%**.
 - Proposal: [proposals/badge-outline-variant.md](./proposals/badge-outline-variant.md) (RATIFIED).
