@@ -16,27 +16,29 @@ Empty State используется когда список / страница 
 
 | Свойство | Значения |
 |---|---|
-| **Layout** | Inline, Full-screen |
+| **Layout** | **Inline-Icon**, **Inline-Image**, Full-screen |
 
-Итого **2 варианта**.
+Итого **3 варианта**.
+
+`Inline-Icon` и `Inline-Image` — два визуальных режима inline-блока. Designer выбирает один или другой при размещении (взаимоисключающие):
+- **Inline-Icon** — 96×96 круг (Background/Tertiary) + 32×32 icon в центре. Лёгкий, нейтральный.
+- **Inline-Image** — 96×96 иллюстрация из Larixon Assets, без подложки. Богаче визуально, привязан к смыслу (Heart, Bell, Send и т.п.).
+
+Full-screen всегда с иллюстрацией 140×140 — отдельный сценарий, не нуждается в Icon-варианте.
 
 ### Boolean properties
 
 | Свойство | Default | Назначение |
 |---|---|---|
-| **Icon** | true | Показывает icon-в-круге как визуал (Inline). Designer выключает при использовании Illustration |
-| **Illustration** | false | Показывает image-иллюстрацию из Assets как визуал. Designer включает вместо Icon |
 | **Description** | true | Поясняющий текст под заголовком |
 | **Action 1** | false | Primary CTA (например, «Reset filters», «Try again»). Также управляет видимостью контейнера `Actions` целиком |
 | **Action 2** | false | Secondary CTA — Ghost-кнопка (например, «Go to homepage»). Доступна **только при включённой Action 1** |
-
-**Convention для Icon vs Illustration:** взаимоисключающие. Designer выключает один и включает другой. Технически могут отображаться одновременно (две видимые сущности в Visual frame перекроют друг друга или выстроятся в HORIZONTAL — нерабочий кейс).
 
 ### Instance swap property
 
 | Свойство | Тип | Default | Назначение |
 |---|---|---|---|
-| **Illustration source** | INSTANCE_SWAP | `WTF?` | Выбор иллюстрации из библиотеки Assets. Preferred values — 12 иллюстраций (Error, Warning, Info, Good, FAQ, Bell, Bell_02, WTF?, Send, Heart, Like, Prize). Дефолтная — `WTF?` (синий вопросительный знак, подходит для no-results) |
+| **Illustration source** | INSTANCE_SWAP | `WTF?` | Выбор иллюстрации из Larixon Assets. Применяется к Inline-Image и Full-screen вариантам. Preferred values — 12 иллюстраций (Error, Warning, Info, Good, FAQ, Bell, Bell_02, WTF?, Send, Heart, Like, Prize). Дефолтная — `WTF?` (синий вопросительный знак, подходит для no-results) |
 
 Эффективных комбинаций — 6 (на каждый вариант: с/без Description × 0/1/2 actions, где 2 actions = Action 1 + Action 2):
 - Description off · 0 actions
@@ -71,13 +73,12 @@ Empty State используется когда список / страница 
 
 ## Структура слоёв
 
-### Layout=Inline
+### Layout=Inline-Icon
 
 ```
-Empty State / Inline (VERTICAL HUG, gap=16, align=CENTER)
+Empty State / Inline-Icon (VERTICAL HUG, gap=16, align=CENTER)
 ├── Visual                          (FIXED 96×96, radius=48, BG Background/Tertiary)
-│   ├── Icon (24/ic_* INSTANCE 32×32, fill=Text&Icon/Secondary · visibility = "Icon")
-│   └── Illustration (INSTANCE из Assets, 96×96 · visibility = "Illustration", default hidden)
+│   └── Icon (24/ic_* INSTANCE 32×32, fill=Text&Icon/Secondary)
 ├── Texts                           (VERTICAL HUG, gap=4, align=CENTER)
 │   ├── Title       (Heading/H3 Medium 20/28, Text&Icon/Primary, center)
 │   └── [Description] (Base/Body 2 14/20, Text&Icon/Secondary, center, max-width 280)
@@ -85,6 +86,22 @@ Empty State / Inline (VERTICAL HUG, gap=16, align=CENTER)
     ├── [Action 1]  (Button Primary, Size=48 · visibility = "Action 1")
     └── [Action 2]  (Button Ghost, Size=48 · visibility = "Action 2")
 ```
+
+### Layout=Inline-Image
+
+```
+Empty State / Inline-Image (VERTICAL HUG, gap=16, align=CENTER)
+├── Visual                          (FIXED 96×96, BG transparent, radius=0)
+│   └── Illustration (INSTANCE из Assets, 96×96 · swap = "Illustration source")
+├── Texts                           (VERTICAL HUG, gap=4, align=CENTER)
+│   ├── Title       (Heading/H3 Medium 20/28, Text&Icon/Primary, center)
+│   └── [Description] (Base/Body 2 14/20, Text&Icon/Secondary, center, max-width 280)
+└── [Actions]                        (HORIZONTAL HUG, gap=8 · visibility bound to "Action 1")
+    ├── [Action 1]  (Button Primary, Size=48 · visibility = "Action 1")
+    └── [Action 2]  (Button Ghost, Size=48 · visibility = "Action 2")
+```
+
+**Отличия Inline-Image от Inline-Icon:** Visual frame **без BG-филла и без radius'а** — иллюстрация рендерится поверх прозрачного контейнера. Это критично, иначе серая подложка торчит из-за квадратных углов иллюстрации (см. История миграций 2026-05-27).
 
 ### Layout=Full-screen
 
@@ -277,19 +294,19 @@ CSS-переменные:
 
 ## История миграций
 
-**2026-05-27 — Inline получил Image-вариант visual'а через boolean Icon/Illustration.**
+**2026-05-27 — Inline получил Image-вариант. Финальная архитектура — через расщепление Layout.**
 
-До этого Inline жёстко был «иконка-в-круге» (96 кружок + 32 icon), а Image-иллюстрации были доступны только в Layout=Full-screen. Продуктовая задача показала кейс: хочется в inline-контексте (между секциями скролла) использовать ту же иллюстрацию из Larixon Assets, что и в Full-screen, но компактнее.
+До этого Inline жёстко был «иконка-в-круге» (96 кружок + 32 icon), а Image-иллюстрации — только в Layout=Full-screen. Продуктовая задача показала кейс: хочется в inline-контексте (между секциями скролла) использовать ту же иллюстрацию из Larixon Assets, что и в Full-screen, но компактнее.
 
-Решение — **не вводить Size axis** (как изначально хотелось), а добавить в Visual frame Inline'а **второй ребёнок Illustration** (96×96, INSTANCE из Assets, default hidden) и завести два booleans:
-- `Icon` (default true) — bound к Icon.visible
-- `Illustration` (default false) — bound к Illustration.visible
+**Итерации:**
 
-Designer toggle'ит: выключает Icon, включает Illustration. Свапает на нужную через свойство `Illustration source` (INSTANCE_SWAP, preferred values = 12 иллюстраций из Assets).
+1. **Boolean Icon/Illustration в одном Inline-варианте** (откат) — добавили два booleans в существующий Inline + INSTANCE_SWAP `Illustration source`. Designer toggle'ит видимость одного из двух детей в Visual frame. **Проблема:** Visual frame имеет `Background/Tertiary` и `radius=48` (круг под иконку). При показе квадратной иллюстрации **углы серой подложки торчат** из-за углов изображения. Boolean toggle не решает структурное различие в подложке.
 
-Trade-off: Icon и Illustration технически могут отображаться одновременно (нерабочий кейс — выстроятся в HORIZONTAL layout родительского Visual frame). Convention в спеке. Альтернатива — Visual VARIANT axis — отвергнута: компонент уже имеет Layout axis и три boolean, добавлять второй axis ради взаимоисключения — оверкилл.
+2. **Расщепление Layout на три значения** (финал) — `Layout = Inline-Icon | Inline-Image | Full-screen`. Inline-Icon сохраняет круглую серую подложку под icon, Inline-Image — прозрачный квадратный контейнер под illustration. Visual frame с разной геометрией — отдельные варианты, не toggle.
 
-Full-screen — не тронут: там Illustration уже была дефолтной, Icon-варианта не требуется.
+INSTANCE_SWAP `Illustration source` сохранён — bound к Illustration child в Inline-Image (и к Illustration в Full-screen — для консистентности; будет настроено отдельным шагом если нужно).
+
+Full-screen — не тронут: там Illustration уже была дефолтной, Icon-варианта не требуется (асимметрия по реальному use case).
 
 **2026-05-12 — аудит готовности (component-spec-check), 100% соответствие, 0 правок.**
 
