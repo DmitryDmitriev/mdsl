@@ -59,6 +59,8 @@
 
 Индикатор онлайн-статуса в правом нижнем углу. Все размеры на **4px сетке**.
 
+> **Концептуально:** Pin — это **specific instance паттерна Notification Slot** (см. [notification-slot-spec.md](./notification-slot-spec.md)). Цвет (`Accent/Primary` default) и логика позиционирования наследуются из slot-спеки. **Структурно Figma остаётся на Ellipse**, не на Badge instance — из-за разной размерной шкалы (avatar pin = 8/12/16/20/24, Badge 2xs = фикс 16). Гармонизация шкал — открытый вопрос для будущих итераций (см. notification-slot-spec.md §10 «История»).
+
 ### 5.1 Размеры Pin (токенизированы)
 
 | Avatar Size | Outer (фон) | Токен | Inner (точка) | Токен |
