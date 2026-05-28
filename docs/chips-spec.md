@@ -22,11 +22,8 @@ Chips -- это компактные элементы в форме «табле
 | **Type** | Text+Icon, Text, Icon |
 | **Size** | 32 (compact), 40 (standard), **48 (large)** |
 | **Shape** | **Pill** (default), **Rounded** |
-| **Notification** *(только Type=Icon)* | None (default), Dot, Counter (только Size=48) |
 
-Итого **96 вариантов** базовой матрицы + **дополнительно Notification axis** на Type=Icon (см. §«Notification slot» ниже).
-
-Notification axis применяется ТОЛЬКО к Type=Icon (icon-only chip), так как Text-варианты сигналят состояние через сам text. Размер control'а определяет availability: Size=32/40 → None|Dot; Size=48 → None|Dot|Counter (см. [notification-slot-spec.md §3](./notification-slot-spec.md)).
+Итого **96 вариантов** (с учётом валидных комбинаций Icon × Type) — для каждой комбинации: 2 Fill × 2 Active × 3 Size × 2 Shape.
 
 ---
 
@@ -173,54 +170,7 @@ Use case: широкий «All categories ▼» chip на всю ширину ro
 
 ---
 
-## Notification slot (Type=Icon only)
-
-Composition rule — см. [notification-slot-spec.md](./notification-slot-spec.md). Здесь — chip-specific детали.
-
-### Доступность по размерам
-
-| Size | Notification axis |
-|---|---|
-| **32** | None, Dot |
-| **40** | None, Dot |
-| **48** | None, Dot, **Counter** |
-
-Counter недоступен на 32/40 — теряется читаемость числа на маленьком chip.
-
-### Anchor и позиционирование
-
-Anchor — `Badge size=2xs` (см. badge-spec.md §6.2):
-- **Dot**: пустой Badge 2xs (12×12 ellipse), 2px outer ring цвета фона chip'а
-- **Counter**: Badge 2xs с числом (16 height, min-width 16, caption-sm 10/12, padding 0/4), 2px outer ring
-
-Позиция: **top-right угол chip'а**, абсолютно (overlay), constraints MAX/MAX:
-- Dot: offset top=8, right=8 (от внутреннего края)
-- Counter: offset top=4, right=4
-
-На Shape=Rounded углы chip'а 8 px — slot позиционируется относительно визуального угла, не bounding box'а. На Shape=Pill — от центра rounding-arc'а.
-
-### Цвет slot'а и ring fallback на Active
-
-| State | Chip BG | Slot fill | Slot ring (2px) |
-|---|---|---|---|
-| Filled + Active=No | `Background/Secondary` | `Accent/Primary` | `Background/Secondary` |
-| Filled + Active=Yes | `Background/Tertiary` | `Accent/Primary` | `Background/Tertiary` |
-| Outline + Active=No | `Background/Primary` | `Accent/Primary` | `Background/Primary` |
-| Outline + Active=Yes | `Background/Secondary` | `Accent/Primary` | `Background/Secondary` |
-
-**Ключевое:** ring цвет **bound to chip BG token** — обеспечивает отделение slot'а от фона control'а во всех 4 состояниях без визуального слияния.
-
-Slot fill в spec'е зафиксирован как `Accent/Primary`. Для override'а (negative/info) — на уровне инстанса в продуктовом файле, без variant axis (см. notification-slot-spec.md §5).
-
-### Counter overflow
-
-При значении > 99 показываем **«99+»**. Меньше — собственно число (1..99).
-
-### Когда использовать (chip-specific)
-
-- **Dot** — для applied filter chip (⚙ More filters с применённым настройкой). Сигнал «что-то изменено».
-- **Counter** — для chip-аналогов notifications/cart/messages в filter-баре, где число информативно (редкий кейс для chip; чаще counter живёт на button-icon).
-- **None** — default для всех остальных filter и tag use case'ов.
+## Аудит покрытия токенами
 
 | Категория | Покрытие |
 |---|---|

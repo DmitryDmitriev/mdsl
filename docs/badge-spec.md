@@ -169,8 +169,6 @@
 - Точка: пустой бейдж с минимальной шириной
 - Число: `<Badge size="2xs" variant="negative">3</Badge>`
 
-Когда Badge 2xs используется **поверх icon-control'а** (chip Type=Icon, future button-icon) — это не просто бейдж, а instance паттерна **Notification Slot**. Правила позиционирования, цвета и ring fallback — см. [notification-slot-spec.md](./notification-slot-spec.md).
-
 ---
 
 ## 7. Figma
