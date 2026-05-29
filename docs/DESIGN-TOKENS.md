@@ -136,7 +136,8 @@
 | Semantic (short) | Figma path                       | Core      | px  | Использование |
 |------------------|----------------------------------|-----------|-----|----------------|
 | control-sm       | `radius/control/control-sm`      | radius/1  | 4   | Мелкие контролы |
-| control-md       | `radius/control/control-md`      | radius/2  | 8   | Кнопка **xs**, rounded badge, мелкие кнопки-иконки |
+| control-md       | `radius/control/control-md`      | radius/2  | 8   | Кнопка **xs**, rounded badge (sm/md/lg/xl), мелкие кнопки-иконки |
+| control-sm (badge 2xs/xs) | `radius/control/control-sm` (на badge) | radius/1 | 4 | Rounded badge **на 2xs/xs** — 4px (8px смотрелся бы почти как Pill на низкой плашке). См. badge-spec.md §2. |
 | control-lg       | `radius/control/control-lg`      | radius/3  | 12  | Кнопки **sm**, **md**, **lg** |
 | surface          | `radius/surface/surface`         | radius/3  | 12  | Карточки, панели |
 | overlay          | `radius/surface/overlay`         | radius/4  | 16  | Модалки, bottom sheet (открытый край) |
@@ -176,8 +177,9 @@
 
 ### Иконки
 
-- **Размеры в UI:** только **16**, **24** и **32** px. Других размеров не вводить.
-- В спецификации компонента для иконок указывать: размер (16 / 24 / 32) и цвет (семантический токен).
+- **Размеры в UI:** **16**, **24** и **32** px — основная шкала. Других размеров не вводить как general-purpose.
+- **Исключение — Badge 2xs/xs:** микро-иконка **12 × 12** px. Реализуется **масштабированием 16-asset до 12** (SVG lossless, без отдельной 12-шкалы в библиотеке). Применяется только в badge-spec.md §3 на размерах 2xs (16 px высота) и xs (20 px высота), где 16-px иконка не помещается с padding'ом. На остальных компонентах 12-px иконку не использовать.
+- В спецификации компонента для иконок указывать: размер (12 — только Badge 2xs/xs / 16 / 24 / 32) и цвет (семантический токен).
 - Источник — Larixon Mobile библиотека, имена с префиксом `ic_*` (legacy без префикса не использовать).
 - **Если нужен «крупный icon-asset» (44 / 64 / 80 px и больше)** — это **Illustration**, не Icon. См. ниже.
 
