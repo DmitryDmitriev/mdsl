@@ -50,11 +50,13 @@ Screen → [StatusBar, Top App Bar, Section1, ...] с screen.itemSpacing = 8
 
 | Tier | `padding` | Когда |
 |---|---|---|
-| Compact | `section/padding-compact` (16) | Списки фильтров, цепочка однотипных блоков, выбор языка |
-| Default | `section/padding-default` (24) | Профиль, описание, payment, обычный контентный блок |
+| **Default** (де-факто чаще всего) | `section/padding-default` (**16**) | Списки фильтров, формы, цепочка однотипных блоков, выбор языка — большинство мобильных карт |
+| Comfortable (редко) | `section/padding-comfortable` (24) | Информационные карты, профиль, описание, payment-блок с воздухом |
 | Spacious | `section/padding-spacious` (32) | Hero, финальный экран с одним действием |
 
 Тир секции диктует размер компонентов внутри (см. § Размерная консистенция).
+
+> **При сомнении — `padding-default` (16).** Mobile-карты в массе плотные; 24 нужен только когда специально нужно «дышать» (info-карты, hero). 32 — для отдельностоящих экранов с одним действием. Ротация ролей произведена 2026-05-29 — см. [spacing-semantic.md](./spacing-semantic.md) §`section/*`.
 
 ---
 
@@ -74,7 +76,7 @@ Screen → [StatusBar, Top App Bar, Section1, ...] с screen.itemSpacing = 8
 **Структура:**
 
 ```
-Card (section/padding-compact = 16)
+Card (section/padding-default = 16)
 ├── Heading «Все марки»                ← section header
 ├── ↕ section/title-to-content (8)
 └── Content

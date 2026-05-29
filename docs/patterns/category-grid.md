@@ -42,7 +42,7 @@ Section card (composition-rules.md §2)
 
 | Параметр | Значение | Токен |
 |---|---|---|
-| Card padding | 16 | `section/padding-compact` |
+| Card padding | 16 | `section/padding-default` |
 | Heading → grid gap | 8 | `section/title-to-content` |
 | Между колонками | 16 | `row/gap-default` × 2 — `screen/padding-horizontal` |
 | Между rows в колонке | 0 | `list/item-gap` |

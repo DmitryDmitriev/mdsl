@@ -22,11 +22,15 @@
 
 | Токен | Значение | Alias | Назначение |
 |---|---|---|---|
-| `section/padding-compact` | 16 | `spacing/4` | Padding внутри карты для плотных секций (списки, фильтры) |
-| `section/padding-default` | 24 | `spacing/6` | Padding внутри карты по умолчанию |
-| `section/padding-spacious` | 32 | `spacing/8` | Padding внутри карты для hero / финальных экранов |
+| `section/padding-default` | **16** | `spacing/4` | **Дефолт — большинство мобильных карт (списки, фильтры, формы).** При сомнении — этот. |
+| `section/padding-comfortable` | 24 | `spacing/6` | Информационные карты, hero-блоки. Используется редко. |
+| `section/padding-spacious` | 32 | `spacing/8` | Hero / финальные экраны с одним действием. |
 | `section/gap` | 8 | `spacing/2` | Расстояние между соседними section card на экране |
 | `section/title-to-content` | 8 | `spacing/2` | От заголовка секции до её контента (внутри карты) |
+
+> **Внимание — semantic-rotation 2026-05-29.** До этой даты `padding-default = 24` (Tailwind-default наследие). По факту 0 компонентов в UI-Kit-Mobile использовали 24, все 83 binding'а сидели на 16 (`compact`). Имена врали против реального use case. Произведена ротация ролей: бывший `compact` (16) → `padding-default`, бывший `padding-default` (24) → `padding-comfortable`. **Значения не менялись** — Figma трекает variables по ID, все существующие bindings автоматически перешли на новые имена с теми же значениями.
+>
+> **Что это значит для продуктовых файлов:** инстансы, которые ранее были привязаны к `section/padding-default = 24` (например, ds-build'овский bind в PB-876), теперь привязаны к `section/padding-comfortable = 24`. Визуально не изменилось. Если нужно перевести их на новый дефолт 16 — отдельная переменная в инстансе.
 
 ### `stack/*` — вертикальный стек элементов
 
@@ -79,9 +83,9 @@
 | 4 | `row/gap-tight`, `stack/gap-tight`, `chip/padding-y` |
 | 8 | `section/gap`, `section/title-to-content`, `row/gap-default`, `stack/gap-default`, `chip/padding-x` |
 | 12 | `row/gap-loose`, `stack/gap-loose`, `cta/padding-bottom-default` |
-| 16 | `screen/padding-horizontal`, `section/padding-compact`, `cta/padding-top-default` |
+| 16 | `screen/padding-horizontal`, `section/padding-default`, `cta/padding-top-default` |
 | 20 | ⚠️ нет точного — округлить до 16 или 24 (по контексту) |
-| 24 | `section/padding-default`, `cta/padding-top-spacious` |
+| 24 | `section/padding-comfortable`, `cta/padding-top-spacious` |
 | 28 | ⚠️ нет точного — обычно 24 |
 | 32 | `section/padding-spacious`, `cta/padding-bottom-spacious` |
 | 40+ | ⚠️ запрещено в нашей шкале — обычно 32 |
