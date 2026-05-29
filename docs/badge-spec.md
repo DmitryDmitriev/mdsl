@@ -50,7 +50,7 @@
 | `negative` | Red/700 | Red/400 |
 | `neutral` | Zinc/700 | Zinc/400 |
 
-> **Warning живёт на двух hue (осознанный выбор, не баг):** Filled-плашка Warning использует **Orange**-шкалу (`Background/Tinted/Warning` = Orange/50–900, текст `on Tinted/Warning` = Orange/800–50), а Outline и Accent — **Amber**-шкалу (Amber/700–400). Это даёт визуальную иерархию: filled = мягкая отметка (приглушённый peach), outline/accent = явный сигнал (контрастный amber). Если semantic-консистентность важнее иерархии — приводить к одному hue (бэклог-тикет, не сделано). Зафиксировано 2026-05-29.
+> ⚠️ **Warning живёт на двух hue — historical drift, не дизайн-замысел.** Filled-Warning сидит на Orange (Orange/50–900 фон + Orange/800–50 текст), Outline-Warning и Accent-Warning — на Amber (Amber/700/400). Получилось при введении `Outline/*` token (2026-05-26, commit `249a0ef`) — взяли Amber/700 как Tailwind-default, не сверившись с tinted-палитрой. План гармонизации к Amber-шкале (Orange освобождается под Decor) — в COLOR-PALETTE.md §2.11. До тикета на гармонизацию обе hue валидны. Зафиксировано 2026-05-29.
 
 **Почему отдельный `Outline/*` токен, а не переиспользование существующих:**
 - В Light нужен Color/700 для контраста текста ≥4.5:1 (WCAG AA). Существующий `Text&Icon/on Tinted/*` даёт Color/700 — подошёл бы.
