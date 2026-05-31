@@ -71,6 +71,10 @@ List Item (COMPONENT)
 
 Это известный bug инстанс-override'ов. В коде проблемы нет — там значения берутся из variant'а напрямую.
 
+**Особенно важно для `Checkbox + Brand`:** мастер вариант 84×40 (checkbox 24 + gap 16 + brand 40 = 80, плюс padding). Если инстанс остался с `lsH=FIXED, width=40` (legacy override от Type=Avatar), Brand Mark **отрезается** справа — кажется что логотип «не виден». Lечение: выделить Left Side инстанс → правая панель → переключить `Fill container` (W) на **`Hug contents`**.
+
+**Batch fix для product-файлов** (если уже накопилось много инстансов с legacy-override): найти все `List Item / Left Side` с `Type=Checkbox + Brand` и `lsH=FIXED`, поставить им HUG. На PB-800 (multiselect марок авто) этим способом исправлено 60 инстансов одним проходом — без этого все 60 показывали только чекбокс без логотипа.
+
 ---
 
 ## 4. Таблица токенов
