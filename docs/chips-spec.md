@@ -25,6 +25,12 @@ Chips -- это компактные элементы в форме «табле
 
 Итого **96 вариантов** (с учётом валидных комбинаций Icon × Type) — для каждой комбинации: 2 Fill × 2 Active × 3 Size × 2 Shape.
 
+### Boolean properties
+
+| Свойство | Default | Применимо к | Назначение |
+|---|---|---|---|
+| **Notification** | false | Type=Icon | Overlay-индикатор «есть непрочитанное / применённое» в top-right углу chip'а. См. §Notification (Icon-only). |
+
 ---
 
 ## Структура слоёв
@@ -170,6 +176,59 @@ Use case: широкий «All categories ▼» chip на всю ширину ro
 
 ---
 
+## Notification (Icon-only)
+
+Только для `Type=Icon`. Overlay-индикатор «есть непрочитанное / применённое / новое» в top-right углу chip'а. Включается через boolean property **`Notification`** (default `false`).
+
+### Когда применять
+
+- Icon-only filter chip с применёнными настройками («⚙ More filters» когда выбран хотя бы один фильтр)
+- Icon-only кнопка-чип с непрочитанными уведомлениями
+- Любой icon-only chip, где text-сигнал состояния невозможен (нет места под лейбл)
+
+**Не применять:** на Text+Icon чипах — там состояние сигналит сам текст лейбла.
+
+### Размеры (scale с chip Size)
+
+Dot и ring масштабируются с размером chip'а:
+
+| Chip Size | Dot diameter | Ring weight | Inset (top, right) |
+|---|---|---|---|
+| 32 | 8 | 1.33 | 4, 4 |
+| 40 | 10 | 1.67 | 4, 4 |
+| 48 | 12 | 2 | 4, 4 |
+
+**Ring weight = dot/6** — пропорциональный, не фиксированный. Это даёт визуально согласованный «donut» в любом размере.
+
+**Inset 4px от верхнего и правого края** — dot полностью внутри chip'а, не выпирает за пределы. Позиционирование `ABSOLUTE` с constraints `MAX/MIN` (pin to top-right).
+
+### Цвета
+
+| Слой | Токен | Light | Dark |
+|---|---|---|---|
+| Dot fill | **`Accent/Negative`** | Red/500 (#DC2626) | Red/400 |
+| Ring (2px outside) | **chip BG (variant-specific)** | Background/Primary / Secondary / Tertiary | (соответственно) |
+
+**Почему `Accent/Negative` (красный), а не `Accent/Primary`** (рассматривалось и отвергнуто 2026-05-30):
+- Red dot — индустриальный конвенциональный signal для notification badge (iOS app icon badge, Material notification badge). Привычный паттерн для пользователя.
+- `Accent/Primary` (Zinc/950 чёрный) в DS дал бы dot, неотличимый от иконки chip'а в Active=Yes state — теряется visual signal.
+- Red на нейтральном chip BG имеет высокий contrast, читается мгновенно даже периферическим зрением.
+
+**Ring bound к chip BG token** — обеспечивает «вырез» вокруг dot, отделяя его от иконки внутри chip'а. Per-variant:
+
+| Fill | Active | Chip BG | Ring color |
+|---|---|---|---|
+| Outline | No | Background/Primary | Background/Primary |
+| Outline | Yes | Background/Secondary | Background/Secondary |
+| Filled | No | Background/Secondary | Background/Secondary |
+| Filled | Yes | Background/Tertiary | Background/Tertiary |
+
+### Counter (отложено)
+
+В этой итерации только Dot. Counter (число 1..99, «99+» при overflow) — отложен до появления второго use case (button-icon). См. также Notification Slot pattern (composition rule) — пока не зафиксирован в отдельной спеке, обсуждение в hub.
+
+---
+
 ## Аудит покрытия токенами
 
 | Категория | Покрытие |
@@ -254,6 +313,24 @@ Chip(
 ---
 
 ## История миграций
+
+**2026-05-30 — Notification boolean на Type=Icon variants (Dot only, Counter отложен).**
+
+Контекст: PB-876 / Sellers Cabinets filter-bar — icon-only chip «⚙ More filters» нужен сигнал что фильтр применён. Text-сигнал на icon-only невозможен.
+
+Решение:
+- Boolean property `Notification` (default `false`), применимо только к Type=Icon вариантам (24 шт). На non-Icon variantах property тоже декларирована на set-уровне, но bindings отсутствуют — designer toggle ничего не делает.
+- Dot 8/10/12 px по Size 32/40/48, fill = **`Accent/Negative`** (красный, индустриальная конвенция).
+- Ring 2px OUTSIDE, weight = dot/6 (пропорциональный), bound к chip BG token per-variant — даёт «вырез» вокруг dot.
+- Inset 4/4 от top-right corner, constraints MAX/MIN, ABSOLUTE positioning.
+
+Итерации выбора цвета:
+1. **`Accent/Primary` (Zinc/950 чёрный)** — первая попытка ради DS-консистентности с avatar online-pin. Слабо различим, особенно на Active=Yes (где иконка тоже Primary). Откатил.
+2. **`Accent/Negative` (Red/500)** — финал. Привычный пользователю notification-red, читается периферически.
+
+Counter (число + «99+» при overflow) — рассмотрен в спецификации, но **в Figma master не реализован** в этой итерации. Добавим вместе с button-icon когда появится второй consumer.
+
+Notification Slot как общий composition rule (avatar pin + button-icon + chips) — рассматривался как отдельная спека `notification-slot-spec.md`, но отложен (преждевременно фиксировать pattern на одном consumer'е). Когда button-icon получит notification — заведём общую спеку.
 
 **2026-05-26 — большое расширение Chips: +Size=48, +Shape axis, FILL-width, Active=Yes invert.**
 
