@@ -98,6 +98,12 @@ Buttons Stack (COMPONENT) — HORIZONTAL/VERTICAL по Type, FILL width, layoutA
 
 ## 8. История миграций
 
+**2026-06-01 — удалена dead boolean property `↳ Divider`.**
+
+Property `↳ Divider#1534:1700` была декларирована на `Buttons Stack` set, но ни к одному узлу не bind'илась. Figma publish-валидация flag'ила как `Unused properties`. Исторически предполагался divider сверху Buttons Stack — концепт отменён, property осталась мёртвой. Удалена.
+
+Consumer-impact: нет. Property нигде не использовалась.
+
 **2026-05-29 — fix overflow в Dialog: убрана привязка `width`/`minWidth` к Platform/Width.**
 
 Симптом: в Dialog (master 328 px) инстанс Buttons Stack выпирал на 32 px за края card'а. Корень: все 5 variant'ов master'а `Buttons Stack` имели `width` и `minWidth` забинденные на `Platform/Width` (360 Android / 320 iOS). При `lsH=FILL` биндинг `minWidth=360` работал как «не сжимайся ниже 360» — в Dialog 328 это давало overflow.
