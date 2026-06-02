@@ -50,7 +50,7 @@ List Item (COMPONENT)
 
 #### Composite Type=Checkbox + Brand
 
-Для multiselect-списков, где каждой строке нужен и чекбокс выбора, и брендированный маркер (логотип марки авто, категории, и т.п.) — см. [brand-mark-spec.md](./brand-mark-spec.md).
+Для multiselect-списков, где каждой строке нужен и чекбокс выбора, и брендированный маркер (логотип марки авто, категории, и т.п.).
 
 | Параметр | Значение | Токен |
 |---|---|---|
@@ -58,10 +58,25 @@ List Item (COMPONENT)
 | Layout | HORIZONTAL | — |
 | paddingLeft | 8 | `spacing/2` |
 | paddingRight | 0 | — |
-| itemSpacing (gap чекбокс ↔ Brand) | 12 | `row/gap-loose` |
-| Состав | [Checkbox 24] + gap + [Brand Mark 40] | — |
+| itemSpacing (gap чекбокс ↔ logo wrap) | 12 | `row/gap-loose` |
+| Состав | [Checkbox 24] + gap + [Logo wrap 40] | — |
 | primaryAxisAlignItems | MIN | — |
 | counterAxisAlignItems | CENTER | — |
+
+**Структура Logo wrap (40 × 40):**
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| Layout | HORIZONTAL, FIXED × FIXED | — |
+| padding (all) | 4 | `spacing/1` |
+| primaryAxisAlignItems | CENTER | — |
+| counterAxisAlignItems | CENTER | — |
+| fills | transparent | — |
+| Содержимое | Logo instance 32 × 32 (INSTANCE_SWAP) | — |
+
+Inline auto-layout frame без отдельного компонента-обёртки. Логотип — instance компонента `Logo` (32 × 32) из коллекции Larixon Assets / Car. Размер обёртки фиксирован (40 × 40 как у других Left Side variant'ов с иконкой), внутри логотип центрирован.
+
+**INSTANCE_SWAP `Logo` — на уровне Left Side set** (`5912:6666`, key `Logo#9867:0`). Property с 15 preferred values (популярные авто-бренды). Свойство автоматически экспонируется через nested instance в `List item` (`6054:3813`) и `.=List item` (`5912:3783`) — designer может менять логотип прямо из panel'и List Item без захода во внутреннюю обёртку.
 
 **Зачем paddingLeft=8 и не CENTER:** чтобы чекбокс этого варианта попал на ту же абсолютную X-координату, что чекбокс варианта `Type=Checkbox` (где он центрирован в 40-px слоте → x=8). При использовании в смешанном списке (некоторые row с брендом, некоторые без) — чекбоксы выровнены в одну колонку.
 
@@ -71,7 +86,7 @@ List Item (COMPONENT)
 
 Это известный bug инстанс-override'ов. В коде проблемы нет — там значения берутся из variant'а напрямую.
 
-**Особенно важно для `Checkbox + Brand`:** мастер вариант 84×40 (checkbox 24 + gap 16 + brand 40 = 80, плюс padding). Если инстанс остался с `lsH=FIXED, width=40` (legacy override от Type=Avatar), Brand Mark **отрезается** справа — кажется что логотип «не виден». Lечение: выделить Left Side инстанс → правая панель → переключить `Fill container` (W) на **`Hug contents`**.
+**Особенно важно для `Checkbox + Brand`:** мастер вариант 84×40 (checkbox 24 + gap 12 + logo wrap 40 = 76, плюс padding 8 → 84). Если инстанс остался с `lsH=FIXED, width=40` (legacy override от Type=Avatar), logo wrap **отрезается** справа — кажется что логотип «не виден». Лечение: выделить Left Side инстанс → правая панель → переключить `Fill container` (W) на **`Hug contents`**.
 
 **Batch fix для product-файлов** (если уже накопилось много инстансов с legacy-override): найти все `List Item / Left Side` с `Type=Checkbox + Brand` и `lsH=FIXED`, поставить им HUG. На PB-800 (multiselect марок авто) этим способом исправлено 60 инстансов одним проходом — без этого все 60 показывали только чекбокс без логотипа.
 
@@ -176,19 +191,36 @@ ListItem(
 - [switch-spec.md](./switch-spec.md) — Switch как building block
 - [badge-spec.md](./badge-spec.md) — Badge как building block
 - [avatar-spec.md](./avatar-spec.md) — Avatar как building block
-- [brand-mark-spec.md](./brand-mark-spec.md) — Brand Mark как building block (для composite Type=Checkbox + Brand)
 - [composition-rules.md](./composition-rules.md) — правила композиции экрана со списками
 
 ---
 
 ## 8. История миграций
 
+**2026-06-01 (вечер) — рефактор Type=Checkbox + Brand: убран атом Brand Mark, логотип inline.**
+
+Brand Mark существовал как отдельный атом-обёртка (40 × 40 transparent frame + Logo 32 × 32 внутри с INSTANCE_SWAP). По факту это padding-обёртка без собственной логики — auto-layout frame с тем же padding делает то же самое без лишней сущности в DS.
+
+Что изменилось:
+- В variant'е Type=Checkbox + Brand (`9264:18`) Brand Mark instance `9264:25` заменён на inline `Logo wrap` (FRAME 40 × 40, padding 4 на 4, layoutMode=HORIZONTAL, centering CENTER/CENTER).
+- Внутри Logo wrap — Logo instance 32 × 32 с INSTANCE_SWAP.
+- INSTANCE_SWAP property `Logo` перенесена с уровня Brand Mark на уровень `List Item / Left Side` set (`5912:6666`, key `Logo#9867:0`). 15 preferred values сохранены.
+- Атом Brand Mark (`9264:13`) и `brand/Placeholder` (`9264:11`) удалены из master-файла. Страница `🟢 Brand Mark` оставлена, на ней — demo-фрейм Search-Suggest 360 (не связан с компонентом).
+- `brand-mark-spec.md` удалён.
+
+**Почему так лучше:**
+1. Минус одна сущность в DS (Brand Mark атом был обёрткой ради обёртки).
+2. INSTANCE_SWAP теперь на Left Side set — designer меняет логотип прямо из panel'и List Item (раньше нужно было войти в Brand Mark override).
+3. Структура иерархии короче: было `list-item → left-side → brand-mark → logo → asset`, стало `list-item → left-side → logo → asset`.
+
+Consumer-impact: только master `9264:18`. Всего 1 инстанс Brand Mark существовал во всём UI-Kit-Mobile (именно в этом master). PB-800 (60 multiselect-инстансов марок авто) использует **List Item**, не Brand Mark — там после publish'а свапнутся автоматически.
+
 **2026-05-20 — добавлен composite Type=Checkbox + Brand.**
 
 - §3 «Building blocks»: Left Side получил 9-й тип `Checkbox + Brand` для multiselect-списков с брендированными маркерами
 - Добавлена под-секция «Composite Type=Checkbox + Brand» с размерами и токенами
 - Зафиксирован gotcha с override'ами Figma при смене Type variant'а
-- Введён новый атом [Brand Mark](./brand-mark-spec.md), на котором строится composite
+- Введён новый атом Brand Mark (40 × 40 transparent + Logo 32 × 32), на котором строится composite. _**2026-06-01:** атом удалён, логотип переведён inline — см. запись выше._
 - Контекст: задача PB-876 (multiselect марок авто), но паттерн универсальный для любых брендированных списков
 
 ---

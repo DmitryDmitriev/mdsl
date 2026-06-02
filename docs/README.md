@@ -59,7 +59,6 @@
 |-----------|--------|-------|
 | Avatar v2 | ✅ | [avatar-spec](./avatar-spec.md) |
 | Badge | ✅ | [badge-spec](./badge-spec.md) |
-| Brand Mark | ✅ | [brand-mark-spec](./brand-mark-spec.md) |
 | Button | ✅ | [button-spec](./button-spec.md) |
 | ButtonIcon | ✅ | [button-spec](./button-spec.md) |
 | Checkbox (radius 2 px, M3) | ✅ | [checkbox-spec](./checkbox-spec.md) |
