@@ -71,7 +71,7 @@ Textarea wrapper (COMPONENT per variant)
 │   │   └── counter-text (TEXT)
 │   │       ├── textStyleId: Caption/caption-md (12/16, w400)
 │   │       ├── characters: bound to "Counter text" TEXT property
-│   │       └── fill: Text&Icon/Tertiary
+│   │       └── fill: **per-state** (Tertiary idle / Secondary Filled / Accent/Negative Error — см. §4)
 │   │
 │   └── scroll (RECTANGLE · visibility = "Scroll" boolean)
 │       ├── size: 4 × N (designer регулирует высоту в зависимости от ratio overflow)
@@ -125,7 +125,20 @@ Textarea wrapper (COMPONENT per variant)
 | Disabled | transparent | 1px `Border/Disabled` (INSIDE) | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
 | ReadOnly | transparent | 1px `Border/Default` (INSIDE) | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 
-**counter-text** во всех state'ах — `Text&Icon/Tertiary` (subtle, не отвлекает от основного текста). Когда counter приближается к лимиту, design-decision: переключать ли цвет на `Accent/Negative` — **открытый вопрос**, на сегодня не реализовано в master'е (designer override на инстансе).
+**counter-text — per-state цвет** (правка 2026-06-01 вечер):
+
+| State | counter-text fill |
+|---|---|
+| Default | `Text&Icon/Tertiary` (подсказка, нет ввода — приглушённо) |
+| Focused | `Text&Icon/Tertiary` |
+| **Filled** | **`Text&Icon/Secondary`** (есть текст — счётчик должен читаться) |
+| **Error** | **`Accent/Negative`** (синхронизирован с цветом border'а и helper'а ошибки) |
+| Disabled | `Text&Icon/Tertiary` |
+| ReadOnly | `Text&Icon/Tertiary` |
+
+Логика: counter — это вторичная метрика, в idle/disabled состояниях не должен забирать внимание. Как только пользователь начал вводить текст (Filled) — счётчик становится утилитарно полезным, цвет поднимается на ступень. При ошибке счётчик включается в единую цветовую группу error-сигналов.
+
+Когда counter приближается к лимиту, design-decision: переключать ли цвет на `Accent/Negative` принудительно — **открытый вопрос**, на сегодня не реализовано в master'е (designer override на инстансе).
 
 **scroll** во всех state'ах — `Text&Icon/Tertiary`. Visible только когда `Scroll=true` (designer показывает индикатор в mockup'ах где текст превышает container).
 
@@ -294,3 +307,14 @@ Open:
 3. **minHeight=64** на Container (= 2 строки Body 1 LH + padding). Designer ресайзит инстанс вертикально, Figma не даёт сжать меньше — гарантирует что textarea остаётся multi-line area, не превращается в визуальный input. Референс: «Leave a comment» в PI3XrUDuoGyK4aXkqyzYoB (39908:14120) — short comment-mode 64 px.
 
 Итоговая matrix: 12 вариантов, 5 component properties (`Counter`, `Helper`, `Scroll`, `Counter text`, `Helper text`).
+
+**2026-06-01 (вечер 2) — counter получил per-state цвет (Filled → Secondary, Error → Negative).**
+
+Изначально counter во всех 12 вариантах был зашит на `Text&Icon/Tertiary` (Zinc/300) — слишком приглушённо для активных state'ов. На скриншоте «Thank you for your kind words!» counter «65 / 300» был еле читаем — фон Background/Secondary, текст Zinc/300, контраст близко к минимуму.
+
+Изменение (вариант D из обсуждения):
+- **Filled (Type=Filled, `9736:28`; Type=Outline, `9736:70`) → `Text&Icon/Secondary`** (Zinc/500). Когда есть ввод — counter становится утилитарно полезным, поднимается на ступень.
+- **Error (Type=Filled, `9736:35`; Type=Outline, `9736:77`) → `Accent/Negative`** (red). Счётчик синхронизирован с цветом border'а и helper'а ошибки — единая визуальная группа error-сигналов.
+- Остальные 8 вариантов (Default / Focused / Disabled / ReadOnly × Filled+Outline) остались на `Text&Icon/Tertiary` (idle/неактивный counter не должен забирать внимание).
+
+Open question «переключать цвет на Negative при приближении к лимиту» — по-прежнему не реализовано в master'е (manual override на инстансе). Когда дойдём — добавим отдельный variant axis или boolean.
