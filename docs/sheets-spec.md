@@ -131,7 +131,7 @@ Header в Figma имеет дополнительную ось `Alignment=Top|Ce
 | Параметр | Токен / значение |
 |----------|------------------|
 | Backdrop fill | semantic.background.overlay |
-| Panel fill | semantic.surface.primary |
+| Panel fill | **`Surface/Surface Primary`** — на **root** компонента Bottom Sheet, не на отдельных кусках. Заливает Header, content slot, Button area, paddingBottom safe-area — одним монолитом. Header сохраняет собственный fill для standalone-использования вне Sheet'а (визуально дублирует root, без видимой разницы). |
 | Panel radius (открытый край) | radius.overlay (16 px) |
 | Handle width | **36 px** |
 | Handle height | 4 px (spacing/1) |
@@ -206,6 +206,14 @@ Sheets — **не единый COMPONENT_SET** с axes `anchor × size × withHa
 ---
 
 ## История миграций
+
+**2026-06-01 (вечер 3) — Bottom Sheet: root fill = Surface/Surface Primary (фон на компонент целиком, не на куски).**
+
+После предыдущей правки (FRAME+BOOLEAN + 12 px safe-area) визуально оставалась проблема: фон шторки был зашит на отдельных кусках (Header — свой fill, Buttons Stack — своя плашка, content slot — designer ставит), а корневой `Bottom Sheet` (4584:1115) имел `fills: []`. Пустые зоны между кусками (включая 12 px safe-area внизу) рендерились прозрачно, создавая ощущение «дырки» — особенно когда `button=false` и контент короткий, 12 px полоска не «принадлежала» шторке.
+
+Правка: на root `Bottom Sheet` привязан fill **`Surface/Surface Primary`** (тот же токен, что у Header'а — по правилу для sticky-контейнеров, см. [COLOR-PALETTE.md §3.2](https://gitlab.com/larixon-mobile/mdsl/-/blob/main/docs/COLOR-PALETTE.md#32-surface)).
+
+Header сохраняет собственный fill — нужен для standalone-использования Header'а вне Sheet'а (например, в Top sheet или в нестандартной композиции). Визуально дублирует root, разницы нет; убирать не стал, чтобы не ломать standalone-кейсы.
 
 **2026-06-01 (вечер 2) — Bottom Sheet: button slot перестроен из SLOT в FRAME + BOOLEAN, добавлена нижняя safe-area 12 px.**
 
