@@ -18,8 +18,10 @@ List Item — контейнер строки списка с опциональ
 |----------|----------|----------|
 | **Type** | `1 str` | Однострочный элемент (min-height **56 px**) |
 | **Type** | `2+ str` | Многострочный элемент |
+| **State** | `Default` | Активный, тапается |
+| **State** | `Disabled` | Недоступное действие — визуально приглушено + non-tappable. См. §«Disabled state» |
 
-Итого **2 варианта**.
+Итого **4 варианта** (2 Type × 2 State).
 
 **Touch target.** Для `1 str` минимальная высота строки — **56 px**, что превышает требование WCAG AA (44 × 44 pt) с запасом. Для `2+ str` высота растёт по контенту, нижняя граница не меньше `1 str`.
 
@@ -89,6 +91,34 @@ Inline auto-layout frame без отдельного компонента-обё
 **Особенно важно для `Checkbox + Brand`:** мастер вариант 84×40 (checkbox 24 + gap 12 + logo wrap 40 = 76, плюс padding 8 → 84). Если инстанс остался с `lsH=FIXED, width=40` (legacy override от Type=Avatar), logo wrap **отрезается** справа — кажется что логотип «не виден». Лечение: выделить Left Side инстанс → правая панель → переключить `Fill container` (W) на **`Hug contents`**.
 
 **Batch fix для product-файлов** (если уже накопилось много инстансов с legacy-override): найти все `List Item / Left Side` с `Type=Checkbox + Brand` и `lsH=FIXED`, поставить им HUG. На PB-800 (multiselect марок авто) этим способом исправлено 60 инстансов одним проходом — без этого все 60 показывали только чекбокс без логотипа.
+
+---
+
+## 3a. Disabled state
+
+Использовать для строк, которые **временно недоступны** — действие, уже выполненное (например, «Respond to the review» после того как ответ дан), фича, недоступная по подписке, sold-out brand в multiselect и т.п.
+
+**Визуальные изменения в `State=Disabled`:**
+
+| Элемент | Изменение | Mechanism |
+|---|---|---|
+| Content (Overline / Label text / Supporting text) | fill → `Text&Icon/Tertiary` | Per-variant fill binding на TEXT nodes в master'е variant'а |
+| Left Side instance | `opacity: 0.4` | Per-variant opacity на инстансе |
+| Right Side instance | `opacity: 0.4` | Per-variant opacity на инстансе |
+| Background / Border | без изменений | — |
+
+**Почему opacity для Left/Right Side, а не fill binding:** Left Side имеет 9 типов (Icon, Avatar, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, Checkbox+Brand), Right Side — 8 типов. Перебивать fills во всех типах генерически невозможно без добавления State axis в наборы `List Item / Left Side` (`5912:6666`) и `List Item / Right Side` (`5912:6691`). Opacity 0.4 — универсальный shortcut: приглушает всё содержимое одной командой, независимо от type variant'а.
+
+> ⚠️ **Phase 1 ограничение:** opacity не различает Dark/Light mode. На светлой теме 40% от Primary даёт визуально близкое к Tertiary. На тёмной — может оказаться слишком тускло (Primary в Dark уже не такой яркий, 40% от него — низкая контрастность). Если в Dark mode disabled state читается плохо — Phase 2: пробрасывать State в Left/Right Side наборы и красить через fill-токены.
+
+**Поведение в коде:**
+
+- **Non-tappable** — `onClick` игнорируется, `pointerEvents: none` (web), `isUserInteractionEnabled = false` (iOS), `enabled = false` (Android).
+- **Visual-only** disabled тоже валиден — например, для «coming soon»-кейсов, где tap открывает explanation toast/dialog «недоступно потому что …». В этом случае разработка переопределяет `pointerEvents` на стороне consumer'а, оставляя визуальное состояние Disabled. Master не предписывает поведение жёстко.
+
+**Use case (зафиксированный):**
+
+В Sellers / Reviews — на каждом отзыве доступны 2 действия в шторке: «Respond to the review» / «Appeal the review». Если ответ уже дан, action item «Respond» переходит в `State=Disabled` (нельзя ответить второй раз) и non-tappable. Action «Appeal» остаётся активным.
 
 ---
 
@@ -196,6 +226,17 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-06-01 (вечер 4) — добавлен `State = Default / Disabled` variant axis.**
+
+Use case: в Sellers / Reviews шторка действий («Respond to the review» / «Appeal the review»). Когда ответ уже дан, action item «Respond» должен переходить в недоступное состояние — визуально приглушённое + non-tappable.
+
+Реализация — Phase 1 на уровне ListItem set:
+- Set 6054:3813 расширен с 2 до **4 вариантов** (Type=1 str / 2+ str × State=Default / Disabled). Существующие 2 variant'а переименованы с `Type=N`, на `Type=N, State=Default`. Добавлены 2 новых variant'а — клоны c name `Type=N, State=Disabled`. Figma auto-detect добавил `State` ось.
+- В Disabled-вариантах: text fills (Overline, Label text, Supporting text) → `Text&Icon/Tertiary`; Left Side instance + Right Side instance → `opacity: 0.4`.
+- Не пробрасываю State в наборы `List Item / Left Side` и `List Item / Right Side` — это Phase 2, появится когда столкнёмся с кейсом, где disabled-state внутреннего Checkbox/Switch/Radio критичен (текущий use case — иконка + текст, opacity-shortcut работает).
+
+Подробности — §3a «Disabled state» спеки.
 
 **2026-06-01 (вечер) — рефактор Type=Checkbox + Brand: убран атом Brand Mark, логотип inline.**
 
