@@ -144,6 +144,7 @@ Header в Figma имеет дополнительную ось `Alignment=Top|Ce
 | Divider | divider/default, semantic.border.default |
 | Body padding vertical | stack-md (24 px) |
 | Body padding horizontal | spacing/4 (16 px) |
+| **Bottom safe-area** (root `paddingBottom`) | **spacing/3 (12 px)** — постоянный buffer между контентом / кнопкой и нижней кромкой панели. На iOS закрывается зоной Home Indicator; на Android даёт breathing room. Действует независимо от наличия Buttons Stack. |
 | Title typography | `Heading/H3 Medium` (20/28 w500), `Text&Icon/Primary` |
 | Close icon | 24×24, `Text&Icon/Secondary` |
 
@@ -196,7 +197,7 @@ Sheets — **не единый COMPONENT_SET** с axes `anchor × size × withHa
 | `.=Description` | `4348:2644` | Описание (опционально) |
 | `Header` | `4535:6998` | Композиция Leading + Title/Description + Trailing. 4 варианта: `Leading=Yes/No × Alignment=Top/Center` |
 | `HandleContainer` | `4558:690` | Контейнер ручки. 2 варианта: `Type=Handler` (выезжающий с handle 36×4) / `Type=без handle` |
-| `Bottom Sheet` | `4584:1115` | Композиция-преview корневой панели (HandleContainer + Header + контент). 360×585 (демонстрационный) |
+| `Bottom Sheet` | `4584:1115` | Композиция корневой панели: Header + content slot + Button area (FRAME с дефолтным Buttons Stack) + 12 px safe-area. 360×597 (с button=true). BOOLEAN property `button` (default `true`) управляет видимостью Button area — при `false` фрейм истинно схлопывается в 0, без orphan-плашек. |
 
 **Anchor=top / size=full/half/auto в Figma не реализованы** — эти axes описаны в §1 спеки на API-уровне (продуктовый код управляет позицией/высотой через props компонента), но в Figma представлен только `Bottom Sheet`-вариант. Top sheets — редкий паттерн, добавлять отдельный mockup-вариант не планируется до явной потребности.
 
@@ -205,6 +206,25 @@ Sheets — **не единый COMPONENT_SET** с axes `anchor × size × withHa
 ---
 
 ## История миграций
+
+**2026-06-01 (вечер 2) — Bottom Sheet: button slot перестроен из SLOT в FRAME + BOOLEAN, добавлена нижняя safe-area 12 px.**
+
+**Проблема.** При сборке Sheet'а в продуктовом файле без bottom-кнопок designer наблюдал «дырку снизу» — пустой `button slot` (Figma SLOT-тип) в edit-view рендерил orphan-плашку «Add instances» в зарезервированной позиции (88 px высотой), оторванную от Sheet body. При публикации SLOT иногда схлопывался, иногда — нет. Параллельно: когда стек кнопок отсутствует, контент (List Item'ы, текст) упирался в нижнюю кромку панели — не было safe-area buffer'а.
+
+**Что изменилось в master `4584:1115`.**
+
+1. **`button slot` (SLOT, `4628:26291`) → `Button area` (FRAME, `9887:40`).** Внутри фрейма — дефолтный инстанс Buttons Stack Type=One. Существующая BOOLEAN property `button#5964:0` (default `true`) теперь bound к `Button area.visible`. Когда designer ставит `button=false`, фрейм истинно схлопывается в 0 — Figma корректно перерасчитывает высоту HUG-родителя, никаких orphan-плашек. Когда `button=true` — отображается дефолтный Buttons Stack; на инстансе можно swap'нуть на любой из 5 вариантов BS (Type=One / Two Horizontal / Two Horizontal Reverse / Two Vertical / Three Vertical) через стандартный nested-instance pick.
+
+2. **Удалена dead SLOT-property `button slot#4585:2`** — больше не нужна, SLOT'а нет.
+
+3. **`paddingBottom = 12` (`spacing/3`) на root Bottom Sheet'а.** Постоянный safe-area buffer между контентом / Buttons Stack и нижней кромкой панели. Действует независимо от `button` boolean'а. На iOS попадает в зону Home Indicator; на Android даёт визуальный breathing room.
+
+**Trade-off.** SLOT-механика давала designer'у возможность подложить любой контент в button-зону (теоретически — не только Buttons Stack). На практике в нашем DS туда всегда кладут BS. Новая FRAME-механика проще: дефолт уже стоит, видимостью управляет boolean, swap variant'а Buttons Stack — через стандартный nested swap. Если когда-нибудь понадобится класть в bottom-зону что-то отличное от Buttons Stack — добавим INSTANCE_SWAP property на сам фрейм.
+
+**Consumer-impact.**
+- В продуктовых файлах: все существующие инстансы Sheet с `button=true` продолжают показывать Buttons Stack (теперь — из дефолта фрейма, а не из drop'нутого в SLOT). Если в slot был кастомный override — он сбросится на дефолтный BS. Sweep по продуктовым файлам после publish'а: проверить инстансы Sheet, в которых button slot был заполнен НЕ-BS контентом (вероятность близка к нулю, но проверить).
+- Инстансы с `button=false` — без изменений (фрейм скрыт, контент имеет 12 px safe-area).
+- API/код: ничего не меняется, `button` BOOLEAN остался тем же ключом (`button#5964:0`).
 
 **2026-06-01 (вечер) — Background/Overlay подключён к canonical.**
 
