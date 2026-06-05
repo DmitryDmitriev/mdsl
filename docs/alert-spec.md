@@ -180,11 +180,20 @@ interface AlertProps {
 | Type | **100%** |
 | **Overall** | **95%** |
 
-15 вариантов (5 type × 3 style). Hardcoded `paddingTop` в `icon-wrap`: 2px (Compact) и 3px (Card) — оптическая компенсация выравнивания иконок с первой строкой текста. В Standard `paddingTop=0` (24-иконка с lineHeight=24 уже выровнены). Намеренные design-decisions, не баг.
+15 вариантов (5 type × 3 style). Design-constants оптической компенсации (намеренные design-decisions, не баг):
+- **Compact:** `icon-wrap.paddingTop = 1` — иконка 16 сдвинута вниз на 1 px для оптического выравнивания с первой строкой Body 2 (lineHeight=20).
+- **Standard:** `inner.paddingTop = 1` — текстовый блок сдвинут вниз на 1 px для выравнивания с иконкой 24.
+- **Card:** `inner.paddingTop = 4` (= `spacing/1`) — привязано к токену; текстовый блок сдвинут вниз для выравнивания с fill-иконкой 32.
 
 ---
 
 ## 11. История решений
+
+**2026-06-05 — два фикса по iOS DS-check (LIOS-2520).**
+
+1. **Action button border (Card) — stale pre-migration instance.** После миграции Button 2026-05-11 (`Accent/Primary → Border/Default`) Alert master не был пересобран. 5 Action-нод Card-вариантов (`6947:14066/14081/14094/14109/14123`) имели старый binding `Accent/Primary` на обводке. Исправлено: stroke variable → **`Border/Default`**. iOS-код (`MDSLButtonView` → `Border.default`) был уже корректен.
+
+2. **§10 paddingTop — реликт до правок 2026-04-30 / 2026-05-11.** §10 содержал устаревшие значения: Compact=2, Standard=0, Card=3. Приведено к каноническим: Compact `icon-wrap.paddingTop=1`, Standard `inner.paddingTop=1`, Card `inner.paddingTop=4`. Источники правды (§4, §6, §11) были верны — §10 был единственным источником ошибки. iOS-fix: `iconTopInset = 2 → 1` (Compact).
 
 **2026-05-11 — финальная чистка токенов и off-scale значений.**
 
