@@ -166,11 +166,15 @@ Fills -- 100% покрытие токенами. Типография -- 100% п
 
 ### FILL-width поведение
 
-По умолчанию chip — HUG width (адаптируется к контенту). Но `Icon=Right, Type=Text+Icon` варианты также поддерживают **FILL-width**: дизайнер ставит `layoutSizingHorizontal=FILL` на инстансе → text растягивается слева, chevron остаётся справа.
+По умолчанию chip — **HUG width** (адаптируется к контенту). Это касается всех вариантов включая `Icon=Right`.
 
-Это реализовано через `Text.layoutGrow=1` в master'ах Icon=Right вариантов. Если parent в auto-layout даёт chip больше ширины — text занимает всё свободное место, иконка прижата вправо. Без parent constraint chip продолжает HUG к контенту (backward-compatible).
+Для FILL-режима («All categories ▼» на всю ширину строки) — два шага на инстансе:
+1. Chip instance: `layoutSizingHorizontal = FILL`
+2. Внутренний Text слой: переопределить `layoutSizingHorizontal = FILL`
 
-Use case: широкий «All categories ▼» chip на всю ширину row внутри filter-карточки.
+Тогда text растягивается слева, chevron остаётся справа.
+
+> **Почему не через master:** `Text.lsH=FILL` в master'е при HUG-родителе вызывает перенос строк вместо расширения чипа (`textAutoResize=HEIGHT` — только вертикальный рост). Баг обнаружен и исправлен 2026-06-08 — `lsH=HUG`, `textAutoResize=WIDTH_AND_HEIGHT` на всех 24 `Icon=Right` вариантах.
 
 **Logic асимметричных padding'ов для Icon=Left / Icon=Right:** padding со стороны иконки всегда меньше (text-side больше), чтобы иконка визуально «прижималась» к краю чипа, а текст имел воздух с противоположной стороны.
 
@@ -313,6 +317,14 @@ Chip(
 ---
 
 ## История миграций
+
+**2026-06-08 — Bugfix: Icon=Right text wrapping (все 24 варианта).**
+
+Баг: `Text.lsH=FILL` + `textAutoResize=HEIGHT` в master'ах `Icon=Right` → при HUG-chip'е текст переносился по строкам вместо расширения чипа. Причина: `FILL` в HUG-родителе не имеет «свободного места», текст получал минимальную ширину и рос только вниз.
+
+Фикс: `lsH=HUG` + `textAutoResize=WIDTH_AND_HEIGHT` на всех 24 вариантах. FILL-поведение («text растягивается, chevron справа») теперь достигается двойным override на инстансе: chip `lsH=FILL` + Text `lsH=FILL`.
+
+---
 
 **2026-05-30 — Notification boolean на Type=Icon variants (Dot only, Counter отложен).**
 
