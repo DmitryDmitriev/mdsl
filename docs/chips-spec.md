@@ -21,7 +21,7 @@ Chips -- это компактные элементы в форме «табле
 | **Icon** | Left, Right, No, Icon Only |
 | **Type** | Text+Icon, Text, Icon |
 | **Size** | 32 (compact), 40 (standard), **48 (large)** |
-| **Shape** | **Pill** (default), **Rounded** |
+| **Shape** | **Rounded** (default для фильтров), **Pill** |
 
 Итого **96 вариантов** (с учётом валидных комбинаций Icon × Type) — для каждой комбинации: 2 Fill × 2 Active × 3 Size × 2 Shape.
 
@@ -161,8 +161,8 @@ Fills -- 100% покрытие токенами. Типография -- 100% п
 
 | Shape | Radius | Когда применять |
 |---|---|---|
-| **Pill** (default) | `radius/pill/pill` (999) | Классический chip — фильтры, теги, категории. Лёгкий visual вес. |
-| **Rounded** | `radius/2` (8) | Когда нужна более «control-like» подача — например, фильтр-чипы в карточке Sellers Cabinets (визуально ближе к Button shape). Совпадает с Button-radius. |
+| **Rounded** (default для фильтров) | `radius/2` (8) | **Канонический shape фильтр-чипов.** Читается как interactive control; совпадает с Button-radius. Использовать везде где chip — это фильтр или quick action. |
+| **Pill** | `radius/pill/pill` (999) | Теги, некликабельные категориальные метки без явного интерактивного контекста. |
 
 ### FILL-width поведение
 
@@ -317,6 +317,12 @@ Chip(
 ---
 
 ## История миграций
+
+**2026-06-09 — Shape фильтр-чипов: Pill → Rounded (QA-reconciliation LIOS-2514).**
+
+- Canonical shape фильтр-чипов обновлён на **Rounded** (`radius/2`, 8px). Figma-нода `4210-54` и продукт Sellers Cabinets используют Rounded; Pill оставлен для некликабельных тегов/меток.
+- Таблица Shape (§Радиусы): Rounded поднят на первую строку как дефолт для фильтров, Pill — опциональный для тегов.
+- Код компонента `MDSLChipsView` поддерживает оба shape — правки только в каноне.
 
 **2026-06-08 — Bugfix: Icon=Right text wrapping (все 24 варианта).**
 

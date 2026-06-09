@@ -80,19 +80,19 @@
 
 | Элемент | Токен (canonical после миграции 2026-05-06) | Использование |
 |---------|----------------------------------------------|---------------|
-| Background аватара (Letter, Icon) | `Accent/Primary` | Тёмная заливка под инициалы и preset-иконки |
+| Background аватара (Letter, Icon) | `Background/Tertiary` | Нейтральный светло-серый кружок под инициалы и preset-иконки |
 | Background аватара (Photo placeholder) | `Background/Tertiary` | Серый плейсхолдер до загрузки фото |
-| Letter text (инициалы) | `Text&Icon/Secondary` | На фоне `Accent/Primary` остаётся читаемо |
-| Icon (Person preset) | `Text&Icon/Inverted W-B` | Белая в Light, чёрная в Dark — инвертирует против `Accent/Primary` |
+| Letter text (инициалы) | `Text&Icon/Secondary` | Тёмно-серые инициалы на нейтральном фоне |
+| Icon (Person preset) | `Text&Icon/Secondary` | Тёмно-серый силуэт на нейтральном фоне |
 | Pin background (внешнее кольцо) | `Background/Primary` | Контур, отделяющий пин от аватара |
 | Pin status (точка) | `Accent/Primary` | Цвет статуса (нейтральный) |
 
 В коде:
 ```ts
-avatarBg: semantic.accent.primary           // Letter / Icon
+avatarBg: semantic.background.tertiary      // Letter / Icon
 avatarPhotoBg: semantic.background.tertiary // Photo placeholder
 letterText: semantic.textIcon.secondary
-iconFill: semantic.textIcon.invertedWB
+iconFill: semantic.textIcon.secondary
 pinBackground: semantic.background.primary
 pinStatus: semantic.accent.primary
 ```
@@ -103,11 +103,11 @@ pinStatus: semantic.accent.primary
 
 ```
 Avatar (Component)
-├── background (Ellipse) — Letter/Icon: Accent/Primary; Photo placeholder: Background/Tertiary
+├── background (Ellipse) — Letter/Icon: Background/Tertiary; Photo placeholder: Background/Tertiary
 │   └── size: привязан к size token
 ├── [content] — зависит от type:
 │   ├── Letter: Text "AB" (Text&Icon/Secondary)
-│   ├── Icon: ic_person preset (Text&Icon/Inverted W-B), swap на любую `ic_*`
+│   ├── Icon: ic_person preset (Text&Icon/Secondary), swap на любую `ic_*`
 │   └── Photo: Ellipse с image fill
 ├── Pin Background (Ellipse) — если pin=true
 │   └── fills: Background/Primary
@@ -180,6 +180,12 @@ interface AvatarProps {
 ---
 
 ## История миграций
+
+**2026-06-09 — фон Letter/Icon: Accent/Primary → Background/Tertiary (QA-reconciliation LIOS-2509).**
+
+- Background аватара (Letter, Icon): `Accent/Primary` → `Background/Tertiary`. Канон расходился с Figma: `Accent/Primary` = Zinc/900 в Light даёт тёмный кружок — читаемость инициалов была только в Dark-теме.
+- Icon (Person preset) tint: `Text&Icon/Inverted W-B` → `Text&Icon/Secondary`. Силуэт тёмно-серый на светло-сером кружке, работает в обеих темах.
+- Код уже приведён под Figma (ветка `feature/LAA-3524-design-system`, коммит `b4a0a3b97`).
 
 **2026-05-11 — аудит готовности к разработке.**
 

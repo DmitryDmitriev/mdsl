@@ -33,7 +33,7 @@
 | Layer | `Fill=Filled` | `Fill=Outline` |
 |---|---|---|
 | Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
-| Border | — (нет) | 1px solid **`Outline/{variant}`**, stroke align **INSIDE** |
+| Border | 1px solid **`Outline/{variant}`** | 1px solid **`Outline/{variant}`**, stroke align **INSIDE** |
 | Text | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
 | Icon (Union fill) | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
 | Icon (container) | — | прозрачный (`fills = []`) |
@@ -246,6 +246,11 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 ---
 
 ## История миграций
+
+**2026-06-09 — Filled-бейджи получают бортик Outline/{variant} (QA-reconciliation LIOS-2510).**
+
+- §2 «Цвет»: Border у `Fill=Filled` исправлен с «— (нет)» на `1px solid Outline/{variant}`. Figma-инстанс содержит цветной бортик у всех Filled-вариантов; канон расходился.
+- Код уже приведён (ветка `feature/LAA-3524-design-system`, коммит `e5c30e50d`).
 
 **2026-05-25 — добавлен `Fill` axis (Filled / Outline).**
 
