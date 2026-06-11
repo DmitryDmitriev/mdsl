@@ -100,7 +100,7 @@ VERTICAL HUG, gap=12, align=CENTER, padding=24
 |---|---|
 | Все skeleton-блоки (Block/Circle/Line) | `Background/Tertiary` |
 
-`Background/Tertiary` = Zinc/200 Light, Zinc/800 Dark — даёт 2 шага элевации над `Background/Primary` страницы. Хорошо читается в обеих темах.
+`Background/Tertiary` = Zinc/200 Light, Zinc/600 Dark. Хорошо читается в обеих темах как нейтральный плейсхолдер.
 
 **Не вводим отдельный токен** `Background/Skeleton` — нет смысла плодить полу-дубликат, `Background/Tertiary` семантически корректен (нейтральная поверхность).
 
@@ -131,7 +131,7 @@ Overlay: linear-gradient(90deg,
 | Тема | `Background/Tertiary` (база) | `Background/Secondary` (highlight) | Результат |
 |---|---|---|---|
 | Light | Zinc/200 (`#e4e4e7`) | Zinc/**100** (`#f4f4f5`) — светлее | ✅ нормальный блик |
-| Dark | Zinc/800 | Zinc/**900** — **темнее** | ⚠️ блик «тёмной полосой» |
+| Dark | Zinc/600 (`#52525b`) | Zinc/**900** — **темнее** | ⚠️ блик «тёмной полосой» |
 
 В Dark `Secondary` темнее `Tertiary` (на ступень ближе к фону экрана) — буквальное применение spec'а давало бы тёмную бегущую полосу вместо светлого блика. **Не дизайн-замысел, а side-effect Zinc-палитры.**
 
@@ -215,9 +215,9 @@ LinearGradient(
 
 | Параметр | Значение | Токен |
 |---|---|---|
-| Fill (все формы) | Zinc/200 / Zinc/800 | `Background/Tertiary` |
-| Block radius | 8 | `radius/sm` или off-scale design constant |
-| Line radius | 4 | off-scale design constant |
+| Fill (все формы) | Zinc/200 / Zinc/600 | `Background/Tertiary` |
+| Block radius | 8 | `radius/2` |
+| Line radius | 4 | `radius/1` |
 | Circle radius | full | width/2 (геометрия круга) |
 | Listing image radius | 12 | соответствует card radius |
 
@@ -278,12 +278,17 @@ CSS-переменные:
 
 ## История миграций
 
+**2026-06-11 — исправлен dark-value Background/Tertiary + зафиксированы radius-токены (QA-reconciliation LIOS-2518).**
+
+- §Цвет, §Shimmer-таблица, §Токены, §История: `Zinc/800` → **`Zinc/600`** для `Background/Tertiary` Dark. Ошибка в спеке — COLOR-PALETTE.md §2.1 всегда содержал Zinc/600; iOS-код был корректен.
+- §Токены: Block radius `radius/sm` / off-scale → **`radius/2`** (8 px); Line radius off-scale → **`radius/1`** (4 px).
+
 **2026-06-04 — пересмотрена формулировка shimmer'а: theme-invariant white overlay вместо `Tertiary → Secondary → Tertiary`.**
 
 Поводом стал drift-вопрос Android. В коде уже было сделано отклонение от буквы старой спеки — shimmer на white-alpha overlay (0.4 alpha пика), а не на token pair `Tertiary/Secondary`. Это **корректное решение проблемы Dark mode**, которая была признана ещё при первой ревизии (открытый вопрос §«Открытые вопросы» — теперь закрыт):
 
 - В Light: `Background/Secondary` (Zinc/100) **светлее** `Background/Tertiary` (Zinc/200) → старая spec-формула работала.
-- В Dark: `Background/Secondary` (Zinc/900) **темнее** `Background/Tertiary` (Zinc/800) — старая формула давала «тёмную полосу» вместо светлого блика.
+- В Dark: `Background/Secondary` (Zinc/900) **темнее** `Background/Tertiary` (Zinc/600) — старая формула давала «тёмную полосу» вместо светлого блика.
 
 Theme-invariant white overlay даёт визуально одинаковый светлый блик в обеих темах. Это индустриальный стандарт (Material 3, shadcn, react-content-loader). Не вводим отдельный token-pair специально под shimmer — overkill для одного use case.
 
