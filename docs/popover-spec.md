@@ -2,7 +2,7 @@
 
 Привязанный плавающий контейнер с произвольным контентом. **База «оверлей-семьи»** Larixon Mobile DS: на ней стоят Tooltip (минимальный popover), Context Menu (popover со списком действий, уже есть) и Coach mark (popover + spotlight, организм — позже).
 
-**Статус:** черновик спеки для ревью. Figma-компонент — собирается после подтверждения.
+**Статус:** Popover — черновик спеки (Figma-база). **Tooltip — собран** (Figma COMPONENT_SET, 4 placement, WIP на стр. `4334:52`). Остальное — §4.
 
 **Категория:** Molecule · floating overlay.
 
@@ -92,7 +92,7 @@ Popover (Surface-карточка, radius 12, Elevation/Floating)
 | Dismiss | авто (через короткую паузу) или по следующему тапу |
 | Фон / тень / радиус | как в Overlay foundation (§1) |
 
-> Реализация в Figma: Tooltip — тонкий отдельный компонент, делящий токены §1 (не вариант Popover, т.к. контент жёстко текстовый). Решается на сборке.
+> Реализация в Figma: Tooltip — отдельный COMPONENT_SET, делящий токены §1 (не вариант Popover, т.к. контент жёстко текстовый). **Собран:** ось `Placement` (Top / Bottom / Left / Right), caret-вектор к триггеру под каждое направление, фон/текст/радиус привязаны к переменным (`Surface/Surface Primary`, `Text&Icon/Primary`, `radius/surface/md`), тень — `Elevation/Floating`. WIP на стр. `4334:52` — на паблиш переедет на components-страницу.
 
 ---
 
@@ -100,8 +100,8 @@ Popover (Surface-карточка, radius 12, Elevation/Floating)
 
 | Член | Что это | Статус |
 |---|---|---|
-| **Popover** | общий контейнер (этот документ) | черновик |
-| **Tooltip** | минимальный popover (§3) | черновик |
+| **Popover** | общий контейнер (этот документ) | черновик спеки + Figma-база |
+| **Tooltip** | минимальный popover (§3) | **Figma COMPONENT_SET, 4 placement (WIP, стр. 4334:52)** |
 | **Context Menu** | popover со списком действий | ✅ есть ([context-menu-spec](./context-menu-spec.md)) — выровнять под §1 при сборке |
 | **Coach mark** | popover + spotlight-backdrop + шаги (1/N, Далее/Пропустить) + секвенс | организм, **позже** (после sign-off базы разработкой) |
 
