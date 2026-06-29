@@ -237,15 +237,20 @@ Subtitle «Выбрано: 3»
 
 ---
 
-## 11. Контролы поверх медиа — ButtonIcon `Type=Overlay`
+## 11. Элементы поверх медиа — `Type=Overlay`
 
-**Правило:** любой интерактивный контрол, размещаемый **поверх произвольного фото/видео** (delete/edit в фото-галерее, ♡ favorite на карточке объявления, close/⋯ в Stories, тулбар lightbox, камера на cover/avatar) — это **`ButtonIcon` `Type=Overlay`**, не Primary/Secondary/Ghost.
+**Правило:** любой элемент, размещаемый **поверх произвольного фото/видео**, использует overlay-вариант с контраст-гарантией, а не обычные fill'ы:
 
-**Почему:** обычные fill'ы (`Background/Primary`, `Secondary` и т.п.) рассчитаны на известный фон экрана и **не гарантируют контраст** с непредсказуемым по яркости медиа. Overlay даёт связку «скрим `Background/Overlay` + theme-invariant белая иконка `Text&Icon/White applied`».
+| Элемент поверх медиа | Компонент |
+|---|---|
+| **Интерактивный контрол** (delete/edit в фото-галерее, ♡ favorite на карточке, close/⋯ в Stories, тулбар lightbox, камера на cover/avatar) | `ButtonIcon` `Type=Overlay` |
+| **Информационный лейбл** («Main photo», счётчик «1/8», теги «VIDEO»/«360°», длительность видео) | `Badge` `Type=Overlay` |
 
-- **НЕ** собирать overlay-контрол вручную (fill-override на Primary/Ghost) — это silent неправильный fill (DS-gap PB-1581).
-- **НЕ** использовать `Background/on Photo` как скрим контрола — в Dark он белый (alpha White/50), белая иконка пропадает. `on Photo` — photo-tint, не control-scrim.
-- Расхождение «overlay-контрол собран не через Type=Overlay» записывать как regression. См. [button-spec.md](./button-spec.md) §«Overlay-вариант».
+**Почему:** обычные fill'ы (`Background/Primary`, статусные `Background/Tinted/*`, Outline) рассчитаны на известный фон и **не гарантируют контраст** с непредсказуемым по яркости медиа. Overlay даёт связку «скрим `Background/Overlay` + theme-invariant белый `Text&Icon/White applied`».
+
+- **НЕ** собирать overlay-элемент вручную (fill-override на Primary/Ghost/Neutral) — это silent неправильный fill (DS-gap PB-1581).
+- **НЕ** использовать `Background/on Photo` как скрим — в Dark он белый (alpha White/50), белый контент пропадает. `on Photo` — photo-tint, не overlay-scrim.
+- Расхождение «overlay-элемент собран не через Type=Overlay» записывать как regression. См. [button-spec.md](./button-spec.md) §«Overlay-вариант», [badge-spec.md](./badge-spec.md) §7.1.
 
 ---
 
@@ -265,7 +270,7 @@ Subtitle «Выбрано: 3»
 - [ ] Цвета компонентов — DS-варианты, без override fill
 - [ ] Bottom CTA — через preset (Default / Spacious / Compact)
 - [ ] Screen edge — `screen/padding-horizontal` (16)
-- [ ] Контролы поверх фото/видео — `ButtonIcon` `Type=Overlay`, не Primary/Ghost (§11)
+- [ ] Элементы поверх фото/видео — `Type=Overlay` (ButtonIcon для контролов, Badge для лейблов), не Primary/Ghost/Neutral (§11)
 
 ---
 

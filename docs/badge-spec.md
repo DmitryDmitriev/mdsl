@@ -181,20 +181,38 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (120 шт.)
-- **Type**: Good, Info, Warning, Negative, Neutral
-- **Size**: 2xs, xs, sm, md, lg, xl
-- **Shape**: Pill, Rounded
-- **Fill**: Filled, Outline
+### Варианты (123 шт.)
+- **Type**: Good, Info, Warning, Negative, Neutral, **Overlay** (последний — для лейблов поверх медиа, см. §7.1)
+- **Size**: 2xs, xs, sm, md, lg, xl (Overlay — только xs / sm / md)
+- **Shape**: Pill, Rounded (Overlay — только Pill)
+- **Fill**: Filled, Outline (Overlay — только Filled-эквивалент)
 
-Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline через stroke на `Text&Icon/on Tinted/*` без заливки. Текст и иконка — всегда `Text&Icon/on Tinted/{Type}`. Покрытие токенами 100% (color/text/spacing/radius/border).
+Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline через stroke на `Text&Icon/on Tinted/*` без заливки. Текст и иконка — всегда `Text&Icon/on Tinted/{Type}` (кроме Overlay — `Text&Icon/White applied`). Покрытие токенами 100% (color/text/spacing/radius/border).
+
+### 7.1. Type=Overlay — лейблы поверх медиа (+3 варианта)
+
+Бейдж, размещаемый **поверх произвольного фото/видео** — информационный лейбл, для которого статусные цвета неуместны, а контраст не гарантирован: «Main photo» / «Главное фото», счётчик фото «1/8», теги «VIDEO» / «360°», длительность видео.
+
+| Свойство | Значение |
+|---|---|
+| Fill (root) | `Background/Overlay` (скрим: alpha Black/40 Light, Black/30 Dark) |
+| Текст / иконка | `Text&Icon/White applied` (White/Main в обеих темах, theme-invariant) |
+| Border | нет (бортик Filled-бейджа снят — скрим самодостаточен) |
+| Shape | Pill (капсула) |
+| Size | xs (20) / sm (24) / md (32) |
+| Icon / Label / Counter | те же boolean (§7), что у остальных Type |
+
+- **Почему это Badge, а не новый «Tag»:** overlay-лейбл — информационный индикатор (как `Neutral`: Beta / New / Draft), не категоризация и не интерактив. Отдельный Tag дублировал бы Badge и Chips.
+- **Почему отдельный Type, а не override на Neutral:** связка «скрим + theme-invariant белый» зашита в вариант, чтобы продукт не собирал её вручную (иначе — silent неправильный fill; DS-gap PB-1581).
+- **Заменяет прежний совет «на картинке → Outline»** (см. §«Когда Filled/Outline»): Outline (цветная обводка + цветной текст) над непредсказуемым фото контраст тоже не гарантирует.
+- Связка тождественна `ButtonIcon Type=Overlay` (контролы поверх медиа) — единый overlay-паттерн. См. composition-rules §11.
 
 ### Когда Filled, когда Outline (guidance для дизайнеров)
 
 | Сценарий | Filled | Outline |
 |---|---|---|
 | Бейдж на нейтральной поверхности (Card, List) | ✅ | OK |
-| Бейдж на цветной картинке / image-фоне (ad card) | ⚠️ сливается | ✅ |
+| Бейдж на цветной картинке / image-фоне (ad card) | используй **`Type=Overlay`** (§7.1) | Outline тоже не гарантирует контраст |
 | Несколько бейджей в ряд (visual rhythm) | primary | secondary |
 | Counter / notification dot | ✅ | ⚠️ слабее заметен |
 | Dark mode на ярком фоне | ⚠️ | ✅ |
@@ -246,6 +264,14 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 ---
 
 ## История миграций
+
+**2026-06-29 — `Type=Overlay` (лейблы поверх медиа, +3 варианта). DS-gap из PB-1581.**
+
+- Контекст: фото-ячейка постинга («Main photo» + edit/close поверх фото). Контролы закрыты `ButtonIcon Type=Overlay`; для текст-лейбла «Main photo» / счётчика / тегов нужен бейдж с контраст-гарантией над произвольным фото.
+- **Premise-check:** рассматривали отдельный компонент «Tag» — отвергнут (overlay-лейбл = информационный бейдж как Neutral; Tag дублировал бы Badge+Chips). Прежний совет «на картинке → Outline» тоже не гарантирует контраст.
+- **+3 варианта** (`4523:14`): `Type=Overlay` × Size xs/sm/md × Shape=Pill × Fill=Filled. Матрица 120 → **123**. Fill `Background/Overlay`, текст/иконка `Text&Icon/White applied`, бортик снят. Собраны клоном `Type=Neutral` + перепривязка.
+- Осознанные омиссии: Overlay только Pill + только Filled-эквивалент + xs/sm/md (как Ghost Negative — Square-only).
+- §7.1 добавлена; §«Когда Filled/Outline» обновлена. composition-rules §11 + скилл `ds-build` (Regression #7) синхронизированы. Тождественно `ButtonIcon Type=Overlay`.
 
 **2026-06-09 — Filled-бейджи получают бортик Outline/{variant} (QA-reconciliation LIOS-2510).**
 
