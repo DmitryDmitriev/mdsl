@@ -217,15 +217,16 @@ Subtitle «Выбрано: 3»
 
 ## 9. Bottom CTA — через preset
 
-**Правило:** кнопка фиксированного действия внизу экрана подаётся через один из трёх preset'ов.
+**Правило:** кнопка фиксированного действия внизу экрана подаётся через один из preset'ов. **Bottom-инсет адаптируется к контексту снизу** (safe-area / клавиатура / граница):
 
 | Preset | Padding top | Padding bottom | Когда |
 |---|---|---|---|
-| Default | `cta/padding-top-default` (16) | `cta/padding-bottom-default` (12) | Обычный экран с CTA |
+| Default | `cta/padding-top-default` (16) | `cta/padding-bottom-default` (12) | Обычный экран с CTA, **клавиатуры нет** (над home-indicator safe-area) |
+| **Keyboard** | `cta/padding-top-default` (16) | **`cta/padding-bottom-keyboard` (16)** | **Клавиатура видна** — CTA закреплён над ней. 0 прижимает к клавиатуре, 16 даёт breathing (industry ~16). |
 | Spacious | `cta/padding-top-spacious` (24) | `cta/padding-bottom-spacious` (32) | Hero, финальный экран |
-| Compact | 0 | 0 | Поверх клавиатуры (контекстный действующий слой) |
+| Compact | 0 | `cta/padding-compact` (0) | CTA **вплотную к границе** без воздуха — input-accessory bar клавиатуры, CTA поверх divider'а. Edge case. |
 
-Горизонтальный padding — всегда `screen/padding-horizontal` (16).
+**При появлении/скрытии клавиатуры** bottom-инсет переключается Default (12, safe-area) ↔ Keyboard (16). Горизонтальный padding — всегда `screen/padding-horizontal` (16).
 
 ---
 

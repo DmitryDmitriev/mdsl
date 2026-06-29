@@ -73,10 +73,11 @@
 | Токен | Значение | Alias | Назначение |
 |---|---|---|---|
 | `cta/padding-top-default` | 16 | `spacing/4` | Padding сверху от CTA до контента (Default preset) |
-| `cta/padding-bottom-default` | 12 | `spacing/3` | Padding снизу от CTA до края экрана (Default preset) |
+| `cta/padding-bottom-default` | 12 | `spacing/3` | Padding снизу от CTA до края экрана / safe-area (Default preset, **без клавиатуры**) |
+| `cta/padding-bottom-keyboard` | 16 | `spacing/4` | Padding снизу от CTA до **видимой клавиатуры** (keyboard visible). Дефолт keyboard-контекста: 0 прижимает CTA к клавиатуре, 16 даёт comfortable breathing (industry: HIG/Material ~16). |
 | `cta/padding-top-spacious` | 24 | `spacing/6` | Spacious preset top |
 | `cta/padding-bottom-spacious` | 32 | `spacing/8` | Spacious preset bottom |
-| `cta/padding-compact` | 0 | `spacing/0` | Compact preset (CTA поверх клавиатуры, без воздуха) |
+| `cta/padding-compact` | 0 | `spacing/0` | Compact — CTA **вплотную к границе** без воздуха (input-accessory bar клавиатуры, CTA поверх divider'а). Edge case; для обычного «над клавиатурой» — `cta/padding-bottom-keyboard`. |
 
 ### `list/*` — список
 
@@ -96,7 +97,7 @@
 | 4 | `row/gap-tight`, `stack/gap-tight`, `chip/padding-y` |
 | 8 | `section/gap`, `section/title-to-content`, `row/gap-default`, `stack/gap-default`, `chip/padding-x` |
 | 12 | `row/gap-loose`, `stack/gap-loose`, `cta/padding-bottom-default` |
-| 16 | `screen/padding-horizontal`, `section/padding-default`, `cta/padding-top-default` |
+| 16 | `screen/padding-horizontal`, `section/padding-default`, `cta/padding-top-default`, `cta/padding-bottom-keyboard` |
 | 20 | ⚠️ нет точного — округлить до 16 или 24 (по контексту) |
 | 24 | `section/padding-comfortable`, `cta/padding-top-spacious` |
 | 28 | ⚠️ нет точного — обычно 24 |
