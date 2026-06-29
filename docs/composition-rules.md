@@ -237,6 +237,18 @@ Subtitle «Выбрано: 3»
 
 ---
 
+## 11. Контролы поверх медиа — ButtonIcon `Type=Overlay`
+
+**Правило:** любой интерактивный контрол, размещаемый **поверх произвольного фото/видео** (delete/edit в фото-галерее, ♡ favorite на карточке объявления, close/⋯ в Stories, тулбар lightbox, камера на cover/avatar) — это **`ButtonIcon` `Type=Overlay`**, не Primary/Secondary/Ghost.
+
+**Почему:** обычные fill'ы (`Background/Primary`, `Secondary` и т.п.) рассчитаны на известный фон экрана и **не гарантируют контраст** с непредсказуемым по яркости медиа. Overlay даёт связку «скрим `Background/Overlay` + theme-invariant белая иконка `Text&Icon/White applied`».
+
+- **НЕ** собирать overlay-контрол вручную (fill-override на Primary/Ghost) — это silent неправильный fill (DS-gap PB-1581).
+- **НЕ** использовать `Background/on Photo` как скрим контрола — в Dark он белый (alpha White/50), белая иконка пропадает. `on Photo` — photo-tint, не control-scrim.
+- Расхождение «overlay-контрол собран не через Type=Overlay» записывать как regression. См. [button-spec.md](./button-spec.md) §«Overlay-вариант».
+
+---
+
 ## Контракт композиции экрана
 
 Каждый собираемый экран должен удовлетворять:
@@ -253,6 +265,7 @@ Subtitle «Выбрано: 3»
 - [ ] Цвета компонентов — DS-варианты, без override fill
 - [ ] Bottom CTA — через preset (Default / Spacious / Compact)
 - [ ] Screen edge — `screen/padding-horizontal` (16)
+- [ ] Контролы поверх фото/видео — `ButtonIcon` `Type=Overlay`, не Primary/Ghost (§11)
 
 ---
 

@@ -21,13 +21,19 @@
   .mid  { color: #d68a02; }
   .good { color: #2a9d4a; }
   details { margin-top: 8px; }
-  details pre { font-size: 10px; max-height: 160px; overflow: auto; background: #f7f7f7; padding: 6px; border-radius: 4px; }
+  details pre { font-size: 10px; max-height: 200px; overflow: auto; background: #f7f7f7; padding: 6px; border-radius: 4px; white-space: pre-wrap; word-break: break-word; }
+  details summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+  details summary .count { color: #888; font-weight: 400; }
+  .category-foreign summary .count { color: #d62828; }
+  .category-namespace summary .count { color: #d68a02; }
+  tr.row.selected { background: #18a0fb22; }
   @media (prefers-color-scheme: dark) {
     body { background: #2c2c2c; color: #eee; }
     select, button { background: #3a3a3a; color: #eee; border-color: #555; }
     th { color: #aaa; }
     th, td { border-color: #444; }
     tr.row:hover { background: #3a3a3a; }
+    tr.row.selected { background: #18a0fb33; }
     details pre { background: #1f1f1f; }
   }
 </style>
@@ -37,13 +43,17 @@
   <div class="controls">
     <select id="scope">
       <option value="page" selected>Текущая страница</option>
-      <option value="selection">Выделенные SET'ы</option>
+      <option value="selection">Выделенные SET'ы / FRAME'ы</option>
       <option value="document">Весь документ</option>
     </select>
-    <button class="primary" id="run">Запустить</button>
-    <button id="copy" title="Скопировать JSON отчёт">⧉ JSON</button>
+    <button class="primary" id="run">Токены</button>
+    <button id="copy" title="Скопировать JSON отчёт с тремя категориями">⧉ JSON</button>
   </div>
   <div class="status" id="status">Готов к запуску.</div>
+  <details id="libs-block" hidden>
+    <summary>📚 Подключённые библиотеки <span class="count" id="libs-count"></span></summary>
+    <pre id="libs"></pre>
+  </details>
   <table id="results" hidden>
     <thead>
       <tr><th>Компонент</th><th class="pct">Color</th><th class="pct">Token</th><th class="pct">Type</th><th class="pct">All</th></tr>
@@ -51,8 +61,16 @@
     <tbody></tbody>
   </table>
   <details id="problems-block" hidden>
-    <summary>Проблемы (топ-30 на компонент)</summary>
+    <summary>Не привязано к токену <span class="count" id="not-bound-count"></span></summary>
     <pre id="problems"></pre>
+  </details>
+  <details id="foreign-block" class="category-foreign" hidden>
+    <summary>Foreign library bindings <span class="count" id="foreign-count"></span></summary>
+    <pre id="foreign"></pre>
+  </details>
+  <details id="namespace-block" class="category-namespace" hidden>
+    <summary>Namespace mismatch (spacing) <span class="count" id="namespace-count"></span></summary>
+    <pre id="namespace"></pre>
   </details>
 
 <script>
@@ -61,11 +79,17 @@
 
   function cls(p) { return p >= 90 ? "good" : p >= 70 ? "mid" : "bad"; }
 
-  $("run").onclick = () => {
-    const scope = $("scope").value;
-    $("status").textContent = "Сканирую…";
+  function resetUI() {
     $("results").hidden = true;
     $("problems-block").hidden = true;
+    $("foreign-block").hidden = true;
+    $("namespace-block").hidden = true;
+  }
+
+  $("run").onclick = () => {
+    const scope = $("scope").value;
+    $("status").textContent = "Сканирую токены…";
+    resetUI();
     parent.postMessage({ pluginMessage: { type: "run", scope } }, "*");
   };
 
@@ -79,11 +103,30 @@
     const msg = e.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "progress") {
+      if (msg.phase === "prefetch") {
+        $("status").textContent = "Загружаю список переменных из подключённых библиотек…";
+        return;
+      }
       if (msg.current) $("status").textContent = `${msg.current}/${msg.total}: ${msg.name}`;
       else $("status").textContent = `Найдено компонентов: ${msg.total}`;
     }
+    if (msg.type === "prefetch-done") {
+      const sum = msg.summary || [];
+      const lines = sum.map(l =>
+        `${l.allowed ? "✓" : "✗"} ${l.libraryName} — ${l.vars} переменных / ${l.collections} коллекций${l.allowed ? "" : "  ← не в allowed-list"}`
+      );
+      if (msg.error) lines.push(`⚠ prefetch error: ${msg.error}`);
+      lines.push("");
+      lines.push(`Итого known variable keys: ${msg.knownVarCount}`);
+      lines.push(`(имена сравниваются через includes() со списком ALLOWED_LIBRARY_NAMES в code.js)`);
+      $("libs").textContent = lines.join("\n");
+      $("libs-count").textContent = `· ${msg.knownVarCount}`;
+      $("libs-block").hidden = false;
+      console.log(`[ds-audit] prefetch summary:`, sum);
+      if (msg.error) console.warn(`[ds-audit] prefetch error: ${msg.error}`);
+    }
     if (msg.type === "report") {
-      lastReport = msg.results;
+      lastReport = { results: msg.results, categories: msg.categories };
       const tbody = $("results").querySelector("tbody");
       tbody.innerHTML = "";
       const probs = [];
@@ -104,10 +147,34 @@
         }
       }
       $("results").hidden = false;
+
+      // Категория 1: not-bound (старые «проблемы»)
       $("problems").textContent = probs.join("\n");
-      $("problems-block").hidden = probs.length === 0;
+      $("not-bound-count").textContent = `· ${msg.categories["not-bound"].length}`;
+      $("problems-block").hidden = msg.categories["not-bound"].length === 0;
+
+      // Категория 2: foreign-binding
+      const foreignLines = [];
+      for (const f of msg.categories["foreign-binding"]) {
+        const varDesc = f.varName ? `\`${f.varName}\`` : "(unresolved)";
+        foreignLines.push(`▼ ${f.componentName} / ${f.nodeName}\n  · ${f.field} → ${varDesc}\n  · ${f.reason}`);
+      }
+      $("foreign").textContent = foreignLines.join("\n\n");
+      $("foreign-count").textContent = `· ${msg.categories["foreign-binding"].length}`;
+      $("foreign-block").hidden = msg.categories["foreign-binding"].length === 0;
+
+      // Категория 3: namespace-mismatch
+      const nsLines = [];
+      for (const m of msg.categories["namespace-mismatch"]) {
+        nsLines.push(`▼ ${m.componentName} / ${m.nodeName}\n  · ${m.field} использует \`${m.varName}\`\n  · контекст: ${m.context} → ожидалось ${m.expected}/*`);
+      }
+      $("namespace").textContent = nsLines.join("\n\n");
+      $("namespace-count").textContent = `· ${msg.categories["namespace-mismatch"].length}`;
+      $("namespace-block").hidden = msg.categories["namespace-mismatch"].length === 0;
+
       const avg = Math.round(msg.results.reduce((s, r) => s + r.overall, 0) / (msg.results.length || 1));
-      $("status").textContent = `Готово. ${msg.results.length} компонентов · средний overall ${avg}%`;
+      const cat = msg.categories;
+      $("status").textContent = `Готово. ${msg.results.length} компонентов · ${avg}% overall · not-bound: ${cat["not-bound"].length} · foreign: ${cat["foreign-binding"].length} · namespace: ${cat["namespace-mismatch"].length}`;
     }
   };
 </script>

@@ -99,6 +99,10 @@ Orange уже имеет полную шкалу в палитре (введён
 
 **Disabled** — единственный фон для всех disabled-controls (кнопки, чипы, плашки и т.п.). См. §3.4.
 
+**Overlay vs on Photo — не путать.**
+- **`Overlay`** (alpha Black/40 Light / Black/30 Dark) — затемняющий скрим. Full-screen диммер за Dialog/Sheet **и** подложка контролов поверх медиа (`ButtonIcon Type=Overlay`). В паре с `Text&Icon/White applied` (theme-invariant белый) гарантирует контраст иконки над произвольным фото.
+- **`on Photo`** (alpha Black/40 Light / **alpha White/50 Dark**) — photo-tint (лёгкая адаптивная вуаль на самом фото). **НЕ использовать как подложку под белые иконки**: в Dark это белый скрим, белая иконка на нём пропадает. Для overlay-контролов всегда `Background/Overlay`. См. composition-rules.md §11.
+
 ### 2.2 Background / Tinted
 Цветные подложки для атомарных color-coded элементов: chat bubble, badge, chip с tinted-фоном, soft-кнопки.
 
