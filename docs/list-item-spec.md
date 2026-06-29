@@ -46,7 +46,7 @@ List Item (COMPONENT)
 
 | Слот | Доступные типы |
 |------|----------------|
-| **Left Side** (9 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Checkbox + Brand** |
+| **Left Side** (10 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Brand**, **Checkbox + Brand** |
 | **Right Side** (8 типов) | Icon, Trailing text, Checkbox, Radio, Switch, Icon button, Accordion, Badge |
 | **Content** (2 типа) | Основной (Title + Subtitle), с Overline |
 
@@ -92,6 +92,29 @@ Inline auto-layout frame без отдельного компонента-обё
 
 **Batch fix для product-файлов** (если уже накопилось много инстансов с legacy-override): найти все `List Item / Left Side` с `Type=Checkbox + Brand` и `lsH=FIXED`, поставить им HUG. На PB-800 (multiselect марок авто) этим способом исправлено 60 инстансов одним проходом — без этого все 60 показывали только чекбокс без логотипа.
 
+#### Type=Brand (standalone логотип)
+
+Логотип/бренд-маркер **без** чекбокса — для строк с крупным полноцветным медиа-маркером: логотипы марок авто (Cars-экран постинга, PB-1581), банков, платёжных методов (Visa / MC / Apple Pay), партнёров, флаги валют, крупные категорийные иконки. Standalone-сиблинг композита `Checkbox + Brand` (тот же логотип, минус чекбокс).
+
+| Параметр | Значение | Токен |
+|---|---|---|
+| Размер | 40 × 40 (HUG) | — |
+| Обёртка (Logo wrap) | 40 × 40, fills transparent, `padding=spacing/1` (4) | — |
+| Содержимое | `Logo` instance 32 × 32 (INSTANCE_SWAP) | — |
+| Выравнивание | flush к левому краю слота (`paddingLeft=0`), как Avatar / Image | — |
+
+**Переиспользует тот же `Logo#9867:0` INSTANCE_SWAP**, что и `Checkbox + Brand` (15 пресетов авто-брендов; swap'ается на любой 32-image). Собран клоном `Checkbox + Brand` минус чекбокс — проводка свойства `Logo` сохранена. Node в наборе Left Side `5912:6666`.
+
+**Имя «Brand».** Выбрано для консистентности с `Checkbox + Brand`. Контент swap'а гибкий (логотип / флаг / платёж / категория) — имя описывает роль слота (бренд-маркер), не ограничивает содержимое. Альтернативы (`Logo`, `Media`) отклонены: `Logo` разъехался бы с composite-именем, `Media` путается с `Image`/`Video`.
+
+**Когда что (leading media):**
+- **Icon** (24, монохромный glyph на `Text&Icon`) — системные иконки.
+- **Brand** (40 / 32, полноцветный image) — логотипы, бренды, платёжные методы, флаги.
+- **Avatar** (40, round) — фото / инициалы пользователя.
+- **Image** (56) — фото-тумбнейл; **Video** — видео-превью.
+
+**Code-side (Compose):** добавить leading-вариант Brand (40-box + 32 logo-slot, transparent wrap) — отдельный таск, см. tracker `tasks/PB-1581`.
+
 ---
 
 ## 3a. Disabled state
@@ -107,7 +130,7 @@ Inline auto-layout frame без отдельного компонента-обё
 | Right Side instance | `opacity: 0.4` | Per-variant opacity на инстансе |
 | Background / Border | без изменений | — |
 
-**Почему opacity для Left/Right Side, а не fill binding:** Left Side имеет 9 типов (Icon, Avatar, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, Checkbox+Brand), Right Side — 8 типов. Перебивать fills во всех типах генерически невозможно без добавления State axis в наборы `List Item / Left Side` (`5912:6666`) и `List Item / Right Side` (`5912:6691`). Opacity 0.4 — универсальный shortcut: приглушает всё содержимое одной командой, независимо от type variant'а.
+**Почему opacity для Left/Right Side, а не fill binding:** Left Side имеет 10 типов (Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, Brand, Checkbox+Brand), Right Side — 8 типов. Перебивать fills во всех типах генерически невозможно без добавления State axis в наборы `List Item / Left Side` (`5912:6666`) и `List Item / Right Side` (`5912:6691`). Opacity 0.4 — универсальный shortcut: приглушает всё содержимое одной командой, независимо от type variant'а.
 
 > ⚠️ **Phase 1 ограничение:** opacity не различает Dark/Light mode. На светлой теме 40% от Primary даёт визуально близкое к Tertiary. На тёмной — может оказаться слишком тускло (Primary в Dark уже не такой яркий, 40% от него — низкая контрастность). Если в Dark mode disabled state читается плохо — Phase 2: пробрасывать State в Left/Right Side наборы и красить через fill-токены.
 
