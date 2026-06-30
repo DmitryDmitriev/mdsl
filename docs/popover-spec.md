@@ -14,7 +14,7 @@
 
 | Параметр | Токен | Значение |
 |---|---|---|
-| Фон | `Surface/Surface Primary` | floating → Surface (см. COLOR-PALETTE §3.2) |
+| Фон | `Surface/Surface Primary` | floating → Surface (см. COLOR-PALETTE §3.2). **Исключение — Tooltip:** инвертированный фон, см. §3 |
 | Тень | `Elevation/Floating` | — |
 | Радиус | `radius/surface/md` | 12 dp |
 | Max-width | — | 256 dp |
@@ -87,12 +87,16 @@ Popover (Surface-карточка, radius 12, Elevation/Floating)
 | Типографика | `Base/Body 2` (14/20) |
 | Padding | `spacing/2` верт. (8) / `spacing/3` гор. (12) |
 | Max-width | 240 dp |
-| Caret | on (по умолчанию) |
+| **Фон / caret** | **`Background/Inverted Primary`** (тёмный/inverse: Zinc/900 Light → Zinc/50 Dark) |
+| **Текст** | **`Text&Icon/Inverted W-B`** (White/Main Light → Zinc/950 Dark) |
+| Тень / радиус | как в Overlay foundation (§1): `Elevation/Floating`, `radius/surface/md` |
+| Caret | on (по умолчанию), заливка = фон (inverse) |
 | Триггер | long-press (на мобайле hover нет) |
 | Dismiss | авто (через короткую паузу) или по следующему тапу |
-| Фон / тень / радиус | как в Overlay foundation (§1) |
 
-> Реализация в Figma: Tooltip — отдельный COMPONENT_SET, делящий токены §1 (не вариант Popover, т.к. контент жёстко текстовый). **Собран:** ось `Placement` (Top / Bottom / Left / Right), caret-вектор к триггеру под каждое направление, фон/текст/радиус привязаны к переменным (`Surface/Surface Primary`, `Text&Icon/Primary`, `radius/surface/md`), тень — `Elevation/Floating`. WIP на стр. `4334:52` — на паблиш переедет на components-страницу.
+> **Цвет — инвертированный (исключение из §1).** В отличие от Popover / Context Menu / Coach mark (светлый `Surface/Surface Primary`), Tooltip — **тёмный/inverse**. Обоснование (решение 2026-06-30): (1) plain text-tooltip конвенционально инвертируют — Material 3 plain tooltip = inverse surface; (2) согласованность с **Larixon Web DS Tooltip** (тоже тёмный); (3) визуально отделяет транзиентную подсказку от светлых интерактивных оверлеев. Это ревизия прежней привязки «Tooltip на Surface вместе с семьёй».
+>
+> Реализация в Figma: Tooltip — отдельный COMPONENT_SET (не вариант Popover, т.к. контент жёстко текстовый). Ось `Placement` (Top / Bottom / Left / Right), caret-вектор под каждое направление. Привязки: фон + caret → `Background/Inverted Primary`, текст → `Text&Icon/Inverted W-B`, тень → `Elevation/Floating`, радиус → `radius/surface/md` (рекрас в inverse выполнен 2026-06-30, узел `10737:1042`). **TODO финализации:** 4 варианта сейчас наложены на `0,0` — разложить; перенести с доковой стр. `4334:52` на отдельную components-страницу Molecules; publish; занести в Confluence-реестр.
 
 ---
 
