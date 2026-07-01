@@ -124,6 +124,8 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 Каретка живёт внутри горизонтальной строки `Content` (Input v2) либо строки `Value` внутри вертикального `Content` (Stacked): `[Caret, Input Text]` для Focused, `[Input Text, Caret]` для Editing.
 
+**Выравнивание (важно):** строка — auto-layout с `counterAxisAlignItems=CENTER`; `Input Text` в ней — **вертикально HUG + `textAlignVertical=CENTER`** (высота = line-height, не тянется на всю высоту поля). Иначе текст растягивается на 56px и прижимается к верху, а каретка центрируется — визуально каретка «проваливается» ниже текста. Каретка и текст должны центрироваться по одной оси строки.
+
 ---
 
 ## Input v2 Stacked — лейбл внутри поля
