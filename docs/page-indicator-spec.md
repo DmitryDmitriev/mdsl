@@ -1,0 +1,155 @@
+# Page Indicator — спецификация для разработки
+
+**Один компонент — одна спека.** «Page Indicator» — индикатор позиции в постраничном контенте (карусели, онбординг, галереи фото). Ряд точек; текущая страница — удлинённая «пилюля».
+
+Привязка к **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md**. Все размеры, радиусы и цвета — через существующие токены.
+
+Figma: страница **🟢 Page Indicator**, набор **Page Indicator / Dot** (COMPONENT_SET `10825:15`).
+
+---
+
+## Обзор
+
+Индикатор — горизонтальный ряд точек, по одной на страницу. Текущая страница показана **удлинённой пилюлей**, остальные — круглыми точками. Единица DS — **точка** (`Page Indicator / Dot`); ряд собирается как горизонтальный auto-layout из инстансов точек, где ровно одна — в состоянии `Active`.
+
+Референс паттерна — LINE Design System / Material page indicator (активная пилюля, точки фиксированного размера).
+
+### Компонент `Page Indicator / Dot`
+
+| Свойство | Значения |
+|---|---|
+| **State** | Inactive, Active |
+| **Type** | Standard, Overlay |
+
+Итого **4 варианта**.
+
+- **State=Active** — пилюля (широкая, закруглённая).
+- **State=Inactive** — круглая точка.
+- **Type=Standard** — на обычной поверхности.
+- **Type=Overlay** — поверх медиа (фото/видео); theme-invariant белые точки.
+
+---
+
+## Ряд (Page Indicator)
+
+Ряд — не отдельный компонент, а **композиция**: горизонтальный auto-layout из инстансов `Dot`, gap = `spacing/2` (8), выравнивание по центру. Ровно один `Dot` — `State=Active`. Количество точек — рантайм (= числу страниц).
+
+```
+Page Indicator (row) — HORIZONTAL auto-layout, gap spacing/2, align center
+├── Dot (Active)    — текущая страница
+├── Dot (Inactive)
+├── Dot (Inactive)
+└── … (по числу страниц)
+```
+
+**Максимум точек — 8** (рекомендация). При большем числе страниц ряд визуально расползается: использовать счётчик «n / m» или отдельный паттерн (в текущей версии не входит — см. §Дальнейшее). Все точки одного размера, без сжатия краёв.
+
+---
+
+## Размеры и радиусы
+
+| Элемент | Параметр | Значение | Токен |
+|---|---|---|---|
+| Inactive dot | width × height | 8 × 8 | `spacing/2` × `spacing/2` |
+| Active pill | width × height | 24 × 8 | `spacing/6` × `spacing/2` |
+| Все точки | radius | pill | `radius/pill/pill` |
+| Ряд | gap между точками | 8 | `spacing/2` |
+
+Соотношение пилюля : точка = 3 : 1 (24 : 8) — активная страница читается однозначно.
+
+---
+
+## Цвета
+
+По **docs/COLOR-PALETTE.md**.
+
+| Type | State | Токен |
+|---|---|---|
+| **Standard** | Active | `Accent/Primary` |
+| **Standard** | Inactive | `Text&Icon/Tertiary` |
+| **Overlay** | Active | `Text&Icon/White applied` (theme-invariant белый) |
+| **Overlay** | Inactive | `Text&Icon/White applied` @ 40% (выравнивание со Stories `White 40`) |
+
+- **Standard** — на поверхностях (`Background/*`, `Surface/*`). Inactive = приглушённый нейтральный `Text&Icon/Tertiary` (Zinc/300); при необходимости большего контраста — кандидат на `Text&Icon/Secondary` (проверить в продукте).
+- **Overlay** — поверх произвольного медиа: белые точки не зависят от темы (как прогресс-бар Stories). Собственного скрима нет (точки мелкие); если контраст с изображением недостаточен — продукт добавляет scrim под индикатором (см. composition-rules §11, элементы поверх медиа).
+
+> **Примечание по `White 40`:** отдельная переменная «White 40» в палитре на 2026-07-01 не заведена — overlay-inactive реализован как `Text&Icon/White applied` с opacity 40%. Когда `White 40` появится как токен (уже используется в Stories) — перепривязать.
+
+---
+
+## Поведение
+
+- Отражает текущую позицию в пейджере; **одна** точка `Active` в любой момент.
+- Индикатор по умолчанию **не интерактивен** (только отражает позицию). Если делается tappable (переход к странице) — hit-area точки ≥ 44 px (прозрачное расширение в коде).
+- Смена страницы → `Active` переезжает на соответствующую точку (в коде — анимация morph пилюли, в Figma не отражается).
+
+---
+
+## Доступность (a11y)
+
+- **Роль:** контейнер `role="tablist"` либо `aria-label="Страница X из N"`; точки декоративные, позиция объявляется на уровне пейджера.
+- **Контраст:** Standard active `Accent/Primary` на светлой поверхности ≥ 3:1 (WCAG 1.4.11, не-текстовый UI). Overlay — белый над медиа; при светлом изображении полагаться на scrim продукта.
+- **Не только цвет:** активная страница отличается **формой** (пилюля vs точка), не только цветом — доступно при цветовой слепоте.
+
+---
+
+## Аудит покрытия токенами
+
+| Категория | Покрытие |
+|---|---|
+| 🎨 Color | **100%** |
+| 🔲 Tokens (size / radius / spacing) | **100%** |
+| **Overall** | **100%** |
+
+Все размеры (ширина/высота точек), радиус и gap ряда привязаны к переменным. Единственное отступление — overlay-inactive использует opacity 40% поверх `Text&Icon/White applied` (нет отдельного токена White 40; см. примечание).
+
+---
+
+## Синхронизация с кодом
+
+```tsx
+<PageIndicator
+  total={5}
+  current={0}
+  type="standard"   // "standard" | "overlay"
+/>
+```
+
+CSS-переменные (из существующих токенов):
+```css
+--pageindicator-dot:        var(--spacing-2);        /* 8  */
+--pageindicator-active-w:    var(--spacing-6);        /* 24 */
+--pageindicator-radius:      var(--radius-pill-pill); /* pill */
+--pageindicator-gap:         var(--spacing-2);        /* 8  */
+/* standard: active = Accent/Primary; inactive = Text&Icon/Tertiary */
+/* overlay:  active = Text&Icon/White applied; inactive = same @ 40% */
+```
+
+---
+
+## Дальнейшее (бэклог)
+
+- **Windowed / shrinking dots** — «оконный» вариант со сжимающимися краевыми точками (LINE/iOS) при большом числе страниц; отклонён в v1 в пользу фиксированных точек.
+- **Counter «n / m»** — для очень длинных галерей вместо ряда точек.
+- **Interactive** — tappable-точки с переходом к странице (+ hit-area 44).
+
+---
+
+## Связанные документы
+
+- [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — size/spacing/radius шкалы
+- [COLOR-PALETTE.md](./COLOR-PALETTE.md) — палитра, overlay-роли
+- [composition-rules.md](./composition-rules.md) — §11, элементы поверх медиа
+- [stories-spec.md](./stories-spec.md) — прогресс-индикатор Stories (White/Main + White 40)
+
+---
+
+## История
+
+**2026-07-01 — Page Indicator собран (Dot-атом + демо-ряды).**
+
+Набор `Page Indicator / Dot` (`10825:15`) на странице 🟢 Page Indicator: State (Active/Inactive) × Type (Standard/Overlay) = 4 варианта. Активная — пилюля 24×8 (`spacing/6`×`spacing/2`), неактивная — точка 8×8 (`spacing/2`), радиус `radius/pill/pill`. Standard: active `Accent/Primary`, inactive `Text&Icon/Tertiary`. Overlay: active `Text&Icon/White applied`, inactive — то же @ 40% (нет токена White 40). Ряд = композиция инстансов, gap `spacing/2`.
+
+Решения по запросу дизайна: **активная = пилюля** (не LINE-точка-цветом), **фиксированные точки** без сжимающегося окна (max 8), **+ Overlay-вариант** для медиа. Windowed-вариант вынесен в бэклог.
+
+Page Indicator → ✅ готов к разработке (v1 — фиксированные точки, Standard + Overlay).
