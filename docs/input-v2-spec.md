@@ -90,6 +90,8 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 Цвет обводки (для обоих Type) — см. таблицу цветов ниже: Focused/Editing → `Border/Active`, Error → `Accent/Negative`.
 
+**Толщина привязана к токенам** (2026-07-01): `strokeWeight` всех полей забинжен на переменные — 1px → `border/default`, 2px → `border/emphasis`. Раньше толщина стояла сырым числом у всего компонента (включая Outline) — это исправлено, теперь она управляется токеном.
+
 ---
 
 ## Цвета по состояниям
