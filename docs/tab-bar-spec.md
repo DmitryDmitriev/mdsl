@@ -78,7 +78,9 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 | Icon / Label | `Text&Icon/Secondary` | **`Accent/Primary`** |
 | Background | `Background/Primary` (default — inline) | — |
 
-> **Active state на обеих платформах = `Accent/Primary`** (красный Larixon, brand-консистентность). Альтернативы M3 (pill-indicator) или iOS (system Blue) **не используются** — в Figma были смешаны три разных токена, теперь унифицировано.
+> **Active state на обеих платформах = `Accent/Primary`** (нейтральный Zinc/900 Light / Zinc/200 Dark — почти-чёрный, **НЕ брендовый и НЕ красный**; см. [COLOR-PALETTE §2.5](./COLOR-PALETTE.md#25-accent)). Альтернативы M3 (pill-indicator) или iOS (system Blue) **не используются** — в Figma были смешаны три разных токена, теперь унифицировано.
+>
+> ⚠️ Если рендер (Android/iOS/Figma-инстанс) показывает активный таб **красным** — значит значение токена `Accent/Primary` на этой стороне неверное. Канонический `Accent/Primary` = Zinc/900, а не brand-red. Правится значение токена, а не логика таба.
 >
 > **Sticky-режим** (стандартный для Tab Bar — он всегда sticky к нижнему краю) — дизайнер на инстансе в продуктовом файле override-ит `Background/Primary` → `Surface/Surface Primary` (Foundation-правило, см. [COLOR-PALETTE.md §3.2](./COLOR-PALETTE.md#32-surface)). В Dark это даёт elevation-контраст Zinc/800 над Zinc/950 при скроллящемся под баром контенте.
 
@@ -119,7 +121,7 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 
 **Почему не option (c)** (тонкая линия-indicator над item): не unify-ится с iOS, который у Apple использует tinted-иконку.
 
-Решение фиксирует **brand-консистентность**: красный Larixon Accent — primary marker active-состояния на обеих платформах. Платформенные различия остаются только в раскладке (vertical/horizontal stack), геометрии (80 vs 83 px height) и nav-pattern (Material vs HIG), цветовая семантика — общая.
+Решение фиксирует **единый accent-маркер**: `Accent/Primary` (нейтральный Zinc/900, **не брендовый и не красный**) — primary marker active-состояния на обеих платформах. Платформенные различия остаются только в раскладке (vertical/horizontal stack), геометрии (80 vs 83 px height) и nav-pattern (Material vs HIG), цветовая семантика — общая.
 
 ---
 
@@ -128,7 +130,7 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 - **Роль:** `role="tablist"` на root, `role="tab"` + `aria-selected="true|false"` на item'ах. Native контролы (`UITabBar`, `NavigationBar`) выставляют это автоматически.
 - **Tap target:** Android item — ≥ 48 dp (FILL ширины, height 80 даёт zone больше 48). iOS item — 49 pt height + horizontal span. WCAG AA пройдено.
 - **Active indicator:** не только цвет — Apple/Material системно подкрашивают tinted-иконку. Дополнительно icon-form может меняться (filled vs outline) — это решается на уровне icon-pair в Larixon Assets.
-- **Контраст:** `Accent/Primary` (Zinc/950 Light) на `Background/Primary` (#ffffff Light) = ≥ 15:1, AAA. В Dark `Accent/Primary` (Zinc/200) на `Background/Primary` (Zinc/950) — также AAA.
+- **Контраст:** `Accent/Primary` (Zinc/900 #18181b Light) на `Background/Primary` (#ffffff Light) = ≥ 15:1, AAA. В Dark `Accent/Primary` (Zinc/200) на `Background/Primary` (Zinc/950) — также AAA.
 - **VoiceOver / TalkBack:** label вкладки + state «выбрано» / «не выбрано». Системные NavigationBar / UITabBar выдают это из-коробки.
 
 ---
@@ -214,5 +216,18 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 ### Открытое (Pass 3)
 
 - Badge как canonical инстансы из `badge-spec.md` — отложено как TODO (см. §10).
+
+### 2026-07-01 — реконсиляция с Android dev-sync (LAA-3524)
+
+**Контекст:** дев зафиксировал drift — спека называет active = `Accent/Primary` (и проза ошибочно звала его «красным»), а публичный `Tab Bar` set (`4318:873`) рендерил активный таб на `Text&Icon/Primary`. Блокер Q1.
+
+**Разобрано:**
+- `Accent/Primary` = **Zinc/900 (#18181b) Light / Zinc/200 Dark** — нейтральный почти-чёрный, **не брендовый и не красный** (см. [COLOR-PALETTE §2.5](./COLOR-PALETTE.md#25-accent)). «Красный Larixon» в прозе §5 был фактической ошибкой — исправлено.
+- Мастер `.=Tab Item` (`1955:2749`), вариант `Active=Yes` (`1955:2748`) — **корректен** (Union+Vector+Label = `Accent/Primary`). Ребайнд 2026-05-12 на источнике правды сохранился.
+- Drift был **в публичной композиции** `Tab Bar` (`4318:873`): iOS-вариант держал instance-override на `Text&Icon/Primary` у активного айтема, Android-вариант собран через параллельный `.=Building Blocks` с прямой привязкой к `Text&Icon/Primary`.
+
+**Фикс (Figma):** 6 активных нод в `4318:873` (Android + iOS × Union/Vector/Label) перепривязаны на `Accent/Primary` (var из корректного мастера). Проверено скриншотом — active = тёмный accent, inactive = `Text&Icon/Secondary`.
+
+**Канон подтверждён:** active tab = `Accent/Primary`. Если код/рендер даёт красный — неверно значение токена `Accent/Primary` на стороне платформы (должно быть Zinc/900), правится значение, а не логика.
 
 Tab Bar → ✅ готов к разработке.
