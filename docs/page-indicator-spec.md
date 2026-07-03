@@ -4,7 +4,7 @@
 
 Привязка к **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md**. Все размеры, радиусы и цвета — через существующие токены.
 
-Figma: страница **🟢 Page Indicator** — контейнер **Page Indicator** (COMPONENT_SET `10851:22`, Type=Standard/Overlay) + атом **Page Indicator / Dot** (COMPONENT_SET `10825:15`) + **Page Indicator / Numeric** (COMPONENT `10857:10`, счётчик «n/m» поверх медиа).
+Figma: страница **🟢 Page Indicator** — контейнер **Page Indicator** (COMPONENT_SET `10851:22`, Type=Standard/Overlay) + атом **Page Indicator / Dot** (COMPONENT_SET `10825:15`) + **Page Indicator / Numeric** (COMPONENT `10857:10`, счётчик «n · m» поверх медиа).
 
 ---
 
@@ -58,11 +58,11 @@ Page Indicator (COMPONENT, Type=Standard/Overlay) — HORIZONTAL auto-layout, ga
 
 ## Числовой индикатор `Page Indicator / Numeric`
 
-Альтернатива точкам для **длинных галерей** (много фото), **только поверх медиа**. Пилюля-счётчик «текущая / всего», например «1/8».
+Альтернатива точкам для **длинных галерей** (много фото), **только поверх медиа**. Пилюля-счётчик «текущая · всего», например «1 · 8».
 
 ```
 Page Indicator / Numeric (COMPONENT) — HORIZONTAL auto-layout, HUG, pill
-└── Text "1/8" — Caption/caption-md Medium, Text&Icon/White applied
+└── Text "1 · 8" — Caption/caption-md Medium, Text&Icon/White applied
 ```
 
 | Параметр | Значение | Токен |
@@ -73,7 +73,7 @@ Page Indicator / Numeric (COMPONENT) — HORIZONTAL auto-layout, HUG, pill
 | Padding H / V | 8 / 4 | `spacing/2` / `spacing/1` |
 | Radius | pill | `radius/pill/pill` |
 
-- **Формат** — `текущая/всего` через слэш без пробелов («1/8»); только цифры, слэш.
+- **Формат** — `текущая · всего` через **среднюю точку** «·» (U+00B7) с пробелами по бокам («1 · 8»); только цифры и разделитель-булит.
 - **Только Overlay** — числовой индикатор задуман поверх фото/видео (счётчик кадров). Варианта «на поверхности» нет (там используются точки).
 - **Размещение** — обычно верхний-правый или нижний угол медиа; отступ от края — на стороне продукта.
 
@@ -187,7 +187,9 @@ CSS-переменные (из существующих токенов):
 
 Решения по запросу дизайна: **активная = пилюля** (не LINE-точка-цветом), **фиксированные точки** без сжимающегося окна (max 8), **+ Overlay-вариант** для медиа. Windowed-вариант вынесен в бэклог.
 
-**2026-07-01 (числовой) — добавлен `Page Indicator / Numeric`.** Пилюля-счётчик «n/m» поверх медиа (`10857:10`): `Background/Overlay` + `Text&Icon/White applied`, Caption md Medium, padding `spacing/2`×`spacing/1`, radius pill. По референсу LINE (числовой page-indicator). Premise-check: визуально пересекается с `Badge Type=Overlay`; выделен в отдельный компонент по решению дизайна (семантика позиции + discoverability), только Overlay.
+**2026-07-03 — разделитель числового индикатора → средняя точка «·».** Формат сменён с «1/8» на «1 · 8» (булит U+00B7 с пробелами) по референсу дизайна.
+
+**2026-07-01 (числовой) — добавлен `Page Indicator / Numeric`.** Пилюля-счётчик «n · m» поверх медиа (`10857:10`): `Background/Overlay` + `Text&Icon/White applied`, Caption md Medium, padding `spacing/2`×`spacing/1`, radius pill. По референсу LINE (числовой page-indicator). Premise-check: визуально пересекается с `Badge Type=Overlay`; выделен в отдельный компонент по решению дизайна (семантика позиции + discoverability), только Overlay.
 
 **2026-07-01 (уточнение) — Page Indicator оформлен как компонент-контейнер.** Поверх атома `Page Indicator / Dot` добавлен контейнер `Page Indicator` (`10851:22`, Type=Standard/Overlay), слот которого содержит **инстансы** точек (ссылка на атом). Смена активной точки — через nested-свойства инстансов, без detach. Демо-фреймы удалены (заменены компонентом).
 
