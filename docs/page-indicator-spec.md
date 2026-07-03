@@ -4,7 +4,7 @@
 
 Привязка к **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md**. Все размеры, радиусы и цвета — через существующие токены.
 
-Figma: страница **🟢 Page Indicator**, набор **Page Indicator / Dot** (COMPONENT_SET `10825:15`).
+Figma: страница **🟢 Page Indicator** — контейнер **Page Indicator** (COMPONENT_SET `10851:22`, Type=Standard/Overlay) + атом **Page Indicator / Dot** (COMPONENT_SET `10825:15`).
 
 ---
 
@@ -30,17 +30,27 @@ Figma: страница **🟢 Page Indicator**, набор **Page Indicator / D
 
 ---
 
-## Ряд (Page Indicator)
+## Контейнер `Page Indicator`
 
-Ряд — не отдельный компонент, а **композиция**: горизонтальный auto-layout из инстансов `Dot`, gap = `spacing/2` (8), выравнивание по центру. Ровно один `Dot` — `State=Active`. Количество точек — рантайм (= числу страниц).
+Готовый компонент-ряд. Слот с точками — горизонтальный auto-layout из **инстансов** `Page Indicator / Dot` (ссылка на атом, не detached-копии), gap = `spacing/2` (8), выравнивание по центру, HUG. Ровно один `Dot` — `State=Active`.
+
+| Свойство | Значения |
+|---|---|
+| **Type** | Standard, Overlay |
+
+Type контейнера задаёт тип вложенных точек (Standard → точки Standard, Overlay → белые точки). В библиотеке — **5 точек** (первая Active) как канонический пример.
 
 ```
-Page Indicator (row) — HORIZONTAL auto-layout, gap spacing/2, align center
-├── Dot (Active)    — текущая страница
-├── Dot (Inactive)
-├── Dot (Inactive)
-└── … (по числу страниц)
+Page Indicator (COMPONENT, Type=Standard/Overlay) — HORIZONTAL auto-layout, gap spacing/2, HUG, align center, fill transparent
+├── ⟶ Dot (instance, Active)    — текущая страница
+├── ⟶ Dot (instance, Inactive)
+├── ⟶ Dot (instance, Inactive)
+└── … (инстансы Dot; State/Type проброшены как nested-свойства инстанса)
 ```
+
+- **Смена активной точки:** переопределить `State` нужного вложенного инстанса через панель свойств (nested instance properties проброшены на контейнер) — без detach.
+- **Число точек:** в макете — добавить/удалить инстансы `Dot` в слоте; в коде — рендерится динамически по числу страниц. Количество в мастере (5) — пример, не ограничение.
+- **Атом отдельно:** `Page Indicator / Dot` остаётся доступен для сборки нестандартных рядов.
 
 **Максимум точек — 8** (рекомендация). При большем числе страниц ряд визуально расползается: использовать счётчик «n / m» или отдельный паттерн (в текущей версии не входит — см. §Дальнейшее). Все точки одного размера, без сжатия краёв.
 
@@ -151,5 +161,7 @@ CSS-переменные (из существующих токенов):
 Набор `Page Indicator / Dot` (`10825:15`) на странице 🟢 Page Indicator: State (Active/Inactive) × Type (Standard/Overlay) = 4 варианта. Активная — пилюля 24×8 (`spacing/6`×`spacing/2`), неактивная — точка 8×8 (`spacing/2`), радиус `radius/pill/pill`. Standard: active `Accent/Primary`, inactive `Text&Icon/Tertiary`. Overlay: active `Text&Icon/White applied`, inactive — то же @ 40% (нет токена White 40). Ряд = композиция инстансов, gap `spacing/2`.
 
 Решения по запросу дизайна: **активная = пилюля** (не LINE-точка-цветом), **фиксированные точки** без сжимающегося окна (max 8), **+ Overlay-вариант** для медиа. Windowed-вариант вынесен в бэклог.
+
+**2026-07-01 (уточнение) — Page Indicator оформлен как компонент-контейнер.** Поверх атома `Page Indicator / Dot` добавлен контейнер `Page Indicator` (`10851:22`, Type=Standard/Overlay), слот которого содержит **инстансы** точек (ссылка на атом). Смена активной точки — через nested-свойства инстансов, без detach. Демо-фреймы удалены (заменены компонентом).
 
 Page Indicator → ✅ готов к разработке (v1 — фиксированные точки, Standard + Overlay).
