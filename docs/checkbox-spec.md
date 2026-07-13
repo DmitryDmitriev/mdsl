@@ -43,7 +43,7 @@
 | Скругление квадрата | **radius/0_5** (2 px) | M3-спека Checkbox = 2 px. Введён 2026-05-11. |
 | Толщина бордера (покой) | **border/default** → border/1 (1 px) | |
 | Бордер (focus / акцент) | **border/emphasis** → border/2 (2 px) | Кольцо фокуса |
-| Бордер (default) | color: Border/Default | **COLOR-PALETTE** |
+| Бордер (покой, unchecked) | color: **Border/Active** (#18181b) | **COLOR-PALETTE** — канон 2026-07-13 (был неоднозначен Default/Active) |
 | Бордер (disabled) | Border/Disabled | |
 | Бордер (focus) | Border/Active или focus-ring | |
 | Фон квадрата (unchecked) | Background/Primary | |
@@ -68,7 +68,7 @@
 
 | Состояние | Квадрат (box) | Иконка (галочка) | Текст подписи |
 |-----------|---------------|------------------|---------------|
-| Unchecked, Active=Yes | stroke `Border/Active` (или `Border/Default`) | — | `Text&Icon/Primary` |
+| Unchecked, Active=Yes | stroke `Border/Active` (#18181b, 1 px) | — | `Text&Icon/Primary` |
 | Unchecked, Active=No (Disabled) | fill `Background/Tertiary` | — | `Text&Icon/Tertiary` |
 | Checked, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** ⚠️ | `Text&Icon/Primary` |
 | Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
@@ -132,6 +132,8 @@ Check+Text — **building block**, не самостоятельный touch-row
 ---
 
 ## 7. История миграций
+
+**2026-07-13 — снята неоднозначность обводки покоя (token-аудит Android).** Спека допускала «`Border/Active` **или** `Border/Default`» для невыбранного бокса. Figma-вариант `Select=Off, Active=Yes` собран на **`Border/Active`** (#18181b, 1 px) — чёткая тёмная обводка (ближе к Material outline). Канон = `Border/Active` (решение дизайна); «или» убрано. **Код на стороне Android нужно поправить** с `Border/Default` → `Border/Active`.
 
 **2026-05-11 — аудит готовности (component-spec-check), 12 правок.**
 

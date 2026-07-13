@@ -139,6 +139,8 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 | Headline (Title, Avatar) | `Heading/H3 Medium` (20/28) |
 | Subtitle | `Caption/caption-md` (12/16) |
 
+> **Subtitle = `caption-md` (12/16), не `Body 2`.** Подтверждено token-аудитом 2026-07-13: слой `Subtitle` в Figma привязан к `Caption/caption-md`. `Base/Body 2` (14/20), который может всплыть по агрегату токенов фрейма, относится к другому элементу (trailing text-button / helper), не к подзаголовку. Спека и код верны.
+
 ---
 
 ## Сводная таблица токенов

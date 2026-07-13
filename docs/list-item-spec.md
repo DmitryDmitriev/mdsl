@@ -176,6 +176,14 @@ Inline auto-layout frame без отдельного компонента-обё
 
 По **docs/TYPOGRAPHY.md**. Все текстовые стили привязаны к токенам — покрытие **100%**.
 
+| Слой | Стиль | Значение |
+|---|---|---|
+| Overline | `Caption/caption-md Medium` | 12 / 16, w500 |
+| **Заголовок** (`Label text`) | **`Base/Body 1`** | **16 / 24, w400 (regular)** |
+| Supporting text | `Base/Body 2` (secondary) | 14 / 20 |
+
+> **⚠️ Заголовок = `Body 1` (16/24, regular), НЕ `Body Dense Medium`.** Стиль `Base/Body Dense Medium` (16/20, w500), который может всплыть в token-аудите, принадлежит **инициалам аватара** (`Left Side > Avatar > AB`), а не заголовку строки. Не путать: заголовок живёт в слое `List Item / Content > Label text`. Подтверждено 2026-07-13.
+
 ---
 
 ## 5. Аудит покрытия токенами
