@@ -18,9 +18,15 @@ Search v2 — поле поиска с лидирующей иконкой 🔍,
 |---|---|
 | **Type** | Filled, Outline |
 | **Size** | lg (56), md (48), sm (40) |
-| **State** | Default, Focused, Filled, Disabled |
+| **State** | Default, Focused, Editing, Filled, Disabled |
 
-Итого **24 варианта** = 2 × 3 × 4.
+Итого **30 вариантов** = 2 × 3 × 5.
+
+**Focused / Editing — два состояния активного ввода** (добавлено 2026-07-13, идентично Input v2):
+- **Focused** («начало ввода») — поле в фокусе, **пустое**: серый плейсхолдер (`Text&Icon/Secondary`) + **каретка перед плейсхолдером**.
+- **Editing** («продолжение / исправление») — поле в фокусе, **со значением**: значение `Text&Icon/Primary` + **каретка после текста** + иконка очистки × (`Right Icon` on).
+
+Оба несут focus-обводку 2px (см. §Границы). Различие — наличие значения и позиция каретки.
 
 Boolean-свойства (с дефолтными значениями):
 
@@ -74,9 +80,9 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 | Состояние | Токен | Core | Значение |
 |---|---|---|---|
 | Default, Filled, Disabled | `border/default` | — | 1 px |
-| Focused | `border/emphasis` | — | 2 px |
+| **Focused, Editing** | `border/emphasis` | — | **2 px** |
 
-Для Type=Filled обводка отсутствует.
+**Filled — обводка в активных состояниях (изменено 2026-07-13).** Раньше у Type=Filled обводки не было ни в одном состоянии → Filled Focused визуально не отличался от Filled Default. Теперь Filled получает **2px обводку `Border/Active`** в `Focused` и `Editing` — как Outline (то же решение, что в Input v2). В остальных состояниях (Default / Filled / Disabled) Filled остаётся без обводки.
 
 ---
 
@@ -84,14 +90,29 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 
 По **docs/COLOR-PALETTE.md**. Все значения привязаны к семантическим токенам.
 
-| State | Filled BG | Outline Stroke | Input Text | Icon | Supporting |
-|---|---|---|---|---|---|
-| **Default** | `Background/Secondary` | `Border/Default` | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiary` |
-| **Focused** | `Background/Secondary` | `Border/Active` | `Text&Icon/Primary` | `Text&Icon/Primary` | `Text&Icon/Tertiary` |
-| **Filled** | `Background/Secondary` | `Border/Default` | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
+| State | Filled BG | Stroke (Outline + Filled active) | Input Text | Icon | Supporting | Каретка |
+|---|---|---|---|---|---|---|
+| **Default** | `Background/Secondary` | `Border/Default` (1px) | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | — |
+| **Focused** | `Background/Secondary` | `Border/Active` (2px, оба Type) | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary`, **перед плейсхолдером** |
+| **Editing** | `Background/Secondary` | `Border/Active` (2px, оба Type) | `Text&Icon/Primary` (значение) | `Text&Icon/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary`, **после значения** |
+| **Filled** | `Background/Secondary` | `Border/Default` (1px) | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | — |
+| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
 
 **Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`. То же правило, что и в Input v2.
+
+### Каретка (курсор)
+
+Элемент `Caret` — вертикальная полоса позиции ввода, идентична Input v2.
+
+| Параметр | Значение |
+|---|---|
+| Ширина | 2 px |
+| Высота | lg — 20; md/sm — 18 (по line-height поля, не токенизируется) |
+| Радиус | 1 px |
+| Цвет | `Text&Icon/Primary` (= цвет вводимого текста; плейсхолдер остаётся серым) |
+| Позиция | `Focused` — перед плейсхолдером (первый элемент); `Editing` — после значения (последний) |
+
+Каретка живёт внутри горизонтальной строки `Content` (`counterAxisAlignItems=CENTER`, gap 2): `[Caret, Input Text]` для Focused, `[Input Text, Caret]` для Editing. `Input Text` — вертикально HUG + `textAlignVertical=CENTER`; в Editing — `layoutGrow=0` (hug по ширине), чтобы каретка вставала вплотную к значению, а не уезжала к правому краю.
 
 ---
 
@@ -143,7 +164,7 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 <Search
   type="filled"    // "filled" | "outline"
   size="lg"        // "lg" | "md" | "sm"
-  state="default"  // "default" | "focused" | "filled" | "disabled"
+  state="default"  // "default" | "focused" | "editing" | "filled" | "disabled"
   value={query}
   placeholder="Search"
   onChange={setQuery}
@@ -190,6 +211,15 @@ CSS-переменные (из существующих токенов):
 ---
 
 ## История миграций
+
+**2026-07-13 — каретка + состояние Editing + Filled focus-обводка (синхронизация с Input v2).**
+
+По фидбеку дизайна Search приведён к той же state-модели активного ввода, что и Input v2:
+1. **Focused переосмыслен как «начало ввода»**: серый плейсхолдер (`Text&Icon/Secondary`) + **каретка перед плейсхолдером**. Content переведён в HORIZONTAL (был VERTICAL).
+2. **Новое состояние `Editing`** («продолжение / исправление»): фокус-обводка + значение `Text&Icon/Primary` + **каретка после текста** + иконка очистки × (`Right Icon` on). +6 вариантов (2 Type × 3 Size). Итого **24 → 30**.
+3. **Filled focus-обводка**: Type=Filled получил 2px `Border/Active` в Focused/Editing (раньше не отличался от Default).
+
+Каретка — презентационный примитив (2 × line-height, radius 1, fill `Text&Icon/Primary`); высота не токенизируется. В Editing `Input Text` — `layoutGrow=0` (hug), чтобы каретка стояла вплотную к значению. Набор `Search v2` (`6447:268`).
 
 **2026-05-12 — аудит готовности (component-spec-check).**
 
