@@ -2,7 +2,7 @@
 
 **Дата:** 2026-07-21
 **Статус:** на согласование с разработкой (сборка полных матриц — после «ок»)
-**Демо в Figma (Release Candidate):** [страница «🔵 Release Candidate — Field family»](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=11012-10) · примитив [`.=Field`](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=11012-141)
+**Figma:** [`.=Field`](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=11024-404) (страница 🟢 Field) · [`Select`](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=11025-556) (страница 🟢 Select) — полные наборы lg/md/sm
 **Архитектура (полный текст):** [field-family-architecture.md](./field-family-architecture.md)
 
 ---
