@@ -285,7 +285,7 @@ struct TextareaView: View {
 
 - **A1. Радиус — исправлен дрейф:** Figma-контейнер был привязан к `radius/control/control-md` (=8), а спека писала «control-md (12)» (имя и значение не сходились). Канон — **`control-lg` (12)**, как у Input/Field/Search (единый chrome семейства). Перепривязаны все 12 вариантов Figma + поправлен текст спеки (§3, §6).
 - **C1. Editing у Textarea — не нужен** (финально): для multiline каретка и так внутри потока текста; остаётся **6 состояний** (Default/Focused/Filled/Error/Disabled/ReadOnly).
-- **C2. `control-height/textarea-min = 64`** — вводим именованный семантический токен (= `spacing/16`) вместо «голого» 64. Забайндить на Container. Значение 64 подтверждено. *(Токен добавить в Semantic-коллекцию — отдельный шаг.)*
+- **C2. `control-height/textarea-min = 64`** — **создан** в коллекции Semantic (UI-Kit-Mobile), FLOAT, scope WIDTH_HEIGHT, алиас на `spacing/16` (=64), `VariableID:11031:10`. В Figma `minHeight` Container = 64 (значение верное); привязка узла к переменной через Plugin API не закрепляется (как `layoutAlign`) — дев байндит токен в коде. Появится в списке при следующем Publish.
 - **C3. Авто-покраснение счётчика у лимита — НЕ вводим сейчас:** counter краснеет только в `state=Error` (over-limit / required). Порог-логику «за N символов до лимита» добавим, только когда будет правило. Пока — не авто.
 
 **2026-06-01 — введён компонент Textarea.**
