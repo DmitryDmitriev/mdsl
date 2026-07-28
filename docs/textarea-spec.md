@@ -52,7 +52,7 @@ Textarea wrapper (COMPONENT per variant)
 ├── Container (FRAME — сам textarea)
 │   ├── width FILL, height FIXED (default 252, minHeight 64)
 │   ├── padding: spacing/2 (8) vertical · spacing/3 (12) horizontal
-│   ├── radius: radius/control/control-md (12)
+│   ├── radius: radius/control/control-lg (12)
 │   ├── layoutMode: VERTICAL, gap: spacing/2 (8)
 │   ├── fills/strokes: по state (см. §4)
 │   │
@@ -197,12 +197,12 @@ Textarea wrapper (COMPONENT per variant)
 |---|---|---|
 | Width (default) | 328 | — (`screen/padding-horizontal × 2 - 360`) |
 | Height container (default) | 252 | — (off-scale, design constant из Post-ad-flow) |
-| **Height container (min)** | **64** | off-scale (`2 × Body 1 LH + 2 × spacing/2 padding`). Зафиксировано `minHeight=64`. Меньше — не «area», а input |
+| **Height container (min)** | **64** | семантический токен **`control-height/textarea-min` = 64** (= `spacing/16`). Меньше — не «area», а input. Именованный токен вводится специально для textarea (у полей нет min-height) — подтверждено 2026-07-27 |
 | Padding container vertical | 8 | `spacing/2` |
 | Padding container horizontal | 12 | `spacing/3` |
 | Gap (input-text → counter) | 8 | `spacing/2` |
 | Gap (container → helper-text) | 8 | `spacing/2` (от wrapper'а) |
-| Radius container | 12 | `radius/control/control-md` |
+| Radius container | 12 | `radius/control/control-lg` |
 | Border weight (Outline + Error states) | 1 px | — |
 | Scroll indicator size | 4 × N | — (off-scale ширина) |
 | Scroll indicator inset (right, top) | 4, 8 | `spacing/1`, `spacing/2` |
@@ -280,6 +280,13 @@ struct TextareaView: View {
 ---
 
 ## 11. История
+
+**2026-07-27 — ответы дизайнера на вопросы Android (field-family).**
+
+- **A1. Радиус — исправлен дрейф:** Figma-контейнер был привязан к `radius/control/control-md` (=8), а спека писала «control-md (12)» (имя и значение не сходились). Канон — **`control-lg` (12)**, как у Input/Field/Search (единый chrome семейства). Перепривязаны все 12 вариантов Figma + поправлен текст спеки (§3, §6).
+- **C1. Editing у Textarea — не нужен** (финально): для multiline каретка и так внутри потока текста; остаётся **6 состояний** (Default/Focused/Filled/Error/Disabled/ReadOnly).
+- **C2. `control-height/textarea-min = 64`** — вводим именованный семантический токен (= `spacing/16`) вместо «голого» 64. Забайндить на Container. Значение 64 подтверждено. *(Токен добавить в Semantic-коллекцию — отдельный шаг.)*
+- **C3. Авто-покраснение счётчика у лимита — НЕ вводим сейчас:** counter краснеет только в `state=Error` (over-limit / required). Порог-логику «за N символов до лимита» добавим, только когда будет правило. Пока — не авто.
 
 **2026-06-01 — введён компонент Textarea.**
 
