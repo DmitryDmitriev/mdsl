@@ -1,8 +1,8 @@
 # Popover — спецификация компонента
 
-Привязанный плавающий контейнер с произвольным контентом. **База «оверлей-семьи»** Larixon Mobile DS: на ней стоят Tooltip (минимальный popover), Context Menu (popover со списком действий, уже есть) и Coach mark (popover + spotlight, организм — позже).
+Привязанный плавающий контейнер с произвольным контентом. **База «оверлей-семьи»** Larixon Mobile DS. Семья разъединена на самостоятельные компоненты (2026-08-05): **[Tooltip](./tooltip-spec.md)** (минимальная тёмная подсказка), **[Coach Mark](./coach-mark-spec.md)** (синяя онбординг-выноска), **[Context Menu](./context-menu-spec.md)** (список действий) и **Popover** (этот документ — контейнер с произвольным контентом).
 
-**Статус:** Popover — черновик спеки (Figma-база). **Tooltip — собран** (Figma COMPONENT_SET, 4 placement, WIP на стр. `4334:52`). Остальное — §4.
+**Статус:** Popover — черновик спеки (Figma-база `10726:11`, стр. «🟢 Popover» `10785:10`). Механика хвостика и тени — общая с Coach Mark/Tooltip (ось `Tail`, тень на фрейме варианта). Соседи — §4.
 
 **Категория:** Molecule · floating overlay.
 
@@ -20,10 +20,10 @@
 | Max-width | — | 256 dp |
 | Появление | `duration/base` (200) + `easing/standard` | см. motion-spec |
 | Закрытие | `duration/fast` (100) + `easing/accelerate` | — |
-| Dismiss | light dismiss (тап за пределами), **без скрима** | (исключение — Coach mark: со spotlight-backdrop) |
-| Привязка | anchor к таргету, позиция top/bottom/left/right + auto-flip на стороне рантайма | — |
+| Dismiss | light dismiss (тап за пределами), **без скрима** | скрима нет ни у кого в семье (спотлайт/затемнение якоря в Coach Mark **не делаем** — моб-разработка: дорого) |
+| Привязка | anchor к таргету, позиция через ось `Tail` (12 по часовой) + auto-flip на стороне рантайма | единая механика с [Coach Mark](./coach-mark-spec.md)/[Tooltip](./tooltip-spec.md) |
 
-**Caret (стрелка к таргету)** — опционально: треугольник 12 × 6, заливка = фон контейнера (`Surface/Surface Primary`), без отдельной тени. Указывает на anchor; позиция следует за placement.
+**Caret / хвостик** — залитый вектор (16×8 / 8×16), заливка = фон контейнера (`Surface/Surface Primary`), **без отдельной тени** (тень отбрасывает фрейм варианта единым силуэтом — см. [coach-mark-spec](./coach-mark-spec.md#тень--на-фрейме-не-на-пузырехвостике)). Указывает на anchor; позиция — ось `Tail`.
 
 ---
 
@@ -77,26 +77,9 @@ Popover (Surface-карточка, radius 12, Elevation/Floating)
 
 ---
 
-## 3. Tooltip — минимальный popover
+## 3. Tooltip — вынесен в отдельную спеку
 
-Самый лёгкий член семьи: **только текст**, неинтерактивный.
-
-| Параметр | Значение |
-|---|---|
-| Контент | текст 1–2 строки, без действий |
-| Типографика | `Base/Body 2` (14/20) |
-| Padding | `spacing/2` верт. (8) / `spacing/3` гор. (12) |
-| Max-width | 240 dp |
-| **Фон / caret** | **`Background/Inverted Primary`** (тёмный/inverse: Zinc/900 Light → Zinc/50 Dark) |
-| **Текст** | **`Text&Icon/Inverted W-B`** (White/Main Light → Zinc/950 Dark) |
-| Тень / радиус | как в Overlay foundation (§1): `Elevation/Floating`, `radius/surface/md` |
-| Caret | on (по умолчанию), заливка = фон (inverse) |
-| Триггер | long-press (на мобайле hover нет) |
-| Dismiss | авто (через короткую паузу) или по следующему тапу |
-
-> **Цвет — инвертированный (исключение из §1).** В отличие от Popover / Context Menu / Coach mark (светлый `Surface/Surface Primary`), Tooltip — **тёмный/inverse**. Обоснование (решение 2026-06-30): (1) plain text-tooltip конвенционально инвертируют — Material 3 plain tooltip = inverse surface; (2) согласованность с **Larixon Web DS Tooltip** (тоже тёмный); (3) визуально отделяет транзиентную подсказку от светлых интерактивных оверлеев. Это ревизия прежней привязки «Tooltip на Surface вместе с семьёй».
->
-> Реализация в Figma: Tooltip — отдельный COMPONENT_SET (не вариант Popover, т.к. контент жёстко текстовый). Ось `Placement` (Top / Bottom / Left / Right), caret-вектор под каждое направление. Привязки: фон + caret → `Background/Inverted Primary`, текст → `Text&Icon/Inverted W-B`, тень → `Elevation/Floating`, радиус → `radius/surface/md` (рекрас в inverse выполнен 2026-06-30, узел `10737:1042`). **TODO финализации:** 4 варианта сейчас наложены на `0,0` — разложить; перенести с доковой стр. `4334:52` на отдельную components-страницу Molecules; publish; занести в Confluence-реестр.
+Самый лёгкий член семьи (тёмный инверсный пузырь, только текст, неинтерактивный) теперь **самостоятельный компонент** — см. **[tooltip-spec.md](./tooltip-spec.md)**. Здесь не дублируем; ключевое для семьи: Tooltip — единственный **инверсный** (`Background/Inverted Primary`), остальные оверлеи светлые (`Surface/Surface Primary`); механика хвостика/тени — общая (ось `Tail`, тень на фрейме).
 
 ---
 
@@ -104,10 +87,12 @@ Popover (Surface-карточка, radius 12, Elevation/Floating)
 
 | Член | Что это | Статус |
 |---|---|---|
-| **Popover** | общий контейнер (этот документ) | черновик спеки + Figma-база |
-| **Tooltip** | минимальный popover (§3) | **Figma COMPONENT_SET, 4 placement (WIP, стр. 4334:52)** |
-| **Context Menu** | popover со списком действий | ✅ есть ([context-menu-spec](./context-menu-spec.md)) — выровнять под §1 при сборке |
-| **Coach mark** | popover + spotlight-backdrop + шаги (1/N, Далее/Пропустить) + секвенс | организм, **позже** (после sign-off базы разработкой) |
+| **Popover** | общий контейнер (этот документ) | черновик спеки + Figma-база `10726:11` |
+| **Tooltip** | минимальная тёмная подсказка, текст | спека готова ([tooltip-spec](./tooltip-spec.md)); standalone-сборка pending |
+| **Coach Mark** | синяя онбординг-выноска (Title/счётчик/кнопки) | ✅ собран ([coach-mark-spec](./coach-mark-spec.md), набор `11088:702`) |
+| **Context Menu** | список действий | ✅ есть ([context-menu-spec](./context-menu-spec.md)) — выровнять под §1 при сборке |
+
+**Спотлайт/затемнение якоря в семье не реализуем** (моб-разработка: дорого) — привязку к элементу несёт хвостик.
 
 ---
 

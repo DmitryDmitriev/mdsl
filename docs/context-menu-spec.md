@@ -55,7 +55,7 @@ Context Menu — небольшой floating-оверлей со списком 
 
 | Type | Описание | Цвет текста | Цвет иконки |
 |---|---|---|---|
-| Default | Обычное действие | `Text&Icon/Primary` | `Text&Icon/Primary` |
+| Default | Обычное действие | `Text&Icon/Primary` | `Text&Icon/Secondary` (M3 on-surface-variant) |
 | Destructive | Необратимое действие (удалить, заблокировать и т.п.) | `Text&Icon/Negative` | `Accent/Negative` |
 
 ### State
@@ -93,10 +93,13 @@ Context Menu — небольшой floating-оверлей со списком 
 | Параметр | Токен | Значение |
 |---|---|---|
 | Высота | `control-height/md` | 48 dp |
-| Padding горизонтальный | `spacing/4` | 16 dp |
+| Padding горизонтальный | `spacing/3` | 12 dp |
 | Gap иконка↔текст | `spacing/3` | 12 dp |
-| Размер иконки | `size/sm` | 20 dp |
-| Типографика | `Base/Body 1` | 16/24, Regular |
+| Размер иконки (leading/trailing) | — | 24 dp |
+| Типографика | `Base/Body 2 Medium` | 14/20, Medium |
+| Чекмарк (Selected) | `Accent/Primary` | 24 dp, справа |
+
+> **Метрики по Material 3 baseline menu** (2026-08-09), значения на наших токенах: padding 12 (`spacing/3`), иконка 24, label `Body 2 Medium` (= M3 label-large 14/500/20), gap 12. Leading-иконка — `Text&Icon/Secondary` (M3 on-surface-variant), label — `Text&Icon/Primary` (M3 on-surface).
 
 ---
 
@@ -156,7 +159,7 @@ Context Menu — overlay с **абсолютным позиционирован�
 - `Context Menu` — пример с иконками, группировкой, Destructive — [`10423:10`](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=10423-10)
 - `Context Menu (with header)` — пример пикера с заголовком и Selected — [`10453:20`](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=10453-20)
 
-> **Иконки-заглушки:** `icon` и `checkmark` — прямоугольники-placeholder (20×20). Заменяй через INSTANCE_SWAP на нужные иконки из библиотеки.
+> **Иконки — реальные инстансы из библиотеки** (2026-08-09, было: rect-плейсхолдеры). `icon` — `24 / ic_*` (дефолт `ic_pencil_simple`), swappable через nested-instance override; крашен по состоянию (Union fill: Secondary / Accent/Negative / Tertiary). `checkmark` (Selected) — `24 / ic_check`, `Accent/Primary`. Пример-меню: pencil / share / flag_fill / delete.
 
 ---
 
@@ -164,5 +167,6 @@ Context Menu — overlay с **абсолютным позиционирован�
 
 | Дата | Изменение |
 |---|---|
+| 2026-08-09 | **Доведён до компонента по Material 3 baseline menu** (наши токены). Item: padding 16→**12** (`spacing/3`), иконка 20→**24**, label `Body 1`→**`Body 2 Medium`** (был без текст-стиля), leading-иконка `Primary`→**`Secondary`**, label растягивается (grow) под trailing. Чекмарк Selected 20→24, `Accent/Primary`. Контейнер-пример сужен до 240 (в рамках 160–256). Фрейм набора Item был схлопнут — 14 вариантов разложены в сетку, фрейм отресайжен. Popover = этот menu (синонимы). |
 | 2026-06-08 | `State=Selected` + `Context Menu / Header` добавлены. Паттерн пикера (без иконки + заголовок + галочка). Итого: 14 вариантов Item, 2 примера контейнера. |
 | 2026-06-08 | Компонент собран в Figma (12 вариантов Item + Container). Спека написана по факту сборки. Инициатор — продуктовая потребность (контекстное меню в List Item). |
