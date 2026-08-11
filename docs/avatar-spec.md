@@ -10,9 +10,11 @@
 
 | Свойство | Значения | По умолчанию |
 |----------|----------|--------------|
-| **type** | `letter` \| `icon` \| `photo` | `letter` |
+| **type** | `letter` \| `icon` \| `photo` \| `logo` | `letter` |
 | **size** | `s` \| `m` \| `l` \| `xl` \| `2xl` \| `3xl` \| `4xl` | `m` |
 | **pin** | `boolean` | `false` |
+
+**56 вариантов** = 4 type × 7 size × 2 pin (Figma `Avatar v2`, COMPONENT_SET `6062:390`).
 
 ---
 
@@ -23,6 +25,21 @@
 | `letter` | Пользователь без фото | Инициалы (1-2 буквы) |
 | `icon` | Пользователь без фото / контекстный статус | Любая релевантная иконка |
 | `photo` | Пользователь с фото | Изображение |
+| `logo` | Бизнес-продавец / компания | Логотип бренда |
+
+### 2.1 Type=Logo
+
+Аватар для бизнес-продавца/компании — логотип бренда вместо фото/инициалов.
+
+**Отличия от Photo:**
+- **Внутренний padding 2px.** Логотип лежит на внутреннем круге, вписанном с отступом 2px от края аватара (иконка `Logo` = `size − 4`, по центру). Нужно, чтобы логотипы, обрезанные в край (full-bleed), не липли к краю аватара.
+- **scaleMode = FIT** (не FILL). Логотип виден целиком, не режется — нельзя калечить бренд. Широкие логотипы letterbox'ятся по центру.
+- **Фон круга = цвет логотипа (held / applied).** Заливка `background` берётся под конкретный логотип (его фоновое/полевое поле), чтобы плитка читалась бесшовно, а padding был в цвет фона. Значение **held (theme-invariant)** — как applied-слой: цвет бренда не меняется по теме. Это **per-instance override** (raw-цвет под бренд), не токен.
+- **Обводка** — hairline `Background/on Photo` (полупрозрачная), чтобы аватар не сливался с белой/тёмной поверхностью экрана независимо от цвета плитки.
+
+**Per-instance:** и логотип (image swap), и цвет фона задаются под конкретный бренд при использовании — как Photo swap'ает фото. Компонент несёт дефолт-плейсхолдер (DOM).
+
+**Пул логотипов-плейсхолдеров** для мокапов/примеров — `_Claude_/image-pool/logos/` (12 шт., png, с bg-цветом в `manifest.json`). **Internal use only** (чужие торговые марки — только placeholder, не в паблик/маркетинг). Examples-фрейм с 12 брендами — на стр. «🟢 Avatar».
 
 ---
 
@@ -86,6 +103,8 @@
 | Icon (Person preset) | `Text&Icon/Secondary` | Тёмно-серый силуэт на нейтральном фоне |
 | Pin background (внешнее кольцо) | `Background/Primary` | Контур, отделяющий пин от аватара |
 | Pin status (точка) | `Accent/Primary` | Цвет статуса (нейтральный) |
+| Background аватара (Logo) | **held raw** = цвет логотипа | Per-instance, theme-invariant (applied-логика); фон = поле логотипа, бесшовно |
+| Logo — обводка | `Background/on Photo` | Полупрозрачный hairline, читается на любой плитке (светлой/тёмной) |
 
 В коде:
 ```ts
@@ -108,7 +127,9 @@ Avatar (Component)
 ├── [content] — зависит от type:
 │   ├── Letter: Text "AB" (Text&Icon/Secondary)
 │   ├── Icon: ic_person preset (Text&Icon/Secondary), swap на любую `ic_*`
-│   └── Photo: Ellipse с image fill
+│   ├── Photo: Ellipse с image fill (scaleMode FILL, во весь круг)
+│   └── Logo: Ellipse `Logo` (size−4, inset 2px, по центру) с image fill (scaleMode FIT)
+│         └── background у Logo: fill = цвет логотипа (held raw) + stroke `Background/on Photo` 1px INSIDE
 ├── Pin Background (Ellipse) — если pin=true
 │   └── fills: Background/Primary
 │   └── size: привязан к spacing token
@@ -127,7 +148,7 @@ Avatar (Component)
 ```tsx
 interface AvatarProps {
   /** Тип отображения */
-  type?: 'letter' | 'icon' | 'photo';
+  type?: 'letter' | 'icon' | 'photo' | 'logo';
   
   /** Размер */
   size?: 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl';
@@ -135,8 +156,11 @@ interface AvatarProps {
   /** Показать индикатор статуса */
   pin?: boolean;
   
-  /** URL изображения (для type="photo") */
+  /** URL изображения (для type="photo") или логотипа (для type="logo") */
   src?: string;
+  
+  /** Цвет фона плитки для type="logo" — held raw hex под цвет логотипа */
+  logoBgColor?: string;
   
   /** Имя пользователя (для генерации инициалов) */
   name?: string;
@@ -162,6 +186,9 @@ interface AvatarProps {
 
 // С фотографией и статусом онлайн
 <Avatar type="photo" size="m" src="/avatar.jpg" pin />
+
+// Логотип компании (бизнес-продавец) — фон под цвет логотипа
+<Avatar type="logo" size="m" src="/brand-logo.png" logoBgColor="#ff0f13" />
 ```
 
 ---
@@ -180,6 +207,14 @@ interface AvatarProps {
 ---
 
 ## История миграций
+
+**2026-08-09 — добавлен `Type=Logo` (аватар компании/бизнес-продавца).**
+
+- +14 вариантов (7 size × 2 pin) в `Avatar v2` (`6062:390`) → итого **56**. Ось Type: `Letter | Icon | Photo | Logo`.
+- Структура Logo: `background` (fill = цвет логотипа held raw + hairline `Background/on Photo`) + внутренний круг `Logo` (size−4, inset **2px**, image fill **FIT**). Pin-геометрия переиспользована из Photo-вариантов.
+- **2px padding** — чтобы full-bleed логотипы не липли к краю. **FIT** — логотип целиком, не режется. **Фон по цвету логотипа, held** (applied-логика, theme-invariant) — бесшовная брендовая плитка; per-instance override (raw), не токен.
+- Пул из 12 логотипов-плейсхолдеров (Bazaraki) — `_Claude_/image-pool/logos/` (png + `manifest.json` с bg-цветом). Internal use only. Examples-фрейм с 12 брендами — на стр. «🟢 Avatar».
+- Картинки заведены через `upload_assets` (в `use_figma` прямой `createImageAsync` запрещён).
 
 **2026-06-09 — фон Letter/Icon: Accent/Primary → Background/Tertiary (QA-reconciliation LIOS-2509).**
 
