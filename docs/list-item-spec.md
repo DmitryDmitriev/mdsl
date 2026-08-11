@@ -47,8 +47,28 @@ List Item (COMPONENT)
 | Слот | Доступные типы |
 |------|----------------|
 | **Left Side** (10 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Brand**, **Checkbox + Brand** |
-| **Right Side** (8 типов) | Icon, Trailing text, Checkbox, Radio, Switch, Icon button, Accordion, Badge |
+| **Right Side** | control-типы (Icon, Checkbox, Radio, Switch, Icon button, Accordion) + модификаторы `text` / `badge` + тип «Trailing text only» — см. ниже |
 | **Content** (2 типа) | Основной (Title + Subtitle), с Overline |
+
+#### Геометрия слотов и модификаторы (reconciliation LIOS-2525, 2026-08-12)
+
+**Left Side — геометрия:**
+
+| Тип | Размер | Радиус | Особенности |
+|---|---|---|---|
+| **Icon** | **40 × 40** (иконка 24 в боксе, padding 8, центр) | — | 40-бокс, чтобы тайтлы выстраивались в одну колонку со строками Checkbox / Radio / Switch |
+| **Image** | 56 × 56 | 4 | оверлей `Background/on-photo`; bool `selected` → маркер 20 pt `Accent/Primary` + белая галка по центру |
+| **Video** | 114 × 64 | 4 | оверлей `Background/on-photo` + **play-кнопка по центру** (круг ⌀32 `#000` 40 % + белый треугольник) |
+| **Avatar** | 40 | round | фото / инициалы |
+| **Brand / Checkbox+Brand** | 40 (logo 32) | — | см. под-секции ниже |
+
+**Accordion** (Right Side) — это **ButtonIcon Ghost 32** с иконкой `16 / ic_expand_more`; развёрнутое состояние = **поворот глифа на 180°** (отдельного `ic_expand_less` нет).
+
+**Right Side — `text` и `badge` это модификаторы, а не плоские типы.** Булевы `text` / `badge` применимы поверх control-типов (Icon, Checkbox, Radio, Switch, Icon button), плюс отдельный тип **«Trailing text only»**. Порядок элементов в ряду: **текст → бейдж → контрол**, gap **8** (`spacing/2`).
+
+**Цвет trailing text — по роли:**
+- `Text&Icon/Primary` — когда текст единственный элемент слота («Trailing text only» = «значение»);
+- `Text&Icon/Secondary` — когда рядом есть бейдж или контрол (текст становится подписью).
 
 #### Composite Type=Checkbox + Brand
 
@@ -158,6 +178,7 @@ Inline auto-layout frame без отдельного компонента-обё
 | paddingLeft | 16 px | `spacing/4` | |
 | paddingRight | 16 px | `spacing/4` | |
 | Wrap padding (Left/Right, `Type=2+ str`) | 4 px (top) | `spacing/1` | Align-top для многострочного контента — см. §3 |
+| Gap внутри Right Side слота | 8 px | `spacing/2` | между text / badge / control |
 
 ### Content slot
 
@@ -172,6 +193,11 @@ Inline auto-layout frame без отдельного компонента-обё
 
 По **docs/COLOR-PALETTE.md**. Все цвета привязаны к семантическим токенам — покрытие **100%**.
 
+**Уточнения (LIOS-2525):**
+- **Overline** в `State=Default` — `Text&Icon/Secondary` (канон ранее называл цвет только для `Disabled`).
+- **Фон строки** — прозрачный: красит контейнер / состояние, сам List Item фон не держит.
+- **Trailing text** — цвет по роли (Primary / Secondary), см. §3 «Геометрия слотов и модификаторы».
+
 ### Типографика
 
 По **docs/TYPOGRAPHY.md**. Все текстовые стили привязаны к токенам — покрытие **100%**.
@@ -181,6 +207,7 @@ Inline auto-layout frame без отдельного компонента-обё
 | Overline | `Caption/caption-md Medium` | 12 / 16, w500 |
 | **Заголовок** (`Label text`) | **`Base/Body 1`** | **16 / 24, w400 (regular)** |
 | Supporting text | `Base/Body 2` (secondary) | 14 / 20 |
+| Trailing text (Right Side) | `Base/Body 2 Medium` | 14 / 20, w500 |
 
 > **⚠️ Заголовок = `Body 1` (16/24, regular), НЕ `Body Dense Medium`.** Стиль `Base/Body Dense Medium` (16/20, w500), который может всплыть в token-аудите, принадлежит **инициалам аватара** (`Left Side > Avatar > AB`), а не заголовку строки. Не путать: заголовок живёт в слое `List Item / Content > Label text`. Подтверждено 2026-07-13.
 
@@ -257,6 +284,11 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-08-12 — reconciliation с iOS-имплементацией (LIOS-2525).** По итогам dev-сверки внесены правки канона:
+- §3 — **Right Side** переписан как control-типы + модификаторы `text` / `badge` + «Trailing text only»; добавлена **геометрия Left Side** (Icon 24 в **40-боксе**, Image 56 r4 + overlay + `selected`-маркер, Video 114×64 r4 + overlay + **play**); **Accordion** = ButtonIcon Ghost 32 + `ic_expand_more`, раскрытие = поворот 180°.
+- §4 — **gap 8** внутри Right Side слота; **Trailing text = `Base/Body 2 Medium`** (14/500/20 — решение A1: Figma прав, Confluence Q9/Body 1 отменён, Android синкнуть); цвет **Overline в Default = Secondary**; фон строки прозрачный; цвет trailing по роли (Primary один / Secondary с бейджем-контролом).
+- Figma-мастер обновлён: Video play-кнопка (`5912:6675`), Icon 40-бокс (`5912:6667`). Disabled opacity 0.4 — Phase 1 как есть, Phase 2 = токены per-slot для dark-контраста.
 
 **2026-06-01 (вечер 4) — добавлен `State = Default / Disabled` variant axis.**
 
