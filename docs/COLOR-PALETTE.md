@@ -214,6 +214,8 @@ Orange уже имеет полную шкалу в палитре (введён
 | Warning       | Accent/Warning   | Amber/400       |
 | Link          | Accent/Link      | Blue/400        |
 
+**White applied / Black applied** — held (theme-invariant, значение одинаково в Light/Dark). Полный applied-слой (+ `Blue applied`) и правило применения — в §2.12 / §3.9.
+
 **Tertiary vs Disabled:**
 - **Tertiary** — *вспомогательный текст 3-го уровня* (placeholders, captions с минимальным весом). Активный, читаемый.
 - **Disabled** — *выключенный control*. Применяется на disabled-кнопках, инпутах, чипах вместе с `Background/Disabled`.
@@ -289,6 +291,8 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 
 **Что будет потом:** когда применение decor стабилизируется (одни и те же цвета используются для одних и тех же ролей в нескольких независимых задачах) — заведём semantic Decor tokens отдельным апдейтом палитры.
 
+> **Held-механизм для expressive (ратифицировано 2026-08-05).** Theme-invariant поведение цвета кодифицировано отдельно от decor-hue mapping — слой `* applied` (§2.12) + правило adaptive vs held (§3.9). Оси ортогональны: applied отвечает «как цвет ведёт себя по теме», decor — «какой hue под категорию».
+
 ### 2.9 Brand Color
 Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`.
 
@@ -300,6 +304,42 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 - ✅ Логотипы, splash-экраны, фирменные баннеры, иллюстрации.
 - ✅ Брендированные элементы конкретного флейвора (например, `Brand/Bazaraki` в bz-сборке для splash и логотипа).
 - ❌ В системных компонентах (кнопки, ссылки, accent-семантика). Для positive-фидбека — `Accent/Positive` (Green/600), не брендовый зелёный.
+
+### 2.12 Applied — held / theme-invariant цвета
+
+Отдельный слой цвета, значение которого **не меняется между Light и Dark** (held). Живёт **внутри существующих ролей** через суффикс **`applied`** — отдельной группы `Applied/*` намеренно нет: префикс роли (`Background` / `Text&Icon`) продолжает нести «поверхность vs контент», а плоский `Applied/Blue` эту информацию потерял бы.
+
+| Токен | Light | Dark | Назначение |
+|---|---|---|---|
+| `Text&Icon/White applied` | White/Main | White/Main | held-белый: on-color текст/иконка поверх произвольного медиа и цветных held-поверхностей |
+| `Text&Icon/Black applied` | Zinc/950 | Zinc/950 | held-почти-чёрный (симметрично White applied) |
+| `Background/Blue applied` | Blue/600 (`#2563EB`) | Blue/600 | held-синяя **поверхность** (coach mark, expressive-плитка, tier-бейдж) |
+| `Text&Icon/Blue applied` | Blue/700 (`#1D4ED8`) | Blue/700 | held-синий **текст/иконка на белом** (глубже 600 ради контраста) |
+
+**Зачем held, а не адаптивный `Accent/*`.** Функциональный акцент светлеет в dark (`Accent/Link` `#3B82F6` → `#60A5FA`) — это правильно для читаемости UI-акцента. Но для **декоративной поверхности, на которой сидит on-color-текст**, осветление ломает фикс-пару: белый на `#60A5FA` = 2.5:1 (провал AA). Held-цвет держит контраст в обеих темах: белый на `Background/Blue applied` (`#2563EB`) ≈ 4.6:1 (AA); `Text&Icon/Blue applied` (`#1D4ED8`) на белом = 7.8:1 (AAA). Адаптируется не декор, а **среда** — нейтральная поверхность вокруг (приём Spotify / Apple, см. `proposals/expressive-palette-discovery.md` §4/§9).
+
+**Поверхность (600) и текст-на-белом (700) — намеренно разные shade'ы**: поверхностный тон на ступень светлее, текстовый глубже ради контраста на белом. Scopes токенов это фиксируют (`FRAME_FILL`/`SHAPE_FILL` у поверхности, `TEXT_FILL`/`SHAPE_FILL` у текста).
+
+**Расширение — только от контекста, не спекулятивно.** Значения — алиасы на примитивы `Blue/*` (не raw hex). Текущий состав: White / Black / Blue. **Known next-candidate — golden** (VIP/TOP tier: сейчас анти-паттерн `warning #FBBF24` или хардкод-purple, см. discovery §3); заводится на первой конкретной tier-задаче с реальной контраст-целью, тогда же подбирается shade.
+
+**Applied живёт и переменными, и paint-стилями.** Часть DS-компонентов потребляет цвет через paint-стили, а не variables — поэтому applied-токены **зеркалятся paint-стилями, привязанными к variable** (не raw hex). Applied — единственный слой, где стили faithful: paint-стиль не поддерживает режимы Light/Dark, а held-цвет одинаков в обеих темах (adaptive-цвет стилем не выразить корректно).
+
+**Стили следуют конвенции style-слоя, не пути переменной.** Style-слой файла `App Color Palette` исторический: раздельные группы `Text/*` и `Icon/*` (до merge в `Text&Icon`), `Background/*` и т.д. Applied-стили встроены в эту же конвенцию — **не** создаём каноничную группу `Text&Icon/*` в стилях. Один held-цвет содержимого даёт **два стиля** (`Text/Blue applied` + `Icon/Blue applied`), оба **bound к одной canonical-variable** `Text&Icon/Blue applied`. Held-поверхность — `Background/Blue applied` (стиль в легаси-группе `Background/`, bound к одноимённой var).
+
+| Variable (canonical) | Paint-стиль(и) (легаси-конвенция) |
+|---|---|
+| `Background/Blue applied` | `Background/Blue applied` |
+| `Text&Icon/Blue applied` | `Text/Blue applied` + `Icon/Blue applied` |
+| `Text&Icon/White applied` | `Text/White applied` + `Icon/White applied` |
+| `Text&Icon/Black applied` | `Text/Black applied` + `Icon/Black applied` |
+
+Структура var-слоя и style-слоя намеренно разная (стили старше merge Text↔Icon); консистентность держится **внутри** каждого слоя, а связь — через binding стиля на canonical-переменную. Значение held всегда живёт в variable; стиль — тонкая обёртка для style-потребителей.
+
+**Дискрипшн-конвеншн:** на каждом applied var и style — описание `Held — не меняется по теме` (сигнал held продублирован к суффиксу `applied`, чтобы не путать похожие свотчи в пикере).
+
+> **Publish:** applied-слой в `App Color Palette` — 2 variables (`Background/Blue applied`, `Text&Icon/Blue applied`, held, scopes проставлены) + 7 paint-стилей, bound к canonical-vars: `Background/Blue applied`, `Text/Blue applied`, `Icon/Blue applied`, `Text/White applied`, `Icon/White applied`, `Text/Black applied`, `Icon/Black applied` (White/Black — рефактор существующих легаси-стилей с raw hex на binding; Black заодно ушёл со стухшего `#1D2023` на канон Zinc/950). Владелец файла — цветовой трек. Перед привязкой в UI-Kit — **ручной Publish** библиотеки (в него войдут: +2 var, applied-стили, −6 снесённых legacy raw-white стилей `Selection Control/*` + `Input/Input`).
+>
+> *NB: весь остальной style-слой файла (~190 стилей `Text/*`, `Icon/*`, `Bubble/*`, `Decor/*`, `Accent/*` …) — легаси raw hex по старой палитре, не bound к vars. Applied-стили — первые variable-bound. Миграция/чистка легаси-стилей — отдельный трек, вне applied-задачи.*
 
 ---
 
@@ -364,6 +404,19 @@ Decor-примитивы введены, но правило «когда decor,
 - **Brand** — отдельный слой, не смешивается с Decor.
 
 Конкретные mapping'и («VIP = Decor/Purple» и т.п.) — пока эмпирически в продуктовых задачах. Когда устаканится — закрепим в §3.
+
+### 3.9 Adaptive vs Applied (held)
+
+Две роли цвета, которые нужно разводить осознанно:
+
+| Роль | Токены | Поведение | Когда |
+|---|---|---|---|
+| **Adaptive** (функциональная) | `Accent/*`, семантические `Text&Icon/*`, `Border/*` | цвет светлеет в dark ради читаемости акцента | функциональный сигнал состояния: ссылки, кнопки, active / error / focus, статусные иконки |
+| **Applied / held** (декор-идентичность) | `* applied` (§2.12) | цвет **константа по теме**, адаптируется среда | декоративная / expressive-поверхность, несущая on-color-текст: coach mark, tier-бейджи, expressive-плитки |
+
+**Тест выбора:** если на цвете сидит white/black-текст и пара обязана держать контраст в обеих темах — берём **held** (`* applied`). Адаптивный акцент меняет значение между темами и ломает фикс-пару on-color. Типичная ошибка — взять `Accent/Link` для held-поверхности: в dark он `#60A5FA`, белый текст на нём 2.5:1.
+
+**Не путать с Decor (§2.10 / §3.8).** Это ортогональные оси: decor отвечает «*какой hue* под категорию/маркетинг», applied — «*как цвет ведёт себя по теме* (held vs adaptive)». Decor-hue может быть applied (golden tier — held), semantic-hue тоже (blue coach mark — held).
 
 ---
 
