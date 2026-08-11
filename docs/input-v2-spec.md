@@ -4,7 +4,9 @@
 
 Привязка к **docs/DESIGN-TOKENS.md**. Все цвета, размеры и радиусы — только через **существующие** токены системы. Компонентно-специфичные токены не используются.
 
-Figma: страница **🟢 Input v2**, наборы **Input v2**, **Input v2 Stacked**, **Input Leading** (COMPONENT_SET).
+Figma: наборы **Input** (`6316:335`, переименован из «Input v2» 2026-08-11), **Input Stacked** (`6346:304`) и building-block **`.=Input Leading`** (`6354:222`) — на странице **🟢 Field family** (семья полей на кубике `.=Field`), Figma-Section «Input». Preview-фреймы, пример-инстанс и Designer Spec остались на detail-странице **🔧 Input — previews & spec** (бывш. 🟢 Input v2).
+
+> Компонент переименован `Input v2` → **`Input`** (v1 живёт как `⚠️ Input (deprecated)`). Имя файла спеки (`input-v2-spec.md`) пока историческое.
 
 ---
 

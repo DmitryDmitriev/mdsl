@@ -4,7 +4,7 @@
 
 Привязка к [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [COLOR-PALETTE.md](./COLOR-PALETTE.md), [TYPOGRAPHY.md](./TYPOGRAPHY.md).
 
-Figma: страница **🟢 Textarea**, набор **Textarea** (`9727:59`).
+Figma: канонический набор **Textarea** (`9736:94`) перенесён на страницу **🟢 Field family** (семья полей на кубике `.=Field`). Preview-фрейм остался на detail-странице **🟢 Textarea**.
 
 ---
 

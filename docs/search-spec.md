@@ -4,7 +4,7 @@
 
 Привязка к **docs/DESIGN-TOKENS.md**. Все цвета, размеры и радиусы — только через **существующие** токены системы. Компонентно-специфичные токены не используются.
 
-Figma: страница **🟢 Search**, набор **Search v2** (COMPONENT_SET). Старый Search задепрекейчен 2026-04-20 (переименован в **⚠️ DEPRECATED / Search**), архитектура консолидирована под state-модель Input v2.
+Figma: канонический набор **Search** (`6447:268`, переименован из «Search v2» 2026-08-11) — на странице **🟢 Field family** (семья полей на кубике `.=Field`), Figma-Section «Search». Chrome сверен с кубиком ✓ (radius 12 · pad 16 · h 56/48/40 · HORIZONTAL; нит — слоты названы `Leading Icon`/`Right Icon` вместо канона `Leading`/`Trailing`). Старый Search (**⚠️ DEPRECATED / Search** `1328:63`, задепрекейчен 2026-04-20) остался на странице **🟢 Search**.
 
 ---
 

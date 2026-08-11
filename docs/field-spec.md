@@ -6,7 +6,7 @@
 
 Привязка к **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md** — только существующие токены.
 
-Figma: страница **🟢 Field**, набор **`.=Field`** (`11024:404`) — полный lg/md/sm (42 варианта).
+Figma: страница **🟢 Field family** (объединяющая — кубик `.=Field` + компоненты семейства: Select, далее Input/Search/Textarea), набор **`.=Field`** (`11024:404`) — полный lg/md/sm (42 варианта).
 
 ---
 
@@ -99,6 +99,17 @@ Supporting Text (опц., под Field)     — Caption/caption-md, Text&Icon/Te
 
 **Нейминг слотов — `Leading` / `Trailing`** (не Left/Right). Совпадает с целевым неймингом Android (`leading/trailingIcon`) и UIKit-конвенцией iOS (directional). В легаси Android (`AppTextField`, @Deprecated) остались `Left/Right` — уезжают с деприкейтом.
 
+### Аффиксы — `Prefix` / `Suffix` (валюта, единицы)
+
+Внутри `Field` есть две скрытые TEXT-ноды: **`Prefix`** (перед `Content`, leading-сторона) и **`Suffix`** (после `Content`, trailing-сторона). Дефолт `visible=false`; показываются **переопределением видимости на инстансе** (отдельного boolean-property нет — консистентно между Prefix и Suffix). Назначение — знак валюты / единицы измерения:
+
+| Паттерн | Нода | Пример |
+|---|---|---|
+| Символ-префикс | `Prefix` | **$** 1 000 |
+| Символ/код-суффикс | `Suffix` | 1 000 **₽** · 1000 **USD** |
+
+Т.е. `Field` **не текст-онли** — «поле суммы» = Input с показанным `Prefix`/`Suffix`. Сам числовой ввод (numeric keyboard, разделители) — рантайм/продукт. Добавлено 2026-08-11 в кубик (`11024:404`) и Input (`6316:335`), все 42 варианта. (Изначально хотели настоящие SLOT, но `figma.createSlot` в API нет — пошли Prefix/Suffix текстом.)
+
 ---
 
 ## Цвета контента (задаёт компонент, не Field)
@@ -141,6 +152,20 @@ Supporting Text (опц., под Field)     — Caption/caption-md, Text&Icon/Te
 Overlay-меню Select переиспользует Context Menu / Popover / Sheet.
 
 ---
+
+## Chrome parity (mirror-модель)
+
+В Figma публичные компоненты (Input, Search, Select, Textarea) — **отдельные копии** обвязки кубика `.=Field`, не вложенные инстансы (Figma не даёт впрыснуть значение/каретку в инстанс без SLOT, а `figma.createSlot` в API нет). Живой авто-связи нет — синхронизацию держим **дисциплиной parity**:
+
+1. **Источник правды** — кубик `.=Field` (`11024:404`) + эта спека (+ единый `Field` в коде).
+2. **Правишь обвязку** (radius / padding / height / layout / gap / цвет) — правишь в кубике **И** прогоняешь по копиям.
+3. **Перед каждым Publish** — прогнать аудит [`DSL/scripts/field-parity-audit.js`](../scripts/field-parity-audit.js) (через MCP `use_figma`). Ожидаемо `drift: []`.
+
+Textarea намеренно в grow-режиме (VERTICAL, min-height 64, top-align) — сверяется только `radius`.
+
+**Базлайн 2026-08-11:** `drift: []` — Input/Search/Select совпадают с кубиком по radius 12 / height 56·48·40 / padH 16·12·12 / HORIZONTAL·CENTER·gap; Textarea radius 12 ✓.
+
+> **Почему не true-nested** (вложенный инстанс кубика): потребовало бы перестройки `Content` кубика + всех боевых сетов (риск регрессий override'ов), Textarea всё равно не ложится (grow), а выгода маргинальна — в **коде** композиция уже единая (`Field` content-agnostic — там дрейфа нет). Решение 2026-08-11.
 
 ## Дальнейшее
 
