@@ -1,204 +1,135 @@
-# Tooltip / Coach Mark — спецификация для разработки
+# Tooltip — спецификация компонента
 
-**Один компонент — одна спека.** Унифицированный **`Tooltip`** покрывает две функции всплывающего пузыря с хвостиком: **Tooltip** (короткая подсказка) и **Coach Mark** (онбординг-выноска с заголовком, счётчиком шагов и кнопками). Часть **PB-1580** (Tooltip / Coach Mark / Popover / Slider).
+Лёгкая транзиентная подсказка: **тёмный (инверсный) пузырь только с текстом**, без хвостика (M3 plain tooltip). Самый минимальный член семьи оверлеев ([coach-mark-spec](./coach-mark-spec.md), [popover-spec](./popover-spec.md), [context-menu-spec](./context-menu-spec.md)). Часть **PB-1580**.
 
-Привязка к **docs/DESIGN-TOKENS.md** и **docs/COLOR-PALETTE.md**. Все размеры, радиусы и цвета — через существующие токены.
+**Статус:** ✅ собран (2026-08-11) — единый COMPONENT `Tooltip` `11122:21` на стр. «🟢 Tooltip». Плоский пузырь без каретки, тень `Elevation/Floating` на самом пузыре, `maxWidth 240`. Привязки inverse-токенов верифицированы. Осталось — ручной **Publish UI-Kit**.
 
-Figma: страница **🟢 Tooltip (unified)** — набор **`Tooltip`** (COMPONENT_SET `10897:486`) + building-block **`.=Tooltip Bubble`** (COMPONENT_SET `10896:179`).
+> **Убрали хвостик (2026-08-11):** как в Material 3 plain tooltip — подсказка позиционируется рядом с триггером через **отступ (offset)**, без указателя. Раньше был набор из 12 Tail-вариантов (наследие от Coach Mark). Каретки не стало → 12 вариантов схлопнулись в **один компонент**: сторона и позиция подсказки — теперь рантайм-параметры (см. §«Позиционирование»), а не геометрия варианта. Механику хвостика/тени-на-фрейме держит только [Coach Mark](./coach-mark-spec.md).
 
 ---
 
 ## Обзор
 
-Всплывающий пузырь с **хвостиком** (указателем на элемент-якорь). Одна структура обслуживает оба кейса — разница только в трактовке (цвет) и наполнении:
+Tooltip — короткая подсказка (1–2 строки), **неинтерактивная**, всплывает по long-press/фокусу и скрывается сама. В отличие от Coach Mark: тёмный (не синий), без заголовка/счётчика/кнопок, без модальности, **без хвостика**.
 
-- **Tooltip** — короткая текстовая подсказка. Тёмный (инверсный) пузырь, только `Body`. Хвостик указывает на триггер.
-- **Coach Mark** — обучающая выноска в онбординге. Синий пузырь, `Title` + `Body` + счётчик шагов + кнопки «Пропустить / Далее».
-
-Обе функции объединены **осознанно** (решение дизайна 2026-07-08): идентичная геометрия (пузырь + хвостик + hug под контент + выравнивание хвостика), различие сведено к оси `Type` (цвет) и булевым (наполнение).
-
-### Оси набора `Tooltip`
-
-| Свойство | Значения |
-|---|---|
-| **Type** | Tooltip, Coach Mark |
-| **Placement** | Top, Bottom, Left, Right |
-| **Tail align** | Start, Center, End |
-
-Итого **24 варианта** (2 × 4 × 3).
-
-- **Type** — задаёт цвет пузыря и хвостика (Tooltip = инверсный тёмный, Coach Mark = синий) + цвет текста.
-- **Placement** — сторона, с которой торчит хвостик (= противоположна якорю: пузырь снизу → хвостик Top).
-- **Tail align** — позиция хвостика вдоль стороны: `Start` / `Center` / `End`. Для Top/Bottom — лево/центр/право, для Left/Right — верх/центр/низ. Позволяет указать на якорь, не двигая сам пузырь.
-
-### Наполнение — булевы (на вложенном пузыре)
-
-| Свойство | Что переключает |
-|---|---|
-| **Title#** | Заголовок |
-| **Counter#** (`Step#`) | Счётчик шагов «1 / 3» |
-| **Actions#** | Кнопки «Пропустить / Далее» |
-
-- **Tooltip-рецепт:** все булевы `off` → остаётся только `Body`. Пузырь сжимается под текст.
-- **Coach Mark-рецепт:** все булевы `on` → `Title` + `Body` + счётчик + кнопки.
+**Инверсный (тёмный) цвет — осознанное исключение** из правила «floating = Surface» (COLOR-PALETTE §3.2). Обоснование (2026-06-30): (1) plain-text tooltip конвенционально инвертируют (Material 3 plain tooltip = inverse surface); (2) согласованность с Larixon Web DS Tooltip; (3) визуально отделяет транзиентную подсказку от светлых интерактивных оверлеев (Popover/Menu).
 
 ---
 
-## Building-block `.=Tooltip Bubble`
-
-Единый источник контента (COMPONENT_SET `10896:179`, ось `Type`). Пузырь **hug под контент**: короткий текст → узкий пузырь, длинный — растёт до `maxWidth 280` и переносится. Каждый из 24 вариантов набора `Tooltip` содержит **инстанс** нужного варианта пузыря + хвостик в цвет.
+## Анатомия
 
 ```
-Tooltip (COMPONENT_SET, Type × Placement × Tail align) — auto-layout, hug, tail-align через counterAxisAlignItems
-├── ⟶ .=Tooltip Bubble (instance, Type=Tooltip|Coach Mark) — контент, hug под контент
-└── Tail (VECTOR, залитый в цвет Type) — позиционируется counterAxisAlignItems (Start/Center/End)
-
-.=Tooltip Bubble (COMPONENT, Type) — VERTICAL auto-layout, hug, gap spacing/3, padding spacing/4
-├── Title (TEXT, auto-width, maxWidth 280)          — булев Title#
-├── Body  (TEXT, auto-width, maxWidth 280)
-└── Footer (FRAME, HORIZONTAL, STRETCH, space-between)
-    ├── «1 / 3» (TEXT)                               — булев Counter# (Step#)
-    └── Actions (FRAME) [Button «Пропустить» Ghost, Button «Далее» Primary]  — булев Actions#
+Tooltip (COMPONENT) — VERTICAL, pad 8/12, radius 12, fill Background/Inverted Primary,
+                      тень Elevation/Floating на самом пузыре, maxWidth 240
+└── Body (TEXT, auto-width, maxWidth 240) — Text&Icon/Inverted W-B
 ```
 
-- **hug + tail-align:** пузырь всегда самый широкий элемент варианта → задаёт ширину фрейма; выравнивание фрейма по кросс-оси (`counterAxisAlignItems`) двигает только узкий хвостик под контент. Так хвостик встаёт точно под пузырём в позиции Start/Center/End.
-- **Хвостик** — залитый вектор (16×8 для Top/Bottom, 8×16 для Left/Right), цвет = цвет заливки пузыря (обводки нет). Смыкается с пузырём без шва.
+Одна структура, никаких булевых наполнения — контент всегда только `Body`. Хвостика/указателя нет.
 
 ---
 
-## Размеры и радиусы
+## Размеры и токены
 
 | Элемент | Параметр | Значение | Токен |
 |---|---|---|---|
-| Пузырь | padding | 16 | `spacing/4` |
-| Пузырь | gap (заголовок/body/footer) | 12 | `spacing/3` |
+| Пузырь | padding верт. | 8 | `spacing/2` |
+| Пузырь | padding гор. | 12 | `spacing/3` |
 | Пузырь | radius | 12 | `radius/surface/surface` |
-| Пузырь | max-width | 280 | — (ограничение контента, не токен) |
-| Хвостик | размер | 16×8 / 8×16 | — (геометрия указателя) |
-| Тень | drop-shadow | Elevation | (см. elevation-spec) |
+| Пузырь | **max-width** | **240** | — (ограничение контента) |
+| Текст | типографика | 14/20 | `Base/Body 2` |
+| Тень | Elevation | на пузыре | `Elevation/Floating` |
 
-Ширина пузыря — **hug под контент** (рантайм), не токенизируется.
+Ширина — hug под текст, но **не более 240** (`maxWidth`); при переполнении текст переносится. Тень — на самом пузыре (без хвостика шов не образуется, отдельный фрейм-обёртка больше не нужен).
 
 ---
 
 ## Цвета
 
-По **docs/COLOR-PALETTE.md**.
-
-| Type | Заливка пузыря + хвостика | Текст |
+| Элемент | Токен | Light → Dark |
 |---|---|---|
-| **Tooltip** | `Background/Inverted Primary` (инверсный тёмный) | `Text&Icon/Inverted W-B` (белый/чёрный — инверсия по теме) |
-| **Coach Mark** | `Accent/Link` (бренд-синий, Blue/500 Light / Blue/400 Dark) | `Text&Icon/White applied` (белый) |
+| Пузырь | `Background/Inverted Primary` | `#18181b` → `#fafafa` |
+| Текст | `Text&Icon/Inverted W-B` | `#ffffff` → `#09090b` |
 
-- **Tooltip** — инверсный пузырь, как классическая подсказка; инверсия работает в обеих темах (Light: тёмный фон/белый текст, Dark: светлый фон/тёмный текст).
-- **Coach Mark** — насыщенный синий, attention-grabbing для онбординга. Хвостик всегда в цвет заливки.
-- **Кнопки** (только Coach Mark): «Далее» = Button `Type=Primary`, «Пропустить» = Button `Type=Ghost`.
+Инверсия работает в обеих темах: Light = тёмный фон / белый текст, Dark = светлый фон / тёмный текст. Контраст проходит AA в обеих темах (в отличие от синего Coach Mark — там понадобился held-слой).
 
-> **⚠️ a11y — контраст синего в Dark.** Белый текст на `Accent/Link` в Light (Blue/500) даёт контраст ≈ 3.7:1 (проходит для крупного/UI, не для мелкого body по AA); в Dark (Blue/400) — хуже. Компромисс принят дизайном (2026-07-08). Кандидат на более тёмный синий фон в Dark — см. §Бэклог.
+---
+
+## Позиционирование (для кода)
+
+Хвостика нет — подсказка позиционируется рядом с триггером через **offset** (как M3 plain tooltip). Сторона и выравнивание — рантайм-параметры, не варианты компонента.
+
+**Отступ от триггера (offset):** `8 dp` (`spacing/2`) — зазор между краем пузыря и краем кнопки/якоря по основной оси раскрытия. Единая константа для всех сторон.
+
+**Сторона раскрытия:** по умолчанию сверху над триггером; если места сверху недостаточно — снизу. Горизонтальные варианты (слева/справа) — по необходимости под конкретный экран.
+
+**Выравнивание вдоль якоря:** центр пузыря по центру триггера; у края экрана — clamp внутрь safe area (логика на стороне кода).
+
+**Ограничение:** пузырь не выходит за пределы safe area; при нехватке ширины срабатывает `maxWidth 240` + перенос текста.
 
 ---
 
 ## Поведение
 
-- Пузырь позиционируется относительно якоря; `Placement` = сторона хвостика (противоположна пузырю). `Tail align` наводит хвостик на якорь без сдвига пузыря.
-- **Tooltip** — по тапу/лонг-тапу или фокусу; авто-скрытие по тайм-ауту / тапу вне.
-- **Coach Mark** — шаги онбординга; «Далее» листает, «Пропустить» закрывает тур; счётчик отражает прогресс. **Затемнения (scrim) нет** — подсветку якоря ставит продукт (2026-07-08).
-- Пузырь сжимается под контент; длинный текст переносится на `maxWidth 280`.
+- Триггер: long-press или фокус (на мобайле hover нет).
+- Dismiss: авто по короткой паузе, или по следующему тапу / тапу вне. Без скрима.
+- Неинтерактивен — не держит фокус, не ловит нажатия внутри.
+- Появление/скрытие (fade + scale от якоря) — на стороне кода.
 
 ---
 
 ## Доступность (a11y)
 
-- **Роль:** Tooltip — `role="tooltip"` + `aria-describedby` на триггере. Coach Mark — модальная выноска: фокус внутри, `aria-label` на шаге, кнопки — обычные `button`.
-- **Клавиатура:** Tooltip показывается по focus триггера, прячется по Esc/blur. Coach Mark — Tab по кнопкам, Esc = «Пропустить».
-- **Контраст:** Tooltip (инверс) проходит в обеих темах. Coach Mark — см. предупреждение выше по синему.
-- **Хвостик** декоративен (`aria-hidden`).
-
----
-
-## Аудит покрытия токенами
-
-| Категория | Покрытие |
-|---|---|
-| 🎨 Color (fill / text) | **100%** |
-| 🔲 Tokens (radius / spacing) | **100%** |
-| **Overall** | **100%** |
-
-Правила аудита: исключены hug-ширина (рантайм), `maxWidth 280` (ограничение контента) и геометрия хвостика-указателя (16×8). Все стилевые свойства пузыря (радиус, padding, gap, заливка, текст) привязаны к переменным.
+- `role="tooltip"` + `aria-describedby` на триггере.
+- Показ по focus триггера, скрытие по Esc/blur.
+- Контраст инверсного пузыря — AA в обеих темах.
 
 ---
 
 ## Синхронизация с кодом
 
 ```tsx
-<Tooltip
-  type="tooltip"           // "tooltip" | "coachMark"
-  placement="top"          // "top" | "bottom" | "left" | "right"
-  tailAlign="center"       // "start" | "center" | "end"
-  title="Фильтр по цене"   // Coach Mark
-  body="Двигайте ползунки, чтобы задать диапазон цены."
-  step={{ current: 1, total: 3 }}   // счётчик
-  actions={[{label:'Пропустить'}, {label:'Далее', primary:true}]}
-/>
+<Tooltip body="Двигайте, чтобы задать диапазон." placement="top" />
+// placement + offset разрешаются на стороне рантайма; каретки нет
 ```
 
-CSS-переменные (из существующих токенов):
 ```css
---tooltip-radius:  var(--radius-surface-surface); /* 12 */
---tooltip-pad:     var(--spacing-4);              /* 16 */
---tooltip-gap:     var(--spacing-3);              /* 12 */
---tooltip-maxw:    280px;
-/* tooltip:   bg + tail = Background/Inverted Primary; text = Text&Icon/Inverted W-B */
-/* coachMark: bg + tail = Accent/Link;                text = Text&Icon/White applied */
+--tt-bg:      var(--background-inverted-primary);  /* инверс */
+--tt-text:    var(--text-icon-inverted-w-b);       /* инверс */
+--tt-radius:  var(--radius-surface-surface);        /* 12 */
+--tt-pad-y:   var(--spacing-2);                      /* 8 */
+--tt-pad-x:   var(--spacing-3);                      /* 12 */
+--tt-maxw:    240px;                                 /* max-width */
+--tt-offset:  var(--spacing-2);                      /* 8 — зазор от триггера */
 ```
-
----
-
-## Дальнейшее (бэклог)
-
-- **On-color кнопка** — для Coach Mark кнопка «Далее» на цветном фоне по-хорошему требует on-color/inverse варианта Button (белая заливка + тёмный текст). В компоненте Button такого Type нет (Primary/Secondary/Ghost/Outline/Negative/Soft Negative/Ghost Negative) — **зависимость от Button-компонента**, не от Tooltip. Пока — Primary (чёрная, читается на синем).
-- **Dark-тема синего** — белый на `Accent/Link` (Blue/400) в Dark слабоват; кандидат на более тёмный синий фон Coach Mark в Dark.
-- **Дефолты булевых** — общие для обоих Type (сейчас `on`, корректно превьюит Coach Mark; Tooltip отключает). Per-variant defaults в Figma невозможны.
-- **Анимация** — появление/скрытие (fade + scale от якоря), morph при листании Coach Mark — на стороне кода.
 
 ---
 
 ## Депрекация
 
-Заменяет два старых компонента (2026-07-08):
-
-- **`⛔ Tooltip (deprecated)`** (`10737:1042`) — фикс-ширина, текст вылезал за пузырь, хвостик приклеен к центру рамки (не под контент).
-- **`⛔ Coach Mark (deprecated)`** (`10797:10`) + **`⛔ Coach Mark / Caret (deprecated)`** (`10796:18`) — полый хвостик (stroke вместо заливки), не выровнен, без hug.
-
-Переименованы в `⛔ … (deprecated)` (не удалены) на период миграции. Удалить после перевода продуктовых макетов на унифицированный `Tooltip`.
+- **`⛔ Tooltip+CoachMark (unified, deprecated)`** (`10897:486`) — объединённый набор (Type=Tooltip/Coach Mark × Placement × Tail align, 24 варианта). Задепрекейчен 2026-08-09. Удалить — после миграции продуктовых макетов.
+- **12-вариантный Tail-набор Tooltip `11130:13`** — удалён 2026-08-11 при переходе на плоский пузырь без хвостика (промоут building-block `.=Tooltip Bubble` → `Tooltip`).
+- Ранее задепрекейченные: `⛔ Tooltip (deprecated)` (`10737:1042`, фикс-ширина), `⛔ Coach Mark (deprecated)` (`10797:10`), `⛔ Coach Mark / Caret (deprecated)` (`10796:18`).
 
 ---
 
-## Связанные документы
+## Остаётся сделать (Figma)
 
-- [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) — spacing/radius шкалы
-- [COLOR-PALETTE.md](./COLOR-PALETTE.md) — палитра, инверсные и синие роли
-- [elevation-spec.md](./elevation-spec.md) — тень пузыря
-- [button-spec.md](./button-spec.md) — кнопки Coach Mark (+ бэклог on-color)
-- [pb-1580-discovery.md](./pb-1580-discovery.md) — контекст PB-1580
-- [popover-spec.md](./popover-spec.md) / [context-menu-spec.md](./context-menu-spec.md) — соседние оверлеи
+1. ✅ Плоский пузырь без хвостика (`11122:21`), тень на пузыре, `maxWidth 240`.
+2. ✅ Удалён 12-вариантный Tail-набор (`11130:13`).
+3. ⏳ **Publish UI-Kit-Mobile** (руками, Дмитрий); занести в Confluence-реестр DS.
+
+## Связано
+- [coach-mark-spec.md](./coach-mark-spec.md) — механика хвостика/тени (Coach Mark хвостик сохраняет)
+- [popover-spec.md](./popover-spec.md) · [context-menu-spec.md](./context-menu-spec.md)
+- [COLOR-PALETTE.md](./COLOR-PALETTE.md) §3.2 — floating = Surface (и исключение Tooltip)
+- [elevation-spec.md](./elevation-spec.md) · [pb-1580-discovery.md](./pb-1580-discovery.md)
 
 ---
 
 ## История
 
-**2026-07-08 — Tooltip и Coach Mark объединены в один компонент (PB-1580).**
+**2026-08-11 — убран хвостик, переход на M3 plain tooltip.** 12 Tail-вариантов схлопнуты в единый компонент `Tooltip` (`11122:21`): плоский пузырь, тень `Elevation/Floating` на пузыре, `maxWidth 240`. Сторона + offset (8 dp, `spacing/2`) вынесены в код-описание. Tail-набор `11130:13` удалён.
 
-Набор `Tooltip` (`10897:486`): Type (Tooltip/Coach Mark) × Placement (Top/Bottom/Left/Right) × Tail align (Start/Center/End) = 24 варианта. Контент — единый building-block `.=Tooltip Bubble` (`10896:179`, Type-set) с булевыми Title/Counter/Actions.
+**2026-08-05 — Tooltip выделен в отдельный компонент** (из объединённого `Tooltip` `10897:486`).
 
-Ключевые решения дизайна:
-- **Объединение** Tooltip + Coach Mark (общая геометрия пузырь+хвостик).
-- **hug под контент + выравнивание хвостика** (`counterAxisAlignItems`) — чинит главный баг старых версий (текст вылезал, хвостик не под контентом).
-- **Цвет:** Tooltip = `Background/Inverted Primary` (чёрный), Coach Mark = `Accent/Link` (синий); текст белый.
-- **Без scrim** — подсветку якоря ставит продукт.
-- Хвостик залит в цвет заливки, обводка снята.
-- Токен-аудит: радиус → `radius/surface/surface`, padding → `spacing/4`, gap → `spacing/3` (были сырые).
-
-Старые `Tooltip` / `Coach Mark` / `Coach Mark / Caret` помечены `⛔ … (deprecated)`.
-
-Tooltip / Coach Mark → ✅ готов к разработке (структура + цвет; on-color кнопка и dark-синий — в бэклоге).
+**2026-06-30 — рекрас Tooltip в inverse** (`Background/Inverted Primary` + `Text&Icon/Inverted W-B`). Обоснование — Material 3 plain tooltip + Larixon Web DS.
