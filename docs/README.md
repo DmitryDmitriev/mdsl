@@ -79,14 +79,26 @@
 
 | Компонент | Статус | Спека / Примечание |
 |-----------|--------|--------------------|
+| **Field-семейство** (все на кубике `.=Field`, стр. «🟢 Field family») | | |
+| `.=Field` — примитив (chrome) | ✅ | [field-spec](./field-spec.md) |
+| Input + Input Stacked | ✅ | [input-v2-spec](./input-v2-spec.md) |
+| Search | ✅ | [search-spec](./search-spec.md) |
+| Textarea | ✅ | [textarea-spec](./textarea-spec.md) |
+| Select | ✅ | [select-spec](./select-spec.md) |
+| Combobox | ⏳ | — |
+| **Overlays** | | |
+| Context Menu / Popover-menu | ✅ | [context-menu-spec](./context-menu-spec.md) |
+| Tooltip (M3 plain, без хвостика) | ✅ | [tooltip-spec](./tooltip-spec.md) |
+| Coach Mark | ✅ | [coach-mark-spec](./coach-mark-spec.md) |
+| Popover (generic content) | 🟡 | [popover-spec](./popover-spec.md) |
+| **Прочие molecules** | | |
 | Alert | 🔍 | [alert-spec](./alert-spec.md) |
 | Buttons Stack | ✅ | [buttons-stack-spec](./buttons-stack-spec.md) |
 | Check+Text | ✅ | [checkbox-spec](./checkbox-spec.md) |
 | FAB Bar | ✅ | [fab-bar-spec](./fab-bar-spec.md) |
-| Input v2 + Input v2 Stacked | ✅ | [input-v2-spec](./input-v2-spec.md) |
 | List Item | ✅ | [list-item-spec](./list-item-spec.md) |
-| Search v2 | ✅ | [search-spec](./search-spec.md) |
 | Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
+| Slider | ✅ | [slider-spec](./slider-spec.md) |
 | Snackbar | ✅ | [snackbar-spec](./snackbar-spec.md) |
 | Tab Bar | ✅ | [tab-bar-spec](./tab-bar-spec.md) |
 | Tabs | ✅ | [tabs-spec](./tabs-spec.md) |

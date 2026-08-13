@@ -84,7 +84,7 @@ Content (VERTICAL, gap = between)     ← между сущностями (на�
 | Архетип | Пример | Ритм |
 |---|---|---|
 | Одно поле | Mileage, Power | одиночный блок, `padTop 12` |
-| Поиск | Post an ad, Select location | `Search v2`, `padTop 12` |
+| Поиск | Post an ad, Select location | `Search`, `padTop 12` |
 | Текст | Description | подсказка + `Textarea` = 1 группа (12) |
 | Медиа | Add photo | подсказка + грид = 1 группа (12) |
 | Список выбора | Body type, Color | `List item ×N`, `gap 0`, `padTop 0`, дивайдеры |
@@ -95,8 +95,8 @@ Content (VERTICAL, gap = between)     ← между сущностями (на�
 
 | Задача | Компонент | Анти-паттерн |
 |---|---|---|
-| Ввод текста/числа | `Input v2` (диапазон — два Input v2 «От»/«До») | — |
-| Поиск | `Search v2` | — |
+| Ввод текста/числа | `Input` (диапазон — два `Input` «От»/«До») | — |
+| Поиск | `Search` | — |
 | **Выбор значения из 2–4 коротких опций** | **`Chips` single-select** (Active=Yes на выбранном) | ❌ «Segmented control» — это **underline-табы = навигация по вью**, не выбор значения. ❌ dropdown — прячет варианты |
 | Выбор значения, список растёт (>4) / нужны иконки/описания | `List item` + `Radio` (single) / `Checkbox` (multi) | — |
 | Вкл/выкл атрибут | `Switch` в `List item` | — |
