@@ -57,8 +57,10 @@ List Item (COMPONENT)
 | Тип | Размер | Радиус | Особенности |
 |---|---|---|---|
 | **Icon** | **40 × 40** (иконка 24 в боксе, padding 8, центр) | — | 40-бокс, чтобы тайтлы выстраивались в одну колонку со строками Checkbox / Radio / Switch |
-| **Image** | 56 × 56 | 4 | оверлей `Background/on-photo`; bool `selected` → маркер 20 pt `Accent/Primary` + белая галка по центру |
-| **Video** | 114 × 64 | 4 | оверлей `Background/on-photo` + **play-кнопка по центру** (круг ⌀32 `#000` 40 % + белый треугольник) |
+| **Image** | 56 × 56 | 4 | **без full-frame скрима** (plain-фото — чистое); bool `selected` → маркер 20 pt: круг `Accent/Primary` + галка **`Text&Icon/Inverted W-B`** (не White applied — §checkbox-spec 4) |
+| **Video** | 114 × 64 | 4 | **без full-frame скрима**; play-кнопка по центру = круг **`Background/Overlay`** ⌀32 + треугольник **`Text&Icon/White applied`** (self-contained, §11) |
+
+> **Скрим на фото-слотах — по §11 [composition-rules](./composition-rules.md#11).** Full-frame скрим на тумбнейл **не кладём**: он нужен только под белым контентом, а `Background/on-photo` в Dark переворачивается в white 50 % (белый контент пропадает — `on-photo` это photo-tint, не scrim). Контраст обеспечивают **сами оверлей-элементы**: play-кнопка = `Background/Overlay` + `White applied`; selected-маркер = `Accent/Primary` + `Inverted W-B` (как галка Checkbox, т.к. `Accent/Primary` инвертируется по теме). Решение reconciliation LIOS-2525 §F1/F3 (2026-08-13).
 | **Avatar** | 40 | round | фото / инициалы |
 | **Brand / Checkbox+Brand** | 40 (logo 32) | — | см. под-секции ниже |
 
@@ -284,6 +286,13 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-08-13 — reconciliation LIOS-2525, раунд 2 (QA + фото-слоты в Dark).**
+- **F1 (фикс канона):** §3 «оверлей `Background/on-photo`» на Image/Video было **ошибкой** — противоречит [composition-rules §11](./composition-rules.md#11) (on-photo = photo-tint, не scrim; в Dark он white 50 %) и [checkbox-spec §4](./checkbox-spec.md) (галка на `Accent/Primary` = `Inverted W-B`, не White applied). Переписано: **без full-frame скрима**; контраст несут сами оверлей-элементы (play = `Background/Overlay` + `White applied`; selected-маркер = `Accent/Primary` + `Inverted W-B`).
+- **F3 (блокер, решено):** вуаль на **невыбранном/plain** фото **не нужна** — скрим только под белым контентом (§11). Plain Image/Video = чистое фото.
+- **E (QA-дефекты Dark, закрыты dev по канону):** тумбнейл-скрим → `Background/Overlay` (не on-photo); selected-галка → `Inverted W-B`. Оба — существующие правила (§11, checkbox-spec §4), совпали с Android (LAA-3723).
+- **F2 (отдельный тикет):** значения токенов `Overlay`/`on-photo` разъехались Figma↔канон↔iOS↔Android — свести отдельно (не в скоупе List Item).
+- Figma-мастер: play-кнопка перепривязана на токены (`Background/Overlay` + `White applied`), убран on-photo с тумбнейлов, selected-галка → `Inverted W-B`.
 
 **2026-08-12 — reconciliation с iOS-имплементацией (LIOS-2525).** По итогам dev-сверки внесены правки канона:
 - §3 — **Right Side** переписан как control-типы + модификаторы `text` / `badge` + «Trailing text only»; добавлена **геометрия Left Side** (Icon 24 в **40-боксе**, Image 56 r4 + overlay + `selected`-маркер, Video 114×64 r4 + overlay + **play**); **Accordion** = ButtonIcon Ghost 32 + `ic_expand_more`, раскрытие = поворот 180°.
