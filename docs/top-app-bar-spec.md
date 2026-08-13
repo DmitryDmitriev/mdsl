@@ -143,6 +143,29 @@ Leading + 4 root.itemSpacing). Соответствует Material "16dp after n
 
 ---
 
+## Overlay / Transparent (бары поверх медиа)
+
+Для баров **поверх фото / карты** (просмотр фото объявления, карта) — прозрачный бар без фона и тени, с held-белым контентом и overlay-контролами. **Не «просто убрать фон»**: тёмные иконки на произвольном медиа проваливают контраст. Используется тот же overlay-паттерн, что у `ButtonIcon` / `Badge`.
+
+**Рецепт:**
+
+| Элемент | Overlay-значение |
+|---|---|
+| Bar background | нет (`fills: []`) |
+| Shadow | нет (`Elevation` игнорируется) |
+| Headline / Subtitle | `Text&Icon/White applied` (held-белый) |
+| Leading / Trailing контролы | `ButtonIcon Type=Overlay` (скрим `Background/Overlay` + белая иконка) |
+
+Каждый контрол несёт **свой скрим-кружок** → контраст на любом медиа без полноэкранного затемнения. Held-белый (не адаптивный `Accent`) держит контраст в обеих темах.
+
+**Figma:** standalone-компонент **`Top App Bar / Overlay`** (`11239:525`) на стр. «Top App Bar v2» (рядом демо-подложка). Собран клоном варианта `Content=Title, Leading=Yes, Trailing=Yes`. Основной набор `6410:288` остаётся opaque (`Background/Primary`).
+
+**Код:** флаг `transparent` в `TopAppBarConfiguration` — убирает bg/shadow, переключает контент на `White applied`, контролы на `Overlay`. Overlay-сценарий из AC **LIOS-2538**.
+
+> Полная матрица прозрачных вариантов (Search / Avatar / Elevation) намеренно не заводилась: overlay-бар живёт в узком контексте (Title + back + действия). Расширяется от кейса.
+
+---
+
 ## Сводная таблица токенов
 
 | Параметр | Top App Bar v2 |
@@ -290,6 +313,8 @@ Screen (VERTICAL, gap = section/gap)
 ---
 
 ## История миграций
+
+**2026-08-12 — reconciliation Top App Bar (LIOS-2538): добавлен Overlay / Transparent.** По AC задачи нужен transparent-бар для overlay-сценариев (поверх фото/карты) — в наборе `6410:288` его не было. Решение (дизайн): не «голый» transparent, а **согласованный overlay-рецепт** семейства (как `ButtonIcon`/`Badge` `Type=Overlay`): без bg/shadow + контент `Text&Icon/White applied` + контролы `ButtonIcon Type=Overlay`. Собран standalone-компонент **`Top App Bar / Overlay`** (`11239:525`, клон Title-варианта) + демо-подложка; основной набор остаётся opaque. Полную матрицу прозрачных вариантов не заводили (узкий контекст). См. §«Overlay / Transparent». Код-сторона — флаг `transparent` в `TopAppBarConfiguration`.
 
 **2026-05-12 — аудит готовности (component-spec-check), 12 правок Figma.**
 
