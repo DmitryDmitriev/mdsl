@@ -55,7 +55,7 @@ Divider (COMPONENT) ← VERTICAL auto-layout
 
 | Элемент | Токен | Light | Dark |
 |---------|-------|-------|------|
-| **LINE stroke** | `Border/Default` | *(по палитре)* | *(dark mode TBD)* |
+| **LINE stroke** | `Border/Default` | Zinc/200 | Zinc/500 |
 
 ---
 

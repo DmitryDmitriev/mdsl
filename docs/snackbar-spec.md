@@ -47,7 +47,7 @@ Snackbar (COMPONENT) — pill-плашка, fixed width 344, padding варьи�
 ```
 
 - **Container width:** 344 px (FIXED, демонстрационное). В продакшене — `min(screen-width − 32, 344)` с горизонтальными отступами 16 px от краёв.
-- **Background:** `Background/Inverted Primary` (Zinc/950 Light, Zinc/100 Dark) — инвертированная поверхность.
+- **Background:** `Background/Inverted Primary` (Zinc/900 Light, Zinc/50 Dark) — инвертированная поверхность.
 - **Text / Icon:** `Text&Icon/Inverted W-B` (#FFFFFF Light, #09090B Dark).
 - **Shadow:** `Elevation/Floating` (см. §6 «Elevation»).
 - **Radius:** `radius/1` (4 px) — flat плашка, не скруглённая capsule.
@@ -82,7 +82,7 @@ Snackbar (COMPONENT) — pill-плашка, fixed width 344, padding варьи�
 
 | Элемент | Токен | Light | Dark |
 |---|---|---|---|
-| Background плашки | `Background/Inverted Primary` | Zinc/950 | Zinc/100 |
+| Background плашки | `Background/Inverted Primary` | Zinc/900 | Zinc/50 |
 | Supporting text | `Text&Icon/Inverted W-B` | #FFFFFF | #09090B |
 | Action label | `Text&Icon/Inverted W-B` (через Button Inverted) | #FFFFFF | #09090B |
 | Close icon | `Text&Icon/Inverted W-B` | #FFFFFF | #09090B |
@@ -139,7 +139,7 @@ Snackbar использует **`Elevation/Floating`** — единый shadow-�
 - **Auto-dismiss:** при `prefers-reduced-motion: reduce` — anim упрощается до fade; auto-dismiss таймер удлиняется в 1.5×.
 - **Action label:** имя действия описывает результат, не процесс: «Отменить», «Открыть», не «Нажмите чтобы отменить».
 - **Close icon:** `aria-label="Закрыть"`, touch target 48×48 (icon 24×24 + state-layer padding 8dp); соответствует Material touch target.
-- **Контраст:** `Text&Icon/Inverted W-B` (#FFFFFF) на `Background/Inverted Primary` (Zinc/950) = ≥ 18:1 (Light), WCAG AAA.
+- **Контраст:** `Text&Icon/Inverted W-B` (#FFFFFF) на `Background/Inverted Primary` (Zinc/900) = ≥ 17:1 (Light), WCAG AAA.
 
 ---
 
