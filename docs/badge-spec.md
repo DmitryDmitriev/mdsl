@@ -33,7 +33,7 @@
 | Layer | `Fill=Filled` | `Fill=Outline` |
 |---|---|---|
 | Background | `Background/Tinted/{variant}` | прозрачный (`fills = []`) |
-| Border | 1px solid **`Outline/{variant}`** | 1px solid **`Outline/{variant}`**, stroke align **INSIDE** |
+| Border | **нет** (`strokes = []`) | 1px solid **`Outline/{variant}`**, stroke align **INSIDE** |
 | Text | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
 | Icon (Union fill) | `Text&Icon/on Tinted/{variant}` | **`Outline/{variant}`** |
 | Icon (container) | — | прозрачный (`fills = []`) |
@@ -57,7 +57,7 @@
 - В Dark нужен Color/400 для visible distinction между типами (Color/50 от `Text&Icon/on Tinted/*` в dark делал бы все outline-бейджи почти-белыми, нет различимости).
 - Ни один existing token не покрывает обе моды одновременно (Color/700 light + Color/400 dark) — поэтому введён новый `Outline/*` (см. COLOR-PALETTE.md §2.11).
 
-**Иконка — особенность binding'а:** Container иконки-инстанса (`16 / ic_check`, `24 / ic_*` и т.п.) имеет `fills = []` (прозрачный). Цвет иконки задаётся через **inner Union** (BOOLEAN_OPERATION) — её `fills` биндятся к `Outline/{variant}`. Если поставить fill на сам инстанс — весь 16×16/24×24 квадрат закрасится solid'ом, чекмарк исчезнет.
+**Иконка — особенность binding'а:** цвет глифа несёт **fill самого инстанса иконки** (`16 / ic_check`, `24 / ic_*`) — один SOLID-fill с **`visible:false`**, привязанный к `Outline/{variant}` (Outline) / `Text&Icon/on Tinted/{variant}` (Filled). Прозрачный-но-привязанный fill красит глиф. ⚠️ Если поставить **`visible:true`** — весь 16×16/24×24 бокс закрасится solid'ом (баг «квадрат вместо галочки»). Inner Union инстанса на traversal недоступен (`children` пусты) — красить только через fill инстанса.
 
 **Stroke align INSIDE** — визуальные границы Outline-бейджа не растут на 2px относительно Filled. Размеры (§3) идентичны.
 
@@ -80,6 +80,8 @@
 **Два намеренных исключения:**
 - **Warning — светлый янтарь `Amber/400` + ЧЁРНЫЙ текст**, не тёмный янтарь + белый. Белый на янтаре не достигает AA ни на одном шейде без ухода в коричневый (Amber/700+), где теряется «warning»-идентичность. Жёлтый+чёрный — каноничный высококонтрастный warning.
 - **Neutral — единственный adaptive** (не held): held-тёмный (Zinc/800) в Dark не отделяется от тёмного фона `Background/Primary` (Zinc/950). `Accent/Primary` даёт тёмный чип в Light / светлый в Dark — отделяется в обеих темах; пара с `Text&Icon/Inverted W-B` (матч, как у Checkbox-галки). Held-нейтрала не заводим.
+
+> **Сплошной акцентный бейдж (эмфаза) = именно `Fill=Contrast`, не ручной `Accent/Link`.** Кейс «сплошная синяя пилюля + белый текст» (напр. метка «Новое» в промо-макетах) исторически собирался руками: заливка `Accent/Link` + текст `Text&Icon/Inverted W-B`. Это **анти-паттерн** — оба токена **adaptive**: в Dark `Accent/Link` светлеет до `#60A5FA` (белый на нём = 2.5:1, провал AA), а `Inverted W-B` вообще флипает в чёрный. `Contrast=info` даёт тот же вид через **held** `Background/Blue applied` (`#2563EB`) + held `White applied` — контраст держится в обеих темах (5.17 AA). Ручные `Accent/*`-заливки в бейджах переводить на `Fill=Contrast`.
 
 **Иконка** — цвет привязан к тому же on-color токену, что и текст (White applied / Black applied / Inverted W-B), так что глиф и подпись всегда одного цвета. Технически цвет несёт **SOLID-fill самого инстанса иконки** (`ic_check` и т.п.) с `visible:false`: прозрачный-но-привязанный fill красит глиф, не бокс. ⚠️ **`visible` держать `false`** — при `visible:true` заливается весь 24×24 бокс сплошным цветом (баг «квадрат вместо галочки», ловил при сборке 2026-08-31; inner Union инстанса при этом недоступен на traversal — красить надо через fill инстанса). Border у Contrast — нет.
 
@@ -139,6 +141,12 @@
 | md     | 32 px | spacing/2 (8) | spacing/2 (8) | caption-md (12/16) | 16×16 px | Компактный бейдж. |
 | lg     | 40 px | spacing/2 (8) | spacing/3 (12) | Body 2 Medium (14/20) | 24×24 px | Стандартный бейдж. |
 | xl     | 48 px | spacing/3 (12) | spacing/4 (16) | Body 2 Medium (14/20) | 24×24 px | Крупный бейдж. |
+
+> **Padding X — это паддинг бокса бейджа, а не «край → текст».** Значения в таблице (`4/4/4/8/8/12`) — отступ корневого фрейма. Зазоры между `icon ↔ text ↔ counter` — отдельно, `spacing/1` (4 px, §5). Итоговый `AppBadge` = **эти табличные значения** (код 4/8/12 — верен).
+>
+> **Механизм зазоров (нормализовано 2026-08-31):** зазоры `icon ↔ text ↔ counter` = `itemSpacing = spacing/1` (4 px) на корневом фрейме бейджа. Внутренние обёртки `text` / `counter` сохранены (под truncation/центровку каунтера), но их горизонтальный padding = `spacing/0` (0). Отрисованный `край → глиф` = box-паддинг §3 (4/8/12), без «утечки».
+>
+> *(До 2026-08-31: `itemSpacing=0`, а зазор давал константный `padding:4` обёрток — из-за чего 4 px «тёк» на внешние края и `край→текст` = box+4 (xs 8, md 12). Замечено dev-замером; исправлено нормализацией на всех 183 вариантах, код `AppBadge` не менялся.)*
 
 **История.** До 2026-05-11 шкала была 2xs / xs / sm / md / lg (5 размеров) с шагом xs→sm = 20→32 (+12). Это создавало пустоту между «мини» (≤20) и «среднеформатными» (32+) бейджами. Введён новый **sm = 24 px** — закрывает пробел. Старые `sm/md/lg` повышены до `md/lg/xl`. Структурно: иконка и текст совпадают с теперешним md (16×16 + 12/16 caption-md), отличие только в padding (4 вместо 8) и итоговой высоте.
 
@@ -299,6 +307,12 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 - **Публикация:** 3 held-фон-токена (`2367:10/11/12`) опубликованы в `App Color Palette`, импортированы и привязаны ко всем 60 фонам Contrast (held-литералов не осталось). Пере-публикация UI-Kit-Mobile — вручную.
 - WCAG: white-контраст ≥4.5 на info/good/negative; warning черный 12.6 AAA; neutral ≥17 AAA. Покрытие токенами 100%.
 
+**2026-08-31 — сверка Android-разработки (3 расхождения спека↔Figma↔код). Ответ dev — на Desktop.**
+
+- **Q1 Горизонтальный паддинг (Figma-дрейф, код верен) — НОРМАЛИЗОВАНО.** Внутренние фреймы `text`/`counter` несли константный `padding:4` (механизм зазора при `itemSpacing=0`), из-за чего 4 px «тёк» на внешние края: `край→текст` = box+4 (xs 8, md 12). Канон — табличные §3 (4/8/12). **Исправлено в Figma на всех 183 вариантах:** зазоры перенесены на `itemSpacing = spacing/1`, боковой padding обёрток снят (`spacing/0`) → отрисованный край→глиф = box-паддинг §3. **Код `AppBadge` не менялся** (4/8/12 верны). §3 дополнена нотой.
+- **Q2 Бортик Filled — убран (откат записи 2026-06-09).** Сверка: все 60 Filled (+Overlay) в Figma **без единого stroke**. Канон возвращён к **Filled без бортика** (чистая заливка) — так Filled/Outline чётко различаются, и совпадает с живым компонентом. §2-таблица: Border у Filled = «нет». **Dev снимает бортик в коде.**
+- **Q3 «Сплошной синий бейдж» из макета = `Fill=Contrast`.** Ручная перекраска инстанса (`Accent/Link` заливка + `Inverted W-B` текст, оба adaptive → провал в Dark) — анти-паттерн. Закрыт новой формой `Contrast=info` (held Blue/600 + White applied). Правок в коде не требует; макет перевести на `Badge(Type=Info, Fill=Contrast)`. §2 Contrast дополнена явным правилом.
+
 **2026-06-29 — `Type=Overlay` (лейблы поверх медиа, +3 варианта). DS-gap из PB-1581.**
 
 - Контекст: фото-ячейка постинга («Main photo» + edit/close поверх фото). Контролы закрыты `ButtonIcon Type=Overlay`; для текст-лейбла «Main photo» / счётчика / тегов нужен бейдж с контраст-гарантией над произвольным фото.
@@ -307,10 +321,11 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 - Осознанные омиссии: Overlay только Pill + только Filled-эквивалент + xs/sm/md (как Ghost Negative — Square-only).
 - §7.1 добавлена; §«Когда Filled/Outline» обновлена. composition-rules §11 + скилл `ds-build` (Regression #7) синхронизированы. Тождественно `ButtonIcon Type=Overlay`.
 
-**2026-06-09 — Filled-бейджи получают бортик Outline/{variant} (QA-reconciliation LIOS-2510).**
+**2026-06-09 — Filled-бейджи получают бортик Outline/{variant} (QA-reconciliation LIOS-2510). ⛔ ОТКАТАНО 2026-08-31 (см. ниже).**
 
-- §2 «Цвет»: Border у `Fill=Filled` исправлен с «— (нет)» на `1px solid Outline/{variant}`. Figma-инстанс содержит цветной бортик у всех Filled-вариантов; канон расходился.
+- §2 «Цвет»: Border у `Fill=Filled` исправлен с «— (нет)» на `1px solid Outline/{variant}`. Figma-инстанс на тот момент содержал цветной бортик у всех Filled-вариантов; канон расходился.
 - Код уже приведён (ветка `feature/LAA-3524-design-system`, коммит `e5c30e50d`).
+- **Отменено:** бортик Filled к 2026-08-31 в Figma отсутствует у всех 60 Filled (сверка dev). Канон возвращён к **Filled без бортика** — см. запись 2026-08-31 ниже.
 
 **2026-05-25 — добавлен `Fill` axis (Filled / Outline).**
 
