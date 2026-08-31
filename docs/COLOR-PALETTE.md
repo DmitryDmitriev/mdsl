@@ -313,14 +313,19 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 |---|---|---|---|
 | `Text&Icon/White applied` | White/Main | White/Main | held-белый: on-color текст/иконка поверх произвольного медиа и цветных held-поверхностей |
 | `Text&Icon/Black applied` | Zinc/950 | Zinc/950 | held-почти-чёрный (симметрично White applied) |
-| `Background/Blue applied` | Blue/600 (`#2563EB`) | Blue/600 | held-синяя **поверхность** (coach mark, expressive-плитка, tier-бейдж) |
+| `Background/Blue applied` | Blue/600 (`#2563EB`) | Blue/600 | held-синяя **поверхность** (coach mark, expressive-плитка, tier-бейдж, Badge Contrast=info) |
 | `Text&Icon/Blue applied` | Blue/700 (`#1D4ED8`) | Blue/700 | held-синий **текст/иконка на белом** (глубже 600 ради контраста) |
+| `Background/Green applied` | Green/700 (`#15803D`) | Green/700 | held-зелёная **поверхность** под on-color-белый (Badge Contrast=good). Шейд 700 — white ≥AA (5.0) |
+| `Background/Red applied` | Red/600 (`#DC2626`) | Red/600 | held-красная **поверхность** под on-color-белый (Badge Contrast=negative). white 4.8 ≥AA |
+| `Background/Amber applied` | Amber/400 (`#FBBF24`) | Amber/400 | held-янтарная **поверхность** под on-color-**чёрный** (Badge Contrast=warning). Белый на янтаре не даёт AA → пара с `Black applied` (12.6) |
 
 **Зачем held, а не адаптивный `Accent/*`.** Функциональный акцент светлеет в dark (`Accent/Link` `#3B82F6` → `#60A5FA`) — это правильно для читаемости UI-акцента. Но для **декоративной поверхности, на которой сидит on-color-текст**, осветление ломает фикс-пару: белый на `#60A5FA` = 2.5:1 (провал AA). Held-цвет держит контраст в обеих темах: белый на `Background/Blue applied` (`#2563EB`) ≈ 4.6:1 (AA); `Text&Icon/Blue applied` (`#1D4ED8`) на белом = 7.8:1 (AAA). Адаптируется не декор, а **среда** — нейтральная поверхность вокруг (приём Spotify / Apple, см. `proposals/expressive-palette-discovery.md` §4/§9).
 
 **Поверхность (600) и текст-на-белом (700) — намеренно разные shade'ы**: поверхностный тон на ступень светлее, текстовый глубже ради контраста на белом. Scopes токенов это фиксируют (`FRAME_FILL`/`SHAPE_FILL` у поверхности, `TEXT_FILL`/`SHAPE_FILL` у текста).
 
-**Расширение — только от контекста, не спекулятивно.** Значения — алиасы на примитивы `Blue/*` (не raw hex). Текущий состав: White / Black / Blue. **Known next-candidate — golden** (VIP/TOP tier: сейчас анти-паттерн `warning #FBBF24` или хардкод-purple, см. discovery §3); заводится на первой конкретной tier-задаче с реальной контраст-целью, тогда же подбирается shade.
+**Расширение — только от контекста, не спекулятивно.** Значения — алиасы на примитивы (не raw hex). Текущий состав: White / Black / Blue / **Green / Red / Amber** (последние три — 2026-08-31, под Badge `Fill=Contrast`, семантические held-поверхности под on-color текст). Шейды подобраны под WCAG-цель on-color-текста (surface white ≥4.5, кроме Amber → пара с `Black applied`). **Known next-candidate — golden** (VIP/TOP tier: сейчас анти-паттерн `warning #FBBF24` или хардкод; заявка из Avatar/промо-плана LAA-4215); заводится на первой конкретной tier-задаче с реальной контраст-целью, тогда же подбирается shade.
+
+> **Neutral held намеренно НЕ заводим.** Для нейтральной contrast-поверхности held не работает: тёмный held-Zinc в Dark не отделяется от `Background/Primary` (Zinc/950). Нейтральный emphasis решается адаптивной парой `Accent/Primary` + `Text&Icon/Inverted W-B` (тёмный чип в Light / светлый в Dark, отделяется в обеих темах). См. `badge-spec.md §2 Fill=Contrast`.
 
 **Applied живёт и переменными, и paint-стилями.** Часть DS-компонентов потребляет цвет через paint-стили, а не variables — поэтому applied-токены **зеркалятся paint-стилями, привязанными к variable** (не raw hex). Applied — единственный слой, где стили faithful: paint-стиль не поддерживает режимы Light/Dark, а held-цвет одинаков в обеих темах (adaptive-цвет стилем не выразить корректно).
 

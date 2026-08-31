@@ -2,7 +2,7 @@
 
 Бейдж — компактный индикатор статуса или категории. Использует только семантические токены дизайн-системы.
 
-Размеры **2xs / xs / sm / md / lg / xl**, формы **Pill / Rounded**, заливка **Filled / Outline**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm / md** — caption-md (12/16); **lg / xl** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm / md** — 16 px; **lg / xl** — 24 px.
+Размеры **2xs / xs / sm / md / lg / xl**, формы **Pill / Rounded**, заливка **Filled / Outline / Contrast**. Семантика вариантов: **good**, **info**, **warning**, **negative**, **neutral** (см. §1). Типографика: **2xs / xs** — caption-sm (10/12); **sm / md** — caption-md (12/16); **lg / xl** — Body 2 Medium (14/20). Иконки: **2xs / xs** — 12 px; **sm / md** — 16 px; **lg / xl** — 24 px.
 
 Контент: **[Icon?] [Text] [Counter?]** — иконка слева, опциональный каунтер справа.
 
@@ -62,6 +62,28 @@
 **Stroke align INSIDE** — визуальные границы Outline-бейджа не растут на 2px относительно Filled. Размеры (§3) идентичны.
 
 - **Не использовать** `Accent/{variant}` (Green/600 и т.п.) для текста на tinted-фоне — контраст на грани WCAG AA, а семантика `Accent/*` принадлежит активным интерактивным элементам, не статичным бейджам.
+
+### Fill=Contrast — контрастная форма (ратифицировано 2026-08-31)
+
+Третья заливка (в дополнение к Filled/Outline): **сплошной сильный фон + held on-color текст**. Для акцентных/emphasis-лейблов («High reliability», премиум-метки), где tinted-пастель недостаточно заметна. Геометрия (размеры/радиусы/паддинги) — идентична Filled.
+
+**Ключевой принцип — held.** Белый/чёрный текст на цвете держит контраст в обеих темах **только на held-фоне** (theme-invariant). Адаптивный `Accent/*` в Dark светлеет и ломает пару (белый на Blue/400 = 2.5:1). Поэтому хроматические фоны Contrast — новые held-токены `Background/{hue} applied` (см. [COLOR-PALETTE §2.12](./COLOR-PALETTE.md)). Шейды подобраны под WCAG AA (white-контраст ≥4.5, кроме Warning — см. ниже).
+
+| Variant | Background (held) | Значение | Text / Icon | Контраст текста |
+|---|---|---|---|---|
+| **info** | `Background/Blue applied` | Blue/600 `#2563EB` | `Text&Icon/White applied` | 5.17 ✓ AA |
+| **good** | `Background/Green applied` | Green/700 `#15803D` | `Text&Icon/White applied` | 5.02 ✓ AA |
+| **negative** | `Background/Red applied` | Red/600 `#DC2626` | `Text&Icon/White applied` | 4.83 ✓ AA |
+| **warning** | `Background/Amber applied` | Amber/400 `#FBBF24` | **`Text&Icon/Black applied`** | 12.6 ✓ AAA (чёрный) |
+| **neutral** | `Accent/Primary` *(adaptive)* | Zinc/900 L ↔ Zinc/200 D | `Text&Icon/Inverted W-B` *(adaptive)* | ≥17 ✓ AAA |
+
+**Два намеренных исключения:**
+- **Warning — светлый янтарь `Amber/400` + ЧЁРНЫЙ текст**, не тёмный янтарь + белый. Белый на янтаре не достигает AA ни на одном шейде без ухода в коричневый (Amber/700+), где теряется «warning»-идентичность. Жёлтый+чёрный — каноничный высококонтрастный warning.
+- **Neutral — единственный adaptive** (не held): held-тёмный (Zinc/800) в Dark не отделяется от тёмного фона `Background/Primary` (Zinc/950). `Accent/Primary` даёт тёмный чип в Light / светлый в Dark — отделяется в обеих темах; пара с `Text&Icon/Inverted W-B` (матч, как у Checkbox-галки). Held-нейтрала не заводим.
+
+**Иконка** — цвет через inner Union (как в Filled/Outline), биндится к тому же on-color токену, что и текст (White applied / Black applied / Inverted W-B). Border у Contrast — нет.
+
+> **Зависимость публикации:** три новых held-токена (`Background/Green/Red/Amber applied`) заведены в `App Color Palette` (`2367:10/11/12`). Для привязки в Badge (файл UI-Kit) библиотеку нужно **опубликовать** (вручную) → импортировать. До публикации хроматические фоны Contrast держатся held-литералом (theme-safe, т.к. held) с последующим ре-биндом.
 
 ### Отступы (spacing)
 - **2xs**: padding `spacing/1` (4 px) по всем сторонам.
