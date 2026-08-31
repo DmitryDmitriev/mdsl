@@ -95,6 +95,8 @@ Snackbar (COMPONENT) — pill-плашка, fixed width 344, padding варьи�
 | Supporting text — Two lines / longer action | `Base/Body 2` | Inter 14/20 Regular |
 | Action label | `Base/Body 2 Medium` | Inter 14/20 Medium |
 
+> **`# of lines` — НЕ параметр API, а внутреннее состояние компонента (для разработки, 2026-08-31).** Число строк определяется рантаймом (длина текста × ширина экрана), не флагом вызывающей стороны. Переключение `Base/Body 1` → `Base/Body 2` при переходе на две строки — **автоматическое, внутри компонента** по факту переноса (1 строка → Body 1 16/24; ≥2 строки → Body 2 14/20). Вызывающая сторона задаёт только `Configuration` (Text only / Text & action / Text & longer action) и `Show close affordance`; высоту и тип supporting-текста считает сам компонент. В Code Connect маппить `Configuration` + `Show close`; `# of lines` не маппить. *(Если авто-переключение типа по измеренным строкам окажется дорого в Compose — допустима унификация на `Base/Body 2` для всех; это осознанное упрощение, согласовано дизайном.)*
+
 ---
 
 ## 5. State (default / pressed / hover)
