@@ -81,9 +81,9 @@
 - **Warning — светлый янтарь `Amber/400` + ЧЁРНЫЙ текст**, не тёмный янтарь + белый. Белый на янтаре не достигает AA ни на одном шейде без ухода в коричневый (Amber/700+), где теряется «warning»-идентичность. Жёлтый+чёрный — каноничный высококонтрастный warning.
 - **Neutral — единственный adaptive** (не held): held-тёмный (Zinc/800) в Dark не отделяется от тёмного фона `Background/Primary` (Zinc/950). `Accent/Primary` даёт тёмный чип в Light / светлый в Dark — отделяется в обеих темах; пара с `Text&Icon/Inverted W-B` (матч, как у Checkbox-галки). Held-нейтрала не заводим.
 
-**Иконка** — цвет через inner Union (как в Filled/Outline), биндится к тому же on-color токену, что и текст (White applied / Black applied / Inverted W-B). Border у Contrast — нет.
+**Иконка** — цвет привязан к тому же on-color токену, что и текст (White applied / Black applied / Inverted W-B), так что глиф и подпись всегда одного цвета. Технически цвет несёт **SOLID-fill самого инстанса иконки** (`ic_check` и т.п.) с `visible:false`: прозрачный-но-привязанный fill красит глиф, не бокс. ⚠️ **`visible` держать `false`** — при `visible:true` заливается весь 24×24 бокс сплошным цветом (баг «квадрат вместо галочки», ловил при сборке 2026-08-31; inner Union инстанса при этом недоступен на traversal — красить надо через fill инстанса). Border у Contrast — нет.
 
-> **Зависимость публикации:** три новых held-токена (`Background/Green/Red/Amber applied`) заведены в `App Color Palette` (`2367:10/11/12`). Для привязки в Badge (файл UI-Kit) библиотеку нужно **опубликовать** (вручную) → импортировать. До публикации хроматические фоны Contrast держатся held-литералом (theme-safe, т.к. held) с последующим ре-биндом.
+> **Публикация — закрыто (2026-08-31):** три held-токена (`Background/Green/Red/Amber applied`, `2367:10/11/12`) опубликованы в `App Color Palette`, импортированы в UI-Kit и **привязаны ко всем 60 фонам Contrast** (Info→`Blue applied`, Good→`Green applied`, Negative→`Red applied`, Warning→`Amber applied`, Neutral→`Accent/Primary`). Held-литералов не осталось. Пере-публикация UI-Kit-Mobile — вручную.
 
 ### Отступы (spacing)
 - **2xs**: padding `spacing/1` (4 px) по всем сторонам.
@@ -203,13 +203,15 @@
 
 Компонент в Figma: [Badge](https://www.figma.com/design/PI2N65xbeJPTc5oWhOP7Bl/UI-Kit-Mobile?node-id=4523-14)
 
-### Варианты (123 шт.)
+### Варианты (183 шт.)
 - **Type**: Good, Info, Warning, Negative, Neutral, **Overlay** (последний — для лейблов поверх медиа, см. §7.1)
 - **Size**: 2xs, xs, sm, md, lg, xl (Overlay — только xs / sm / md)
 - **Shape**: Pill, Rounded (Overlay — только Pill)
-- **Fill**: Filled, Outline (Overlay — только Filled-эквивалент)
+- **Fill**: Filled, Outline, **Contrast** (Overlay — только Filled-эквивалент; Contrast — 5 type × 6 size × 2 shape = 60 вариантов, см. §2 «Fill=Contrast»)
 
-Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline через stroke на `Text&Icon/on Tinted/*` без заливки. Текст и иконка — всегда `Text&Icon/on Tinted/{Type}` (кроме Overlay — `Text&Icon/White applied`). Покрытие токенами 100% (color/text/spacing/radius/border).
+Раскладка: Filled 63 (вкл. Overlay ×3) + Outline 60 + Contrast 60 = **183**.
+
+Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline через stroke на `Outline/*` без заливки, Contrast на held `Background/{hue} applied` + on-color (White/Black applied, Neutral — Accent/Primary + Inverted W-B). Текст и иконка Filled — всегда `Text&Icon/on Tinted/{Type}` (кроме Overlay — `Text&Icon/White applied`). Покрытие токенами 100% (color/text/spacing/radius/border).
 
 ### 7.1. Type=Overlay — лейблы поверх медиа (+3 варианта)
 
@@ -286,6 +288,16 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 ---
 
 ## История миграций
+
+**2026-08-31 — `Fill=Contrast` — третья заливка (+60 вариантов). Матрица 123 → 183.**
+
+- Запрос: нужна контрастная форма бейджа — сплошной сильный фон + held on-color текст (референс — акцентная метка «High reliability»), где tinted-пастель Filled недостаточно заметна.
+- **Решение по объёму:** полный семантический набор — все 5 type (info/good/warning/negative/neutral) × 6 size × 2 shape = **60 вариантов**. Геометрия идентична Filled.
+- **held, не adaptive** (сознательный выбор): белый/чёрный текст на цвете держит контраст в обеих темах только на theme-invariant фоне. Заведены 3 новых held-токена `Background/Green/Red/Amber applied` + переиспользован `Background/Blue applied`; on-color — `Text&Icon/White applied` (info/good/negative), `Black applied` (warning) — см. §2 «Fill=Contrast».
+- **2 намеренных исключения:** warning = светлый `Amber/400` + **чёрный** текст (белый на янтаре не берёт AA); neutral = единственный **adaptive** (`Accent/Primary` + `Text&Icon/Inverted W-B`) — held-тёмный в Dark не отделялся бы от фона.
+- **Сборка:** клон 60 Filled-вариантов → перепривязка фона (held), текста и **иконки**. Иконка красится через fill инстанса `ic_check` с `visible:false` (см. §2, gotcha «квадрат вместо галочки»). `componentPropertyReferences` (Icon/Label/Counter toggles) восстановлены после клона.
+- **Публикация:** 3 held-фон-токена (`2367:10/11/12`) опубликованы в `App Color Palette`, импортированы и привязаны ко всем 60 фонам Contrast (held-литералов не осталось). Пере-публикация UI-Kit-Mobile — вручную.
+- WCAG: white-контраст ≥4.5 на info/good/negative; warning черный 12.6 AAA; neutral ≥17 AAA. Покрытие токенами 100%.
 
 **2026-06-29 — `Type=Overlay` (лейблы поверх медиа, +3 варианта). DS-gap из PB-1581.**
 

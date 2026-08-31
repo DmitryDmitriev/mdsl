@@ -314,7 +314,7 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 | `Text&Icon/White applied` | White/Main | White/Main | held-белый: on-color текст/иконка поверх произвольного медиа и цветных held-поверхностей |
 | `Text&Icon/Black applied` | Zinc/950 | Zinc/950 | held-почти-чёрный (симметрично White applied) |
 | `Background/Blue applied` | Blue/600 (`#2563EB`) | Blue/600 | held-синяя **поверхность** (coach mark, expressive-плитка, tier-бейдж, Badge Contrast=info) |
-| `Text&Icon/Blue applied` | Blue/700 (`#1D4ED8`) | Blue/700 | held-синий **текст/иконка на белом** (глубже 600 ради контраста) |
+| `Text&Icon/Blue applied` ⏳ | Blue/700 (`#1D4ED8`) | Blue/700 | held-синий **текст/иконка на белом** (глубже 600 ради контраста). ⏳ *как переменная пока не заведён — нет живого потребителя (см. §-Publish ниже)* |
 | `Background/Green applied` | Green/700 (`#15803D`) | Green/700 | held-зелёная **поверхность** под on-color-белый (Badge Contrast=good). Шейд 700 — white ≥AA (5.0) |
 | `Background/Red applied` | Red/600 (`#DC2626`) | Red/600 | held-красная **поверхность** под on-color-белый (Badge Contrast=negative). white 4.8 ≥AA |
 | `Background/Amber applied` | Amber/400 (`#FBBF24`) | Amber/400 | held-янтарная **поверхность** под on-color-**чёрный** (Badge Contrast=warning). Белый на янтаре не даёт AA → пара с `Black applied` (12.6) |
@@ -329,20 +329,25 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 
 **Applied живёт и переменными, и paint-стилями.** Часть DS-компонентов потребляет цвет через paint-стили, а не variables — поэтому applied-токены **зеркалятся paint-стилями, привязанными к variable** (не raw hex). Applied — единственный слой, где стили faithful: paint-стиль не поддерживает режимы Light/Dark, а held-цвет одинаков в обеих темах (adaptive-цвет стилем не выразить корректно).
 
-**Стили следуют конвенции style-слоя, не пути переменной.** Style-слой файла `App Color Palette` исторический: раздельные группы `Text/*` и `Icon/*` (до merge в `Text&Icon`), `Background/*` и т.д. Applied-стили встроены в эту же конвенцию — **не** создаём каноничную группу `Text&Icon/*` в стилях. Один held-цвет содержимого даёт **два стиля** (`Text/Blue applied` + `Icon/Blue applied`), оба **bound к одной canonical-variable** `Text&Icon/Blue applied`. Held-поверхность — `Background/Blue applied` (стиль в легаси-группе `Background/`, bound к одноимённой var).
+**Зеркалятся стилями только held-поверхности.** Style-слой файла `App Color Palette` исторический (раздельные группы `Text/*`, `Icon/*`, `Background/*`). Paint-стилями продублированы **только held-фоны** `Background/{hue} applied` (их потребляют компоненты, читающие цвет через paint-стиль, а не variable). On-color-**содержимое** (`Text&Icon/White applied`, `Text&Icon/Black applied`) живёт **только переменной** — текущие потребители (Badge Contrast, Overlay) биндят его напрямую как variable, отдельные `Text/… applied` / `Icon/… applied` стили не заводились. Если появится style-потребитель on-color-контента — стиль(и) заводятся тогда, по легаси-конвенции (`Text/*` + `Icon/*`, bound к canonical-var).
 
-| Variable (canonical) | Paint-стиль(и) (легаси-конвенция) |
+**Фактическое состояние (сверка 2026-08-31):**
+
+| Variable (canonical) | Paint-стиль |
 |---|---|
-| `Background/Blue applied` | `Background/Blue applied` |
-| `Text&Icon/Blue applied` | `Text/Blue applied` + `Icon/Blue applied` |
-| `Text&Icon/White applied` | `Text/White applied` + `Icon/White applied` |
-| `Text&Icon/Black applied` | `Text/Black applied` + `Icon/Black applied` |
+| `Background/Blue applied` (`2336:12`) | `Background/Blue applied` (bound) |
+| `Background/Green applied` (`2367:10`) | `Background/Green applied` (bound) |
+| `Background/Red applied` (`2367:11`) | `Background/Red applied` (bound) |
+| `Background/Amber applied` (`2367:12`) | `Background/Amber applied` (bound) |
+| `Text&Icon/White applied` (`1026:7566`) | — (variable-only) |
+| `Text&Icon/Black applied` (`1026:7567`) | — (variable-only) |
+| `Border/White applied` (`2357:10`) | — (variable-only) |
 
-Структура var-слоя и style-слоя намеренно разная (стили старше merge Text↔Icon); консистентность держится **внутри** каждого слоя, а связь — через binding стиля на canonical-переменную. Значение held всегда живёт в variable; стиль — тонкая обёртка для style-потребителей.
+> `Text&Icon/Blue applied` (held-синий текст на белом, §2.12-таблица) как переменная **пока не заведён** — нет живого потребителя; заводится на первой задаче, где held-синий текст сядет на светлый фон. Значение held всегда живёт в variable; стиль — тонкая обёртка для style-потребителей.
 
 **Дискрипшн-конвеншн:** на каждом applied var и style — описание `Held — не меняется по теме` (сигнал held продублирован к суффиксу `applied`, чтобы не путать похожие свотчи в пикере).
 
-> **Publish:** applied-слой в `App Color Palette` — 2 variables (`Background/Blue applied`, `Text&Icon/Blue applied`, held, scopes проставлены) + 7 paint-стилей, bound к canonical-vars: `Background/Blue applied`, `Text/Blue applied`, `Icon/Blue applied`, `Text/White applied`, `Icon/White applied`, `Text/Black applied`, `Icon/Black applied` (White/Black — рефактор существующих легаси-стилей с raw hex на binding; Black заодно ушёл со стухшего `#1D2023` на канон Zinc/950). Владелец файла — цветовой трек. Перед привязкой в UI-Kit — **ручной Publish** библиотеки (в него войдут: +2 var, applied-стили, −6 снесённых legacy raw-white стилей `Selection Control/*` + `Input/Input`).
+> **Publish (состояние на 2026-08-31, сверено с файлом):** applied-слой в `App Color Palette` — canonical-variables: `Text&Icon/White applied`, `Text&Icon/Black applied`, `Border/White applied`, `Background/Blue applied`, **`Background/Green applied`**, **`Background/Red applied`**, **`Background/Amber applied`** (три последних — 2026-08-31, под Badge `Fill=Contrast`; все held, scopes проставлены) + **4 paint-стиля** `Background/{Blue,Green,Red,Amber} applied`, каждый bound к своей variable (не raw hex). On-color-содержимое (`White/Black applied`) — variable-only. Владелец файла — цветовой трек. Библиотека **опубликована** (2026-08-31); held-фоны Green/Red/Amber импортированы в UI-Kit и привязаны ко всем 60 фонам Badge `Fill=Contrast` (held-литералов не осталось).
 >
 > *NB: весь остальной style-слой файла (~190 стилей `Text/*`, `Icon/*`, `Bubble/*`, `Decor/*`, `Accent/*` …) — легаси raw hex по старой палитре, не bound к vars. Applied-стили — первые variable-bound. Миграция/чистка легаси-стилей — отдельный трек, вне applied-задачи.*
 
