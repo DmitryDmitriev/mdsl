@@ -42,7 +42,7 @@ Tabs (COMPONENT_SET, варианты Size × Items)
     ├── radius = radius/2 (8)
     ├── fill = Background/Primary (только при Active=On)
     ├── effect = Elevation/Floating (только при Active=On)
-    ├── icon (FRAME 20×20, boolean Icon, hidden by default)
+    ├── icon (FRAME 24×24 — размеры по §3, boolean Icon, hidden by default)
     ├── Label (TEXT, Base/Body 2 Medium)
     └── Badge (instance, boolean Badge, hidden by default)
 ```
