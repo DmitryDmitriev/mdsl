@@ -95,9 +95,11 @@ Orange уже имеет полную шкалу в палитре (введён
 | Inverted Primary | Zinc/900       | Zinc/50        |
 | Overlay          | alpha Black/40 | alpha Black/30 |
 | on Photo         | alpha Black/40 | alpha White/50 |
-| **Disabled**     | Zinc/100       | Zinc/800       |
+| **Disabled**     | Zinc/100       | **Zinc/900**   |
 
 **Disabled** — единственный фон для всех disabled-controls (кнопки, чипы, плашки и т.п.). См. §3.4.
+
+> **Disabled Dark = Zinc/900 (не Zinc/800) — 2026-09-04, LIOS-2864.** Раньше Dark = Zinc/800 совпадал с `Surface/Primary` — выключенная кнопка на шторке/диалоге сливалась с панелью. Сдвиг на `Zinc/900` (на ступень **темнее** Surface/Primary) даёт «recessed» read — как в Light, где `Zinc/100` на шаг темнее белого сюрфейса. Совпадает с `Background/Secondary` Dark (Zinc/900) — но это состояние-контрола vs фон-области, пространственно почти не пересекаются. Часть общего фикса вторичной кнопки (см. §2.5 Accent).
 
 **Overlay vs on Photo — не путать.**
 - **`Overlay`** (alpha Black/40 Light / Black/30 Dark) — затемняющий скрим. Full-screen диммер за Dialog/Sheet **и** подложка контролов поверх медиа (`ButtonIcon Type=Overlay`). В паре с `Text&Icon/White applied` (theme-invariant белый) гарантирует контраст иконки над произвольным фото.
@@ -120,7 +122,15 @@ Orange уже имеет полную шкалу в палитре (введён
 
 **Не применять** в структурных компонентах (Alert, Notification, Card, Dialog) для текста — там фон может быть tinted, но текст всегда `Text&Icon/Primary`/`Secondary`. См. §3.3.
 
-**Neutral / Disabled / Secondary** — три семантические роли (`Background/Tinted/Neutral`, `Background/Disabled`, `Background/Secondary`) сознательно разделяют значение `Zinc/100` (Light) / `Zinc/800` (Dark). Все три претендуют на «самый светлый нейтральный тинт» — на shade-шкале для них нет другой адекватной ступени. В реальных компонентах они не пересекаются: Neutral — в бейджах и Tech-алёртах, Disabled — в выключенных контролах, Secondary — в общих фонах. Если возникнет сценарий с визуальным конфликтом — пересматриваем точечно.
+**Neutral / Disabled / Secondary** — три нейтральные роли (`Background/Tinted/Neutral`, `Background/Disabled`, `Background/Secondary`) в **Light** делят «самый светлый нейтральный тинт» `Zinc/100` (на shade-шкале для них нет другой адекватной ступени). В **Dark** они разведены по элевации (после фикса LIOS-2864, 2026-09-04):
+
+| Роль | Light | Dark | Логика Dark |
+|---|---|---|---|
+| `Background/Tinted/Neutral` | Zinc/100 | **Zinc/800** | нейтральный тинт бейджа = уровню `Surface/Primary` (хроматической нагрузки нет) |
+| `Background/Disabled` | Zinc/100 | **Zinc/900** | recessed — на ступень темнее Surface/Primary |
+| `Background/Secondary` | Zinc/100 | **Zinc/900** | базовый фон-область на ступень темнее Surface |
+
+Раньше заметка утверждала, что все три = Zinc/800 в Dark — это было неточно (`Background/Secondary` всегда был Zinc/900) и создавало коллизию `Disabled`↔`Surface/Primary`. Теперь `Disabled` воссоединён с `Background/Secondary` на Zinc/900, а на Zinc/800 остаются только `Surface/Primary` и нейтральный тинт бейджа. В реальных компонентах роли не пересекаются пространственно. Если возникнет новый визуальный конфликт — пересматриваем точечно.
 
 ### 2.3 Surface
 Поверхности **над базовым уровнем**: модалки, шторки, выезжающие панели.
@@ -155,11 +165,13 @@ Orange уже имеет полную шкалу в палитре (введён
 | Роль      | Light     | Dark       |
 |-----------|-----------|------------|
 | Primary   | Zinc/900  | Zinc/200   |
-| Secondary | Zinc/200  | Zinc/800   |
+| Secondary | Zinc/200  | **Zinc/700** |
 | Link      | Blue/500  | Blue/400   |
 | Negative  | Red/600   | Red/400    |
 | Positive  | Green/600 | Green/400  |
 | Warning   | Amber/400 | Amber/400  |
+
+> **Secondary Dark = Zinc/700 (не Zinc/800) — фикс коллизии, 2026-09-04, LIOS-2864.** Это фон вторичной кнопки (`Button/Secondary` — алиас на `Accent/Secondary`). Раньше Dark = Zinc/800 совпадал с `Surface/Primary` (шторки/диалоги) и `Background/Disabled` → вторичная кнопка была невидима на панели и неотличима от выключенной. Сдвиг на `Zinc/700` (на ступень **светлее** Surface/Primary) даёт «raised interactive» — кнопка отделяется и от панели, и от disabled. Складывается когерентная тройка в Dark: **recessed `Background/Disabled` Zinc/900 < surface `Surface/Primary` Zinc/800 < raised `Accent/Secondary` Zinc/700**. `Zinc/700` в Dark совпадает только с `Border/Disabled` (роль-бордер vs заливка — пространственно не пересекаются). **Light не меняется** (Zinc/200 на белом сюрфейсе — как было; переменная mode-раздельная, правился только Dark-алиас).
 
 **Primary не брендовый.** В системе намеренно используется нейтральный Zinc/900 (почти-чёрный) вместо брендового цвета — для упрощения поддержки и кросс-бренд переиспользования.
 
