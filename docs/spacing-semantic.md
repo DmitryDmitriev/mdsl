@@ -51,7 +51,10 @@
 |---|---|---|---|
 | `stack/gap-tight` | 4 | `spacing/1` | Title ↔ Subtitle, сверхплотная вертикальная связка |
 | `stack/gap-default` | 8 | `spacing/2` | Обычный вертикальный стек элементов |
-| `stack/gap-loose` | 12 | `spacing/3` | Свободный вертикальный стек |
+| `stack/gap-loose` | 12 | `spacing/3` | Свободный вертикальный стек (within-group) |
+| `stack/gap-2xloose` | 24 | `spacing/6` | **Between-group** — между разными сущностями Content (ритм 12/24, см. `screen-assembly-spec §8`) |
+
+> ⚠️ **Параллельная лестница `space/stack/*` (коллекция Semantic).** Помимо usage-слоя `stack/gap-*` выше, в файле есть Semantic-лестница `space/stack/stack-sm=16 / stack-md=24 / stack-lg=32 / stack-xl=48 / stack-2xl=64`. Две лестницы пересекаются (24 = и `stack/gap-2xloose`, и `space/stack/stack-md`) — это часть токен-фрагментации, нормализация ждёт решения. Проверять наличие токена — перечислением коллекций (`getLocalVariableCollectionsAsync`), не по `boundVariables` выборки нод.
 
 ### `row/*` — горизонтальный ряд элементов
 
@@ -99,7 +102,7 @@
 | 12 | `row/gap-loose`, `stack/gap-loose`, `cta/padding-bottom-default` |
 | 16 | `screen/padding-horizontal`, `section/padding-default`, `cta/padding-top-default`, `cta/padding-bottom-keyboard` |
 | 20 | ⚠️ нет точного — округлить до 16 или 24 (по контексту) |
-| 24 | `section/padding-comfortable`, `cta/padding-top-spacious` |
+| 24 | `section/padding-comfortable`, `cta/padding-top-spacious`, `stack/gap-2xloose` (between-group) |
 | 28 | ⚠️ нет точного — обычно 24 |
 | 32 | `section/padding-spacious`, `cta/padding-bottom-spacious` |
 | 40+ | ⚠️ запрещено в нашей шкале — обычно 32 |
