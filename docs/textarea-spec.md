@@ -58,8 +58,8 @@ Textarea wrapper (COMPONENT per variant)
 │   │
 │   ├── input-text (TEXT)
 │   │   ├── textStyleId: Base/Body 1 (16/24, w400)
-│   │   ├── textAutoResize: HEIGHT
-│   │   ├── layoutSizingHorizontal: FILL
+│   │   ├── textAutoResize: NONE (высота — через layoutGrow, не автоподбор)
+│   │   ├── layoutSizingHorizontal: FILL  ← критично во ВСЕХ состояниях (см. build-ноту ниже)
 │   │   ├── layoutGrow: 1 (занимает оставшуюся высоту container'а)
 │   │   └── fill: per-state textColor
 │   │
@@ -90,6 +90,8 @@ Textarea wrapper (COMPONENT per variant)
 **Wrapper vs Container.** Variant root — это wrapper (HUG vertical, без BG/radius), а сам textarea сидит внутри как Container. Это нужно потому что Helper text живёт **ниже** textarea container'а — wrapper держит обоих в VERTICAL layout. Designer ресайзит **Container** вертикально (не wrapper), wrapper подстраивается HUG'ом.
 
 **Дефолт width:** 328 px (вписывается в screen-card с `screen/padding-horizontal=16` от краёв 360-экрана). В инстансе можно `FILL` родителя.
+
+> ⚠️ **Build-готча — `input-text` ширина 0 при пустом контенте (баг Focused, пойман 2026-09-20).** У `input-text` во всех вариантах `layoutSizingHorizontal = FILL`, но при **пустом** тексте ширина может «залипнуть» на 0 (тогда текст переносится по одному символу в столбик и уезжает за низ). API при этом всё равно показывает `FILL`, а `HUG↔FILL` toggle — no-op. **Чинится только так:** сначала `resize(<ширина Container минус паддинги>, height)`, **затем** `layoutSizingHorizontal='FILL'` — принудительный пересчёт. После пересборки любого варианта проверять ширину `input-text` во **всех** State (особенно при пустом плейсхолдере).
 
 **Дефолт height container:** 252 px (по референсу Post-ad-flow).
 
@@ -280,6 +282,13 @@ struct TextareaView: View {
 ---
 
 ## 11. История
+
+**2026-09-20 — фикс: `input-text` ширина 0 в State=Focused (баг из CD-6262).**
+
+- Симптом: в `Type=Outline/Filled, State=Focused` у `input-text` ширина = 0 (текст переносился по символу в столбик, уезжал за низ). Остальные состояния — 304 (ок). Задевало все шторки жалоб CD-6262 (поле комментария), было обойдено принудительным `State=Default` с пометкой `⚠️ DS-bug:`.
+- Причина: у пустого `input-text` в Focused ширина «залипла» на 0, хотя `layoutSizingHorizontal` числился `FILL`. Пере-ассерт FILL и toggle HUG↔FILL — no-op (см. build-готчу в §3).
+- Фикс: на обоих Focused-вариантах `resize(304, height)` → затем `layoutSizingHorizontal='FILL'`. Проверено на всех 12 (Type × State) — ширина `input-text` везде наследуется от Container; на инстансе 400 px `input-text` = 376 во всех состояниях (FILL реально тянется). Заодно `textAutoResize` в §3 приведён к факту (`NONE`, высота через `layoutGrow`).
+- Требуется **re-publish UI-Kit-Mobile**; после подтягивания библиотеки в CD-6262 можно снять обход `State=Default` и пометки `⚠️ DS-bug:`.
 
 **2026-07-27 — ответы дизайнера на вопросы Android (field-family).**
 
