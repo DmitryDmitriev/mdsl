@@ -43,6 +43,7 @@
 | Snackbar / Tooltip / Popover — появление | `base` (200) | `standard` |
 | Snackbar / Tooltip / Popover — закрытие | `fast` (100) | `accelerate` |
 | Switch / Checkbox / Radio / state-layer | `fast` (100) | `standard` |
+| Slider — ручка (Dragging): увеличение + halo | `fast` (100) | `standard` |
 | Полноэкранные (Stories, переход экранов) | `slower` (400) | `standard` |
 | Progress fill / Skeleton shimmer | непрерывно | `linear` |
 

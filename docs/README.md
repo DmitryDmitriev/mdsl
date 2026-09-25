@@ -65,6 +65,7 @@
 | Chips | ✅ | [chips-spec](./chips-spec.md) |
 | Divider | ✅ | [divider-spec](./divider-spec.md) |
 | Home Indicator | ✅ | [home-indicator-spec](./home-indicator-spec.md) |
+| Image (атом) | ⏳ | внесён в канон 2026-09-25 (LIOS-2687); спека — port из iOS-зеркала |
 | Progress | ✅ | [progress-spec](./progress-spec.md) |
 | Radio | ✅ | [radio-spec](./radio-spec.md) |
 | Skeleton — атомы (Block/Circle/Line) | ✅ | [skeleton-spec](./skeleton-spec.md) |
@@ -97,8 +98,9 @@
 | Check+Text | ✅ | [checkbox-spec](./checkbox-spec.md) |
 | FAB Bar | ✅ | [fab-bar-spec](./fab-bar-spec.md) |
 | List Item | ✅ | [list-item-spec](./list-item-spec.md) |
+| Section Header | ⏳ | внесён в канон 2026-09-25 (LIOS-2688); спека — port из iOS-зеркала |
 | Segment Control (Android M3) | ✅ | [segment-control-spec](./segment-control-spec.md) |
-| Slider | ✅ | [slider-spec](./slider-spec.md) |
+| Slider | ✅ | [slider-spec](./slider-spec.md) — Phase 2: State=Dragging/Disabled + value-tooltip (2026-09-25) |
 | Snackbar | ✅ | [snackbar-spec](./snackbar-spec.md) |
 | Tab Bar | ✅ | [tab-bar-spec](./tab-bar-spec.md) |
 | Tabs | ✅ | [tabs-spec](./tabs-spec.md) |
@@ -114,6 +116,7 @@
 |-----------|--------|--------------------|
 | Dialog (slots: Title/Description/Buttons Stack/Image) | ✅ | [dialog-spec](./dialog-spec.md) |
 | Empty State (Inline / Full-screen) | ✅ | [empty-state-spec](./empty-state-spec.md) |
+| ImageCard (App image card) | ⏳ | внесён в канон 2026-09-25 (LIOS-2687, ex-Q8); спека — port из iOS-зеркала |
 | Sheet / Sheets | ✅ | [sheets-spec](./sheets-spec.md) |
 | Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
