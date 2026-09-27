@@ -64,6 +64,8 @@ Slider (COMPONENT) — фикс. высота 24 (тач-зона), fill transpa
 
 **Halo (Dragging).** На время перетаскивания вокруг активной ручки — полупрозрачное кольцо-state-layer ⌀44: `Accent/Primary` с opacity **≈16 % Light / ≈20 % Dark**. Отдельный токен не заводим (opacity поверх `Accent/Primary`); ⌀44 совпадает с минимальной интерактивной тач-зоной ручки (§Доступность). Halo — единственный тема-независимый признак драга: в Dark тени не рисуются (см. §Поведение → Dragging).
 
+> **Figma vs код (2026-09-27).** В Figma `fill-opacity` слоя Halo — единое значение **16 %** (обычная opacity не разделяется по темам без отдельной FLOAT-переменной прозрачности, а плодить токен ради 4 % не оправдано). Разницу **16 % Light / 20 % Dark** держит код (iOS/Android) — это допустимо, признак драга и там, и там читается. Если по UX решим, что 20 % нужны и в макете — заведём mode-переменную прозрачности отдельным решением.
+
 ---
 
 ## Цвета
@@ -184,6 +186,8 @@ _Реализовано в Phase 2 (2026-09-25, LIOS-2792): State=Disabled, Stat
 ---
 
 ## История
+
+**2026-09-27 — фикс дрифта Halo в Figma (LIOS-2792, ответ iOS).** iOS сообщил: слой Halo в `Dragging` (`11660:14` Single, `11660:20` Range) был залит `Accent/Primary` (#18181B) c `fill-opacity 100 %` — на рендере кольцо сливалось с ручкой. Выставлен `fill-opacity 16 %` на обоих (Light+Dark). Тема-разница 16/20 % оставлена коду (см. §Размеры → Halo, врезка «Figma vs код»). iOS собран по канону, drift был только в Figma.
 
 **2026-09-25 — Phase 2 (LIOS-2792): State=Disabled/Dragging + Value tooltip.** Сверка с iOS (MR !1418). Добавлена ось **State = Default / Dragging / Disabled** (× Type). Решения: Disabled — по образцу Switch (Track `Background/Secondary`, Active+Thumb `Text&Icon/Tertiary`, ободок сохранён), смена токенов, не opacity. Dragging — ручка 20→24 (`size/sm`), **halo** ⌀44 (`Accent/Primary` ~16/20 %), тень `Elevation/Floating` (только Light; в Dark признак драга несут halo+увеличение+tooltip). Value tooltip — `Tooltip` `11122:21`: только при drag, значение активной ручки, одна строка с обрезкой, offset 8 от ручки-24; дубль с подписями «от–до» решает продукт. Анимация — motion §3 (state-layer `fast`/`standard`; tooltip `base`/`fast`). Ticks остаются в бэклоге.
 
