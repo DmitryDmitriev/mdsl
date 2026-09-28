@@ -152,6 +152,44 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 
 ---
 
+## 7a. Floating Tab Bar (плавающий вариант)
+
+**Отдельный компонент `Tab Bar / Floating`** (COMPONENT_SET `11700:454`, стр. «🟢 Tab Bar»), заведён **2026-09-28** по запросу продукта. Остров-навигация: скруглённый бар, оторванный от нижнего края, поверх контента.
+
+**Почему отдельный компонент, а не ось `Style` на `Tab Bar` (`4318:873`):** anchored-бар маппится на нативные контролы (UITabBar / NavigationBar) и делится по `Type=Android/iOs`. Floating — **кастомный кросс-платформенный** паттерн (не нативный), платформенного деления не имеет; ось Style внутри нативного набора дала бы избыточные `Android×Floating` / `iOs×Floating` дубли. Поэтому — сосед в семействе Tab Bar.
+
+**Варианты:** ось **Active** = `Search / Favorites / Post / Messages / Services` (какой из 5 табов активен). Состав **фиксированный** — 5 табов (Поиск / Избранное / Объявления / Сообщения / Сервисы).
+
+**Структура:**
+```
+Tab Bar / Floating (COMPONENT_SET, ось Active)
+└── контейнер — HORIZONTAL, pill (radius/pill), fill Surface/Surface Primary, Elevation/Floating, боковой padding
+    └── 5 × .=Building Blocks (реюз item-билдблока: иконка над лейблом, ось Badge для dot на «Избранное»)
+```
+
+**Токены:**
+
+| Элемент | Значение | Токен |
+|---|---|---|
+| Контейнер fill | Surface Primary (адаптив по теме) | `Surface/Surface Primary` |
+| Контейнер radius | pill | `radius/pill/pill` |
+| Контейнер elevation | Floating (в Dark теней нет — elevation-spec) | `Elevation/Floating` |
+| Активный таб — pill | сплошной, адаптив (Light ≈ Zinc/200, Dark светлее Surface), radius pill | `Background/Tertiary` |
+| Иконка / лейбл | как в anchored (по теме) | `Text&Icon/*` |
+| Бейдж «Избранное» | dot | `Badge` (Small) |
+
+**Активный индикатор — pill (осознанное отличие от anchored).** Anchored §5 отверг pill в пользу accent-цвета. Для floating pill возвращён: на тёмной / медиа-поверхности цветовой accent читается хуже, чем плашка-подложка. Плашка — **сплошной `Background/Tertiary`**, НЕ opacity-приём (paint-level opacity на bound-краске нестабильна через пайплайн компонент→инстанс — рендерилась в 100%).
+
+**Тема — адаптивная** (референс-макет был Dark). Компонент не пиннит variable-режим — наследует контекст экрана.
+
+**Прозрачность / блюр.** Референс-макет полупрозрачный поверх фото; в Figma поверхность сплошная (`Surface Primary`). Реальную полупрозрачность / блюр-материал даёт код.
+
+**Открытые задачи (Floating):**
+- **Иконка «Сервисы»** — временный плейсхолдер `24 / menu`: иконки-сетки (apps / grid) в доступной icon-библиотеке нет. Нужна заявка в icon-трек; свап тривиален через билдблок.
+- **Publish UI-Kit** — вручную.
+
+---
+
 ## 8. Аудит покрытия токенами
 
 | Категория | Покрытие |
@@ -186,6 +224,8 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 ---
 
 ## 11. История миграций
+
+**2026-09-28 — Floating Tab Bar (новый компонент).** По запросу продукта собран плавающий вариант таб-бара — `Tab Bar / Floating` (COMPONENT_SET `11700:454`), ось `Active` (5 табов). Реюз `.=Building Blocks`. Отдельный компонент (не ось на нативном `4318:873`), т.к. floating кросс-платформенный. Активный индикатор — pill `Background/Tertiary` (сплошной, адаптивный; opacity-приём на bound-краске оказался нестабилен). Контейнер — pill + `Surface/Surface Primary` + `Elevation/Floating`. Адаптив по теме. Иконка «Сервисы» — плейсхолдер (нет grid-иконки в ките). Детали — §7a. Publish — вручную.
 
 **2026-05-12 — аудит готовности (component-spec-check), 31 правка в Figma + новая спека.**
 
