@@ -47,7 +47,7 @@ List Item (COMPONENT)
 | Слот | Доступные типы |
 |------|----------------|
 | **Left Side** (10 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Brand**, **Checkbox + Brand** |
-| **Right Side** | control-типы (Icon, Checkbox, Radio, Switch, Icon button, Accordion) + модификаторы `text` / `badge` + тип «Trailing text only» — см. ниже |
+| **Right Side** | control-типы (Icon, Checkbox, Radio, Switch, Icon button, Accordion) + модификаторы `text` / `badge` + типы «Trailing text only» и «Trailing value» — см. ниже |
 | **Content** (2 типа) | Основной (Title + Subtitle), с Overline |
 
 #### Геометрия слотов и модификаторы (reconciliation LIOS-2525, 2026-08-12)
@@ -71,6 +71,8 @@ List Item (COMPONENT)
 **Цвет trailing text — по роли:**
 - `Text&Icon/Primary` — когда текст единственный элемент слота («Trailing text only» = «значение»);
 - `Text&Icon/Secondary` — когда рядом есть бейдж или контрол (текст становится подписью).
+
+**`Trailing value` — эмфаза значения (`5912:6691` вариант `Type=Trailing value`, добавлен 2026-09-28).** То же «значение» в правом слоте, но типографикой **`Base/Body 1 Medium` (16/24)** вместо `Body 2 Medium` (14/20). Когда применять: значение справа — **основа решения** в строке, а не второстепенная метадата. Канонический кейс — **priced-выбор**: список опций с ценой (периоды продвижения, тарифы, пакеты, доставка), где цена сопоставляется по строкам и должна читаться на равных с заголовком (`Body 1`), а не мелким trailing. Цвет — `Text&Icon/Primary` (это «значение»). Не путать с «суммой карточки» (напр. `Amount` пакетов 18 Bold) — то отдельный контекст карточки, в строку списка не тянем; для строки максимум `Trailing value` (16).
 
 #### Composite Type=Checkbox + Brand
 
@@ -210,6 +212,7 @@ Inline auto-layout frame без отдельного компонента-обё
 | **Заголовок** (`Label text`) | **`Base/Body 1`** | **16 / 24, w400 (regular)** |
 | Supporting text | `Base/Body 2` (secondary) | 14 / 20 |
 | Trailing text (Right Side) | `Base/Body 2 Medium` | 14 / 20, w500 |
+| **Trailing value** (Right Side, эмфаза) | **`Base/Body 1 Medium`** | **16 / 24, w500** |
 
 > **⚠️ Заголовок = `Body 1` (16/24, regular), НЕ `Body Dense Medium`.** Стиль `Base/Body Dense Medium` (16/20, w500), который может всплыть в token-аудите, принадлежит **инициалам аватара** (`Left Side > Avatar > AB`), а не заголовку строки. Не путать: заголовок живёт в слое `List Item / Content > Label text`. Подтверждено 2026-07-13.
 
@@ -286,6 +289,8 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-09-28 — добавлен `Right Side / Type=Trailing value` (эмфаза значения).** Контекст: шторка «Поднять в ТОП» (Sellers-Cabinets) — priced-выбор периодов, где цена справа = основа решения, а `Trailing text only` (14 Medium) её недооценивает. Вместо нового компонента/паттерна расширили List Item: 9-й вариант набора `List Item / Right Side` (`5912:6691`) `Type=Trailing value` (`11693:260`) — то же значение, но `Base/Body 1 Medium` (16/24) вместо `Body 2 Medium` (14/20). Кейс — списки опций с ценой (периоды, тарифы, пакеты, доставка). «Сумму карточки» (18 Bold) в строку не тянем. Публикация UI-Kit — вручную. Density (компактный размер строки) — отдельно, по итогам скана частотности плотных списков.
 
 **2026-08-13 — reconciliation LIOS-2525, раунд 2 (QA + фото-слоты в Dark).**
 - **F1 (фикс канона):** §3 «оверлей `Background/on-photo`» на Image/Video было **ошибкой** — противоречит [composition-rules §11](./composition-rules.md#11) (on-photo = photo-tint, не scrim; в Dark он white 50 %) и [checkbox-spec §4](./checkbox-spec.md) (галка на `Accent/Primary` = `Inverted W-B`, не White applied). Переписано: **без full-frame скрима**; контраст несут сами оверлей-элементы (play = `Background/Overlay` + `White applied`; selected-маркер = `Accent/Primary` + `Inverted W-B`).
