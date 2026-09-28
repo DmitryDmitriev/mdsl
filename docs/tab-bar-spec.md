@@ -158,7 +158,7 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 
 **Почему отдельный компонент, а не ось `Style` на `Tab Bar` (`4318:873`):** anchored-бар маппится на нативные контролы (UITabBar / NavigationBar) и делится по `Type=Android/iOs`. Floating — **кастомный кросс-платформенный** паттерн (не нативный), платформенного деления не имеет; ось Style внутри нативного набора дала бы избыточные `Android×Floating` / `iOs×Floating` дубли. Поэтому — сосед в семействе Tab Bar.
 
-**Варианты:** ось **Active** = `Search / Favorites / Post / Messages / Services` (какой из 5 табов активен). Состав **фиксированный** — 5 табов (Поиск / Избранное / Объявления / Сообщения / Сервисы).
+**Варианты:** ось **Active** = `Home / Favorite / New ad / Messages / My ads` (какой из 5 табов активен). Состав **фиксированный** — 5 табов, **совпадает с anchored `Tab Bar` (`4318:873`)**: категории и иконки те же, что в старом баре, — `ic_search` (Home), `ic_favorite_fill` (Favorite), `ic_add_circle_fill` (New ad), `ic_chats` (Messages), `ic_person_fill` (My ads). Иконки **заливные** (как в anchored), не outline.
 
 **Структура:**
 ```
@@ -185,7 +185,6 @@ Tab Bar / Floating (COMPONENT_SET, ось Active)
 **Прозрачность / блюр.** Референс-макет полупрозрачный поверх фото; в Figma поверхность сплошная (`Surface Primary`). Реальную полупрозрачность / блюр-материал даёт код.
 
 **Открытые задачи (Floating):**
-- **Иконка «Сервисы»** — временный плейсхолдер `24 / menu`: иконки-сетки (apps / grid) в доступной icon-библиотеке нет. Нужна заявка в icon-трек; свап тривиален через билдблок.
 - **Publish UI-Kit** — вручную.
 
 ---
@@ -225,7 +224,7 @@ Tab Bar / Floating (COMPONENT_SET, ось Active)
 
 ## 11. История миграций
 
-**2026-09-28 — Floating Tab Bar (новый компонент).** По запросу продукта собран плавающий вариант таб-бара — `Tab Bar / Floating` (COMPONENT_SET `11700:454`), ось `Active` (5 табов). Реюз `.=Building Blocks`. Отдельный компонент (не ось на нативном `4318:873`), т.к. floating кросс-платформенный. Активный индикатор — pill `Background/Tertiary` (сплошной, адаптивный; opacity-приём на bound-краске оказался нестабилен). Контейнер — pill + `Surface/Surface Primary` + `Elevation/Floating`. Адаптив по теме. Иконка «Сервисы» — плейсхолдер (нет grid-иконки в ките). Детали — §7a. Publish — вручную.
+**2026-09-28 — Floating Tab Bar (новый компонент).** По запросу продукта собран плавающий вариант таб-бара — `Tab Bar / Floating` (COMPONENT_SET `11700:454`), ось `Active` (5 табов). Реюз `.=Building Blocks`. Отдельный компонент (не ось на нативном `4318:873`), т.к. floating кросс-платформенный. **Табы и иконки приведены к anchored Tab Bar** (по замечанию продукта): Home / Favorite / New ad / Messages / My ads с заливными `ic_search / ic_favorite_fill / ic_add_circle_fill / ic_chats / ic_person_fill`. Активный индикатор — pill `Background/Tertiary` (сплошной, адаптивный; opacity-приём на bound-краске оказался нестабилен). Контейнер — pill + `Surface/Surface Primary` + `Elevation/Floating`. Адаптив по теме. Детали — §7a. Publish — вручную.
 
 **2026-05-12 — аудит готовности (component-spec-check), 31 правка в Figma + новая спека.**
 
