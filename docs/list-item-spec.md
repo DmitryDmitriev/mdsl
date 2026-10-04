@@ -246,44 +246,83 @@ Inline auto-layout frame без отдельного компонента-обё
 
 ## 6. Синхронизация с кодом
 
+### 6.1 `Type` в коде = вертикальное выравнивание слотов
+
+Figma-ось `Type` маппится в коде **не** на количество текстовых строк, а на **выравнивание Left/Right слотов по вертикали** (см. §2 «Как выбрать `Type`», §3 «Wrap-фреймы»):
+
+| Figma `Type` | Web (`type`) | Выравнивание Left/Right | Когда |
+|---|---|---|---|
+| `1 str` | `"single-line"` (дефолт) | **по центру** контента (`align-items: center`) | Title; Title + Subtitle; Overline + Title + Subtitle — **каждый текст в одну строку** |
+| `2+ str` | `"multi-line"` | **по верху**, слоты смещены на `spacing/1` = **4 px** (`align-items: flex-start` + `padding-top: 4px` у слотов) | Текст **переносится** (≥ 3 строк суммарно: длинное описание, превью сообщения, отзыв) |
+
+> ⚠️ **«Title + Subtitle» — это НЕ `multi-line`.** Строка «аватар · Имя / 28 августа · Разблокировать» = `single-line`: аватар и trailing-кнопка стоят по центру. Если выбирать `type` по числу текстовых пропсов (`subtitle != null → multi-line`) — аватар и trailing уезжают вверх. Так делать нельзя.
+>
+> Если высота текста заранее неизвестна (пользовательский контент), допустимо вычислять режим по факту: `multi-line`, когда Title/Subtitle реально перенеслись (`lineCount > 1`), иначе `single-line`.
+
+Минимальная высота строки (§2): `Regular` 56 / `Compact` 48 для обоих `type`; высота растёт по контенту (строка Avatar L + Title + Subtitle = 60).
+
+### 6.2 Примеры
+
 **Web (React):**
 ```tsx
+// Title + Subtitle, каждый в одну строку → single-line (слоты по центру)
 <ListItem
   type="single-line"
-  leftSlot={<Avatar size="m" />}
-  rightSlot={<Icon name="chevron-right" />}
+  leftSlot={<Avatar size="l" letter="П" />}
+  rightSlot={<ListItemTrailingText>Разблокировать</ListItemTrailingText>}
 >
-  <ListItemContent title="Title" />
+  <ListItemContent title="Патимат" subtitle="28 августа" />
 </ListItem>
 
+// Переносящийся текст (≥ 3 строк) → multi-line (слоты по верху, +4 px)
 <ListItem
   type="multi-line"
   leftSlot={<Checkbox />}
   rightSlot={<Badge size="xs" variant="info">3</Badge>}
 >
-  <ListItemContent title="Title" subtitle="Subtitle" overline="Overline" />
+  <ListItemContent
+    overline="Overline"
+    title="Title"
+    subtitle="Длинное описание, которое переносится на две и более строки…"
+  />
 </ListItem>
+```
+
+```css
+.list-item               { display: flex; align-items: center; }      /* single-line */
+.list-item--multi-line   { align-items: flex-start; }
+.list-item--multi-line .list-item__left,
+.list-item--multi-line .list-item__right { padding-top: 4px; }        /* spacing/1 */
 ```
 
 **iOS (SwiftUI):**
 ```swift
+// single-line: HStack(alignment: .center)
 ListItemView(type: .singleLine) {
-    AvatarView(size: .m)
+    AvatarView(size: .l, letter: "П")
 } content: {
-    ListItemContent(title: "Title")
+    ListItemContent(title: "Патимат", subtitle: "28 августа")
 } trailing: {
-    Image(systemName: "chevron.right")
+    ListItemTrailingText("Разблокировать")
 }
+
+// multi-line: HStack(alignment: .top), leading/trailing .padding(.top, 4)
+ListItemView(type: .multiLine) { … }
 ```
 
 **Android (Compose):**
 ```kotlin
+// Material 3 ListItem сам выбирает выравнивание по числу строк:
+// 1–2 строки (headline + supporting в одну строку) → leading/trailing по центру (= 1 str),
+// 3 строки (overline + headline + supporting, или перенос) → по верху (= 2+ str).
 ListItem(
-    headlineContent = { Text("Title") },
-    supportingContent = { Text("Subtitle") },
-    leadingContent = { Avatar(size = AvatarSize.M) },
-    trailingContent = { Badge(size = BadgeSize.XS, variant = Info) { Text("3") } },
+    headlineContent = { Text("Патимат") },
+    supportingContent = { Text("28 августа", maxLines = 1) },
+    leadingContent = { Avatar(size = AvatarSize.L, letter = "П") },
+    trailingContent = { Text("Разблокировать") },
 )
+// В кастомной Row: verticalAlignment = Alignment.CenterVertically для 1 str;
+// Alignment.Top + Modifier.padding(top = 4.dp) у слотов для 2+ str.
 ```
 
 ---
@@ -305,7 +344,7 @@ ListItem(
 
 ## 8. История миграций
 
-**2026-10-04 — уточнено правило выбора `Type` (docs-only).** Ребилд интерпретировал `2+ str` как «Title + Subtitle = 2 строки» и ставил его в строки «аватар + имя + дата + Разблокировать» (PI3XrU `57020:232117`) — аватар и trailing-кнопка уезжали вверх. Зафиксировано: `Type` = режим выравнивания слотов; Title + Subtitle в одну строку каждый → `1 str` (центр), `2+ str` — только для переносящегося текста (≥ 3 строк). См. §2.
+**2026-10-04 — уточнено правило выбора `Type` (docs-only).** Ребилд интерпретировал `2+ str` как «Title + Subtitle = 2 строки» и ставил его в строки «аватар + имя + дата + Разблокировать» (PI3XrU `57020:232117`) — аватар и trailing-кнопка уезжали вверх. Зафиксировано: `Type` = режим выравнивания слотов; Title + Subtitle в одну строку каждый → `1 str` (центр), `2+ str` — только для переносящегося текста (≥ 3 строк). См. §2. §6 «Синхронизация с кодом» переписан: маппинг `Type` → выравнивание (web/iOS/Android), исправлен пример `multi-line` (был с однострочными Title + Subtitle — та же ошибка). Экран «Чат Rebuild → Блокировки» (`57020:232068`, `:232100`, `:232117`) переключён на `1 str`.
 
 **2026-09-28 — добавлена ось `Density = Regular / Compact`.** По скану частотности плотных списков в PI3XrU (длинные ряды `≥6` List Item в ≥5 разделах: Выбор локации 13, Уведомления 10, Чат Rebuild 6, Профиль 01/01.3 5/5) заведён Compact. Реализация — на **публичном** наборе `List item` (`6054:3813`, 4→8 вариантов): `Compact` = `padding верт. 8→4`, `min-height 56→48` (≥44 WCAG). Базовый куб `.=List item` (~180 вариантов) **не трогали** — высота/padding живут на публичном варианте. Набору включён вертикальный auto-layout для аккуратной раскладки 8 вариантов. Compact — для селекторов/настроек; контентные (2-строчные, чат) — опционально. Публикация UI-Kit — вручную.
 
