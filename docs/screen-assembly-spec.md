@@ -100,6 +100,7 @@ Content (VERTICAL, gap = between)     ← между сущностями (на�
 | **Выбор значения из 2–4 коротких опций** | **`Chips` single-select** (Active=Yes на выбранном) | ❌ «Segmented control» — это **underline-табы = навигация по вью**, не выбор значения. ❌ dropdown — прячет варианты |
 | Выбор значения, список растёт (>4) / нужны иконки/описания | `List item` + `Radio` (single) / `Checkbox` (multi) | — |
 | Вкл/выкл атрибут | `Switch` в `List item` | — |
+| Строка списка с Title + Subtitle (каждый в 1 строку) | `List item` **`Type=1 str`** — слоты по центру | ❌ `Type=2+ str` «потому что 2 строки текста» — он прижимает аватар/trailing к верху; только для переносящегося текста ≥ 3 строк (`list-item-spec §2`) |
 | Многострочный текст | `Textarea` | — |
 | Выбор значения со сменой (напр. валюта у одного поля) | `Input v2` (ReadOnly) + trailing `chevron` → поверхность (`Sheet` / `Context Menu`) | prefix-слота в Input v2 нет — символ валюты не пихать в поле |
 
