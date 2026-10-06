@@ -1,6 +1,8 @@
 # Expressive / Decorative Palette — Discovery
 
-**Статус:** discovery (инвентарь + оценка scope + каркас подходов). **НЕ дизайн палитры.** Уровень решения — structural (Round 6), если примут.
+**Статус:** discovery → **реализовано 2026-10-06**: expressive-палитра (held-пары + градиенты) — `COLOR-PALETTE.md` §2.13, правила — §3.10. Ниже — исходный trail.
+
+~~discovery (инвентарь + оценка scope + каркас подходов). **НЕ дизайн палитры.**~~ Уровень решения — structural (Round 6), если примут.
 **Дата:** 2026-07-28
 
 ---
@@ -153,6 +155,10 @@ Apple не хранит «два синих». Поверхность = **ней
 - `Text&Icon/Blue applied` = алиас Blue/700 `#1d4ed8` (key `d775d0e9f756015bdf3cd3c5ded1397a91c36fe3`) — синий текст/иконка на белом (глубже для контраста в обеих темах).
 
 Расширяем **от контекста** (по мере появления tier-бейджей, плиток и пр.), не спекулятивно. Требует Publish App Color Palette перед привязкой в UI-Kit.
+
+## 10. Итог (2026-10-06)
+
+Рецепт §8 (accent × opacity) остался для data-тинтов Seller-Cabinet. Для эмоциональных контекстов выбран held-подход §9 в расширенном виде: 6 held-пар (`Background/{Purple,Gold,Pink,Orange,Cyan,Green} applied`) + 7 held-градиентов (Royal, Gold, Sunset, Ember, Aurora, Meadow, Graphite) + 1 адаптивный (Bloom). Все held-градиенты проходят AA с on-color на обоих стопах. Состав — `COLOR-PALETTE.md` §2.13, правила — §3.10, доска — App Color Palette → «Градиенты» → Expressive palette v1.
 
 ## Связано
 - [decorative-color-palette.md](./decorative-color-palette.md) — существующий Tinted-decor proposal (Phase 1a ratified)

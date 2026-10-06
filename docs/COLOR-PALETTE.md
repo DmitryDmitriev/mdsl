@@ -304,6 +304,8 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 **Что будет потом:** когда применение decor стабилизируется (одни и те же цвета используются для одних и тех же ролей в нескольких независимых задачах) — заведём semantic Decor tokens отдельным апдейтом палитры.
 
 > **Held-механизм для expressive (ратифицировано 2026-08-05).** Theme-invariant поведение цвета кодифицировано отдельно от decor-hue mapping — слой `* applied` (§2.12) + правило adaptive vs held (§3.9). Оси ортогональны: applied отвечает «как цвет ведёт себя по теме», decor — «какой hue под категорию».
+>
+> **Expressive-палитра (2026-10-06).** Для эмоциональных контекстов (VIP+/TOP, PayWall, success, promo, hot/new/sale) собран отдельный held-набор: пары + градиенты — §2.13, правила — §3.10. Tinted-decor для плоских пастельных лейблов (Phase 1b) этим не закрыт и по-прежнему «в тестах».
 
 ### 2.9 Brand Color
 Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`.
@@ -335,7 +337,7 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 
 **Поверхность (600) и текст-на-белом (700) — намеренно разные shade'ы**: поверхностный тон на ступень светлее, текстовый глубже ради контраста на белом. Scopes токенов это фиксируют (`FRAME_FILL`/`SHAPE_FILL` у поверхности, `TEXT_FILL`/`SHAPE_FILL` у текста).
 
-**Расширение — только от контекста, не спекулятивно.** Значения — алиасы на примитивы (не raw hex). Текущий состав: White / Black / Blue / **Green / Red / Amber** (последние три — 2026-08-31, под Badge `Fill=Contrast`, семантические held-поверхности под on-color текст). Шейды подобраны под WCAG-цель on-color-текста (surface white ≥4.5, кроме Amber → пара с `Black applied`). **Known next-candidate — golden** (VIP/TOP tier: сейчас анти-паттерн `warning #FBBF24` или хардкод; заявка из Avatar/промо-плана LAA-4215); заводится на первой конкретной tier-задаче с реальной контраст-целью, тогда же подбирается shade.
+**Расширение — только от контекста, не спекулятивно.** Значения — алиасы на примитивы (не raw hex). Текущий состав: White / Black / Blue / **Green / Red / Amber** (последние три — 2026-08-31, под Badge `Fill=Contrast`, семантические held-поверхности под on-color текст). Шейды подобраны под WCAG-цель on-color-текста (surface white ≥4.5, кроме Amber → пара с `Black applied`). ~~Known next-candidate — golden~~ → заведён как `Background/Gold applied` (2026-10-06) вместе с остальным expressive-слоем — см. **§2.13**.
 
 > **Neutral held намеренно НЕ заводим.** Для нейтральной contrast-поверхности held не работает: тёмный held-Zinc в Dark не отделяется от `Background/Primary` (Zinc/950). Нейтральный emphasis решается адаптивной парой `Accent/Primary` + `Text&Icon/Inverted W-B` (тёмный чип в Light / светлый в Dark, отделяется в обеих темах). См. `badge-spec.md §2 Fill=Contrast`.
 
@@ -362,6 +364,52 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 > **Publish (состояние на 2026-08-31, сверено с файлом):** applied-слой в `App Color Palette` — canonical-variables: `Text&Icon/White applied`, `Text&Icon/Black applied`, `Border/White applied`, `Background/Blue applied`, **`Background/Green applied`**, **`Background/Red applied`**, **`Background/Amber applied`** (три последних — 2026-08-31, под Badge `Fill=Contrast`; все held, scopes проставлены) + **4 paint-стиля** `Background/{Blue,Green,Red,Amber} applied`, каждый bound к своей variable (не raw hex). On-color-содержимое (`White/Black applied`) — variable-only. Владелец файла — цветовой трек. Библиотека **опубликована** (2026-08-31); held-фоны Green/Red/Amber импортированы в UI-Kit и привязаны ко всем 60 фонам Badge `Fill=Contrast` (held-литералов не осталось).
 >
 > *NB: весь остальной style-слой файла (~190 стилей `Text/*`, `Icon/*`, `Bubble/*`, `Decor/*`, `Accent/*` …) — легаси raw hex по старой палитре, не bound к vars. Applied-стили — первые variable-bound. Миграция/чистка легаси-стилей — отдельный трек, вне applied-задачи.*
+
+### 2.13 Expressive — цвета и градиенты эмоциональных контекстов
+
+Отдельный слой для **эмоциональных** поверхностей: VIP+ / TOP-бейджи, PayWall и checkout, success-экраны, promo-баннеры, hot / new / sale, story-обложки. Построен на механизме applied (§2.12): все expressive-цвета, кроме Bloom, — **held** (не флипаются Light↔Dark). Правила применения — §3.10. Источник: discovery `proposals/expressive-palette-discovery.md`.
+
+**Где живёт (Figma `App Color Palette`):** страница «Градиенты» → доска **Expressive palette v1** (Light + Dark бок о бок). Первая доска на странице — черновик (superseded).
+
+#### 2.13.1 Held-пары (плоская поверхность + on-color)
+
+Для **мелких** элементов: бейдж, чип, tier-лейбл, плашка. Каждая пара = `Background/{hue} applied` + on-color из §2.12.
+
+| Роль | Surface | Primitive | On-color | Контраст |
+|---|---|---|---|---|
+| **VIP+** | `Background/Purple applied` | Purple/600 `#9333EA` | `Text&Icon/White applied` | 5.4:1 |
+| **TOP** | `Background/Gold applied` | Amber/300 `#FCD34D` | `Text&Icon/Black applied` | 13.8:1 |
+| **Promo / Sale** | `Background/Pink applied` | Pink/600 `#DB2777` | `Text&Icon/White applied` | 4.6:1 |
+| **Hot** | `Background/Orange applied` | Orange/700 `#C2410C` | `Text&Icon/White applied` | 5.2:1 |
+| **New** | `Background/Cyan applied` | Cyan/700 `#0E7490` | `Text&Icon/White applied` | 5.4:1 |
+| **Success** | `Background/Green applied` *(уже был, §2.12)* | Green/700 `#15803D` | `Text&Icon/White applied` | 5.0:1 |
+
+`Gold applied` закрывает known next-candidate из §2.12 (golden tier). Это **отдельный** токен, а не `Background/Amber applied`: Amber applied — семантический held-warning (Badge Contrast=warning), Gold — маркетинговый tier. Совпадение семейства не повод склеивать роли (иначе возвращается анти-паттерн «VIP = warning»).
+
+#### 2.13.2 Градиенты
+
+Для **крупных** поверхностей: hero-карточка, баннер, шапка PayWall, success-hero, story-обложка, tier-бейдж на медиа. Все градиенты — linear **135°** (левый верх → правый низ), 2 стопа; стопы paint-стилей **привязаны к primitive-variables** (не raw hex).
+
+| Стиль | Стопы | Контекст | On-color | Min контраст по стопам |
+|---|---|---|---|---|
+| `Background/Gradient/Royal applied` | Indigo/600 → Purple/600 | VIP+, премиум, tier-чип | White applied | 5.4:1 |
+| `Background/Gradient/Gold applied` | Amber/200 → Amber/400 | TOP tier | Black applied | 11.9:1 |
+| `Background/Gradient/Sunset applied` | Pink/600 → Orange/700 | Promo, Sale, PayWall-hero | White applied | 4.6:1 |
+| `Background/Gradient/Ember applied` | Red/600 → Orange/700 | Hot / trending | White applied | 4.8:1 |
+| `Background/Gradient/Aurora applied` | Cyan/700 → Indigo/600 | New / fresh | White applied | 5.4:1 |
+| `Background/Gradient/Meadow applied` | Green/700 → Teal/700 | Success / celebration | White applied | 5.0:1 |
+| `Background/Gradient/Graphite applied` | Zinc/800 → Zinc/950 | Тёмная премиум-поверхность (PayWall, story-обложка) | White applied | 14.9:1 |
+| `Background/Gradient/Bloom` ⚡ **adaptive** | Light: Purple/100 → Pink/100 · Dark: Purple/950 → Pink/950 | Мягкая подложка: success-карточка «что дальше», empty-state, фон PayWall-секции | `Text&Icon/Primary` / `Secondary` | ≥4.5 (адаптивный текст) |
+
+**Каждый held-градиент проходит AA (≥4.5:1) с on-color на обоих стопах.** Поэтому текст любого размера можно ставить в любой точке градиента, scrim не нужен. Shade'ы подняты с черновика (`*/500`) ровно ради этого: Indigo/500 и Purple/500 давали 4.5 и 4.0, Orange/500 — 2.8.
+
+**Bloom — единственный адаптивный градиент.** Стопы привязаны к адаптивным переменным `Background/Gradient/Bloom start` / `Bloom end` (Light/Dark-моды), поэтому paint-стиль следует теме через режим переменных. Свой цвет он не держит: это фон-подсказка, текст на нём адаптивный.
+
+**Почему градиенты — paint-стили, а не variables.** Figma-variable не хранит градиент. Held-градиент одинаков в обеих темах, поэтому paint-стиль его описывает корректно (тот же аргумент, что в §2.12). Bloom адаптируется через режим стоп-переменных.
+
+**Вне набора (черновик доски):** Lagoon (Teal/500 → Cyan/400 — белый 2.5:1, провал) и Grove (стартовый стоп — `Brand/Bazaraki`, а бренд не смешивается с expressive, §3.5). Добавлять — только от контекста и с проверкой контраста.
+
+> **Состояние (2026-10-06):** в `App Color Palette` заведены 5 variables `Background/{Purple,Gold,Pink,Orange,Cyan} applied` (held, scopes `FRAME_FILL`/`SHAPE_FILL`, описание с парой и контрастом) + 2 адаптивные `Background/Gradient/Bloom start|end`. Paint-стили: 8 градиентов `Background/Gradient/*` + 5 зеркал `Background/{hue} applied`, bound к variable. ⏳ **Библиотека не опубликована.** Publish — шаг владельца цветового трека. При публикации проверить, что опубликованы стоп-примитивы **Amber / Orange / Red / Green** из Base Color: сейчас они не импортируются в потребителей. Поэтому в макетах применения стопы Amber/200 и Orange/700 временно стоят hex-значением, а Amber/400, Red/600 и Green/700 привязаны через опубликованные `* applied`.
 
 ---
 
@@ -439,6 +487,37 @@ Decor-примитивы введены, но правило «когда decor,
 **Тест выбора:** если на цвете сидит white/black-текст и пара обязана держать контраст в обеих темах — берём **held** (`* applied`). Адаптивный акцент меняет значение между темами и ломает фикс-пару on-color. Типичная ошибка — взять `Accent/Link` для held-поверхности: в dark он `#60A5FA`, белый текст на нём 2.5:1.
 
 **Не путать с Decor (§2.10 / §3.8).** Это ортогональные оси: decor отвечает «*какой hue* под категорию/маркетинг», applied — «*как цвет ведёт себя по теме* (held vs adaptive)». Decor-hue может быть applied (golden tier — held), semantic-hue тоже (blue coach mark — held).
+
+### 3.10 Expressive — где применять
+
+Состав — §2.13. Expressive — **акцент эмоционального момента, а не фон интерфейса**. Функциональный слой (Zinc, `Accent/*`, `Background/*`) остаётся плоским.
+
+**Где применять:**
+
+| Контекст | Что берём | Пример |
+|---|---|---|
+| Tier-бейдж VIP+ / TOP (на карточке, медиа, в тарифе) | пара `Purple` / `Gold applied` · на медиа и в hero — градиент Royal / Gold | листинг: ТОП = Gold вместо `#FFCC00`; тариф Premium = VIP+ Royal |
+| PayWall / checkout — шапка, hero тарифа | Royal (VIP), Sunset (promo-оффер), Graphite (тёмный премиум) · фон секции — Bloom | экран выбора тарифа |
+| Success-экран после оплаты / публикации | Meadow — hero · Bloom — карточка «что дальше» | «Объявление в VIP+» |
+| Promo-баннер, оффер, скидка | Sunset · бейдж Sale — `Pink applied` | «−30% на TOP» |
+| Hot / New / Sale лейблы | Ember / Aurora / Sunset на крупном · `Orange` / `Cyan` / `Pink applied` на мелком | бейдж на карточке |
+| Story-обложка, celebration | любой held-градиент по смыслу · Graphite под фото-контент | — |
+
+**Где НЕ применять:**
+- ❌ **CTA и controls.** Кнопка «Оплатить / Опубликовать» остаётся функциональной (`Accent/*`, Button). Градиентная кнопка конкурирует с hero и ломает иерархию CTA.
+- ❌ Системные статусы (ошибка / успех операции в форме, валидация) — это `Accent/*` / `Background/Tinted/*` (§3.3). Meadow — только для **праздничного** success-экрана, не для inline-подтверждения.
+- ❌ Фон целого экрана, навигация, списки, Tab Bar / Top App Bar.
+- ❌ Brand-цвета внутри градиентов (§3.5): expressive не брендовый.
+- ❌ Больше **одного** hero-градиента на экране. Tier-чип рядом с hero допустим: это бейдж, а не hero.
+
+**Held или adaptive — тест:**
+1. На цвете сидит on-color-текст (white/black) и пара обязана держать контраст в обеих темах? → **held** (`* applied`, все градиенты, кроме Bloom).
+2. Цвет — **идентичность** момента (золото TOP, фиолетовый VIP+, праздничный зелёный)? → **held**: в Dark он не тускнеет и не меняется, адаптируется окружение (фон экрана). Это приём Spotify / Apple из discovery §4.
+3. Цвет — **фон-подсказка**, на нём адаптивный текст (`Text&Icon/Primary`), и он должен «уходить назад» в обеих темах? → **adaptive** (Bloom).
+
+**Мелкое vs крупное:** плоская held-пара — для элементов ≤ ~32 px высотой (бейдж, чип, лейбл): градиент на них не читается и шумит. Градиент — для поверхностей от карточки и больше. Исключение — tier-бейдж поверх медиа/hero, там допустим градиент Royal / Gold.
+
+**Применено в макетах** (файл Mobile, страница «🎨 Expressive palette — применение» — копии, оригиналы не тронуты): (1) Listing — ТОП-бейджи → Gold; (2) PayWall «Publication condition» — Premium = VIP+ Royal, Top = Gold, tier-чипы у заголовков тарифов, Regular без бейджа, CTA функциональные; (3) Success «Объявление в VIP+» — Meadow hero + Bloom + Sunset promo-баннер, Light и Dark (held-цвета идентичны, Bloom адаптируется).
 
 ---
 
