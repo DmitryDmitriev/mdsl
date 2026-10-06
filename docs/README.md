@@ -116,6 +116,7 @@
 |-----------|--------|--------------------|
 | Dialog (slots: Title/Description/Buttons Stack/Image) | ✅ | [dialog-spec](./dialog-spec.md) |
 | Empty State (Inline / Full-screen) | ✅ | [empty-state-spec](./empty-state-spec.md) |
+| Island / Остров (generic «заголовок + слот») | ✅ | [island-card-spec](./island-card-spec.md) — designed and described (2026-10-06); gutter 12, без double-pad, строки Compact + Trailing value |
 | ImageCard (App image card) | 🟡 | [imagecard-spec](./imagecard-spec.md) — черновик из iOS-реализации (LIOS-2687); ждёт Figma-компонент + сверку значений |
 | Sheet / Sheets | ✅ | [sheets-spec](./sheets-spec.md) |
 | Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |

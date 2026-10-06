@@ -236,6 +236,8 @@ Subtitle «Выбрано: 3»
 
 **Исключение:** List Item — edge-to-edge (FILL контейнер 360 без horizontal padding), потому что master компонента имеет фиксированную ширину 360. Если нужны отступы у списка — оборачивай в Card с padding.
 
+**Исключение:** экран из островов ([Island](./island-card-spec.md)) — боковой gutter **12** (`spacing/3`), не 16; внутри острова горизонтальный отступ задаётся один раз (без double-pad). См. [island-card-spec §5](./island-card-spec.md).
+
 ---
 
 ## 11. Элементы поверх медиа — `Type=Overlay`
