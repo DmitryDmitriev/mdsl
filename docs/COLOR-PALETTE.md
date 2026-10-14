@@ -143,8 +143,11 @@ Orange уже имеет полную шкалу в палитре (введён
 |-------------------|----------------------|-----------------------|
 | Surface Primary   | Background Primary   | **Zinc/800** (#27272A) |
 | Surface Secondary | Background Primary   | Background Tertiary   |
+| **Black applied** (held) | Zinc/800 (#27272A) | Zinc/800 (#27272A) |
 
-В Light обе роли = Background Primary: разделение от фона делается через border (или shadow в редких случаях).
+**Surface/Black applied** — held (theme-invariant) тёмная поверхность-«остров»: дублирует Dark-значение `Surface/Primary` (Zinc/800) в **обе** темы, чтобы премиум-карточка (напр. XL-карточка, CD-6393) оставалась тёмной и в светлой теме, не переворачиваясь в белый. Заменяет анти-паттерн «форс Dark mode на слое». Пара `Surface/White applied` — по надобности (пока use case нет). Введён 2026-10-14.
+
+В Light обе base-роли = Background Primary: разделение от фона делается через border (или shadow в редких случаях).
 
 В Dark разделение делается через **осветление поверхности** относительно фона — **тени в Dark не видны и не используются**. `Surface Primary` Dark = Zinc/800 (#27272A) — на одну ступень светлее `Background/Primary` (Zinc/950, #09090B) и `Background/Secondary` (Zinc/900, #18181B). Это даёт визуальный elevation cue без тени. Привязка идёт напрямую на raw Zinc/800, не через Background/* — иначе поверхность сольётся с фоном (см. историю 2026-05-11).
 
