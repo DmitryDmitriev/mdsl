@@ -61,8 +61,8 @@ Figma: страница **🟢 Field family** (объединяющая — ку
 | **Editing** | в фокусе, со значением | `Border/Active` 2px | `Background/Secondary` |
 | **Filled** | заполнено, не в фокусе | `Border/Default` 1px | `Background/Secondary` |
 | **Error** | ошибка валидации | `Accent/Negative` 2px | `Background/Secondary` |
-| **Disabled** | недоступно | `Border/Disabled` | `Background/Tertiary` |
-| **ReadOnly** | только чтение | `Border/Default` 1px | `Background/Secondary` |
+| **Disabled** | недоступно | `Border/Disabled` | `Background/Disabled` |
+| **ReadOnly** | только чтение | `Border/Default` 1px | `Background/Tertiary` |
 
 - **Outline** — фон прозрачный (наследует поверхность), граница всегда.
 - **Filled** — фон `Background/Secondary`; граница появляется только в активных/ошибочных (`Focused/Editing/Error`), в остальном без границы.
@@ -93,8 +93,8 @@ Field (контейнер, HORIZONTAL, height по Size, padding H по Size)
 ├── Leading   (опц.)  — иконка/префикс
 ├── Content   (FILL)  — наполнение компонента
 └── Trailing  (опц.)  — иконка/действие/шеврон
-Label          (опц., над Field)      — Caption/caption-md Medium, Text&Icon/Primary
-Supporting Text (опц., под Field)     — Caption/caption-md, Text&Icon/Tertiary (Error → Accent/Negative)
+Label          (опц., над Field)      — Base/Body 2 Medium, Text&Icon/Secondary (цвет по состоянию)
+Supporting Text (опц., под Field)     — Caption/caption-md, Text&Icon/Secondary (Error → Accent/Negative)
 ```
 
 **Нейминг слотов — `Leading` / `Trailing`** (не Left/Right). Совпадает с целевым неймингом Android (`leading/trailingIcon`) и UIKit-конвенцией iOS (directional). В легаси Android (`AppTextField`, @Deprecated) остались `Left/Right` — уезжают с деприкейтом.
@@ -185,6 +185,12 @@ Textarea намеренно в grow-режиме (VERTICAL, min-height 64, top-a
 ---
 
 ## История
+
+**2026-10-14 — reconciliation с iOS-имплементацией (LIOS-2926).** По итогам dev-сверки Field/Select/Textarea:
+- **Label** (B1): `Caption/caption-md` Medium, `Text&Icon/Primary` → **`Base/Body 2 Medium`, цвет по состоянию** (Figma Select `11025:39` + input-v2 + iOS сходятся; прозаический дрейф спеки).
+- **ReadOnly фон** (B2): `Background/Secondary` → **`Background/Tertiary`** (Figma `11025:101` + input-v2 + iOS). ReadOnly ≠ Disabled: Disabled = `Background/Disabled` (консолидация 2026-10-11), ReadOnly = `Background/Tertiary`.
+- **Supporting text цвет** (C1): `Text&Icon/Tertiary` → **`Text&Icon/Secondary`** — унификация helper'а по всему field-семейству (Textarea уже был Secondary). Причина: в светлой теме Tertiary = Zinc/300 (#d4d4d8) недо-читаем на белом (контраст ~1.5:1); Secondary = Zinc/500 читается (~4.7:1). Figma Field/Select supporting + iOS синкнуть.
+- **Шеврон Select** в покое (A1): канон = `Text&Icon/Secondary` (не Primary) — правился **Figma** (`11025:38` держал литерал `#09090B`), канон/код верны.
 
 **2026-07-27 (вечер) — `Field` развёрнут в полный размер + вынесен на страницу.** Набор `.=Field` (`11024:404`): Type × Size (lg/md/sm) × State = **42 варианта** на странице **🟢 Field** (RC-страница расформирована на 🟢 Field + 🟢 Select). Контент — пустой слот, иконочные слоты скрыты. Готов к публикации.
 

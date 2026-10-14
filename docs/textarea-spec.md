@@ -46,7 +46,7 @@ Textarea — поле ввода для длинного текста. Container
 
 ```
 Textarea wrapper (COMPONENT per variant)
-├── layoutMode: VERTICAL, gap: spacing/2 (8), no padding, no fill
+├── layoutMode: VERTICAL, gap: spacing/1 (4), no padding, no fill
 ├── width 328 (FILL родителя на инстансе), height HUG
 │
 ├── Container (FRAME — сам textarea)
@@ -113,7 +113,7 @@ Textarea wrapper (COMPONENT per variant)
 | Focused | `Background/Secondary` | — | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 | Filled | `Background/Secondary` | — | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 | Error | `Background/Secondary` | 1px `Accent/Negative` (INSIDE) | `Text&Icon/Primary` | **`Accent/Negative`** |
-| Disabled | `Background/Tertiary` | — | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
+| Disabled | `Background/Disabled` | — | `Text&Icon/Tertiary` (вкл. placeholder) | `Text&Icon/Tertiary` |
 | ReadOnly | `Background/Tertiary` | — | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 
 ### Outline (Type=Outline)
@@ -124,7 +124,7 @@ Textarea wrapper (COMPONENT per variant)
 | Focused | transparent | 1px `Border/Active` (INSIDE) | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 | Filled | transparent | 1px `Border/Default` (INSIDE) | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 | Error | transparent | 1px `Accent/Negative` (INSIDE) | `Text&Icon/Primary` | **`Accent/Negative`** |
-| Disabled | transparent | 1px `Border/Disabled` (INSIDE) | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` |
+| Disabled | transparent | 1px `Border/Disabled` (INSIDE) | `Text&Icon/Tertiary` (вкл. placeholder) | `Text&Icon/Tertiary` |
 | ReadOnly | transparent | 1px `Border/Default` (INSIDE) | `Text&Icon/Primary` | `Text&Icon/Secondary` |
 
 **counter-text — per-state цвет** (правка 2026-06-01 вечер):
@@ -176,7 +176,7 @@ Textarea wrapper (COMPONENT per variant)
 
 Не путать с Label/Title — он живёт **выше** textarea, вне master'а (родительский screen-layout).
 
-Типографика: `Caption/caption-md` (12/16, w400). Gap от container'а до helper-text — `spacing/2` (8 px).
+Типографика: `Caption/caption-md` (12/16, w400). Gap от container'а до helper-text — `spacing/1` (4 px) (унифицирован с Field/Select, 2026-10-14).
 
 ---
 
@@ -203,7 +203,7 @@ Textarea wrapper (COMPONENT per variant)
 | Padding container vertical | 8 | `spacing/2` |
 | Padding container horizontal | 12 | `spacing/3` |
 | Gap (input-text → counter) | 8 | `spacing/2` |
-| Gap (container → helper-text) | 8 | `spacing/2` (от wrapper'а) |
+| Gap (container → helper-text) | 4 | `spacing/1` (от wrapper'а; унифицирован с Field/Select 2026-10-14) |
 | Radius container | 12 | `radius/control/control-lg` |
 | Border weight (Outline + Error states) | 1 px | — |
 | Scroll indicator size | 4 × N | — (off-scale ширина) |
@@ -252,17 +252,21 @@ fun Textarea(
 )
 ```
 
-**iOS (SwiftUI):**
+**iOS (UIKit):** MDSL на iOS — UIKit, не SwiftUI.
 ```swift
-struct TextareaView: View {
-    @Binding var text: String
-    var type: TextareaType = .filled
-    var state: TextareaState = .default
-    var minHeight: CGFloat = 64
-    var counter: Bool = false
-    var counterText: String? = nil
-    var helper: Bool = false
-    var helperText: String? = nil
+final class MDSLTextareaView: UIView {
+    struct Configuration {
+        var text: String = ""
+        var type: TextareaType = .filled
+        var state: TextareaState = .default
+        var minHeight: CGFloat = 64
+        var counter: Bool = false
+        var counterText: String? = nil
+        var helper: Bool = false
+        var helperText: String? = nil   // "Description is too short" — цвет по state (Error → red)
+    }
+    var configuration: Configuration { didSet { apply() } }
+    var onTextChange: ((String) -> Void)?
     // ...
 }
 ```
@@ -282,6 +286,12 @@ struct TextareaView: View {
 ---
 
 ## 11. История
+
+**2026-10-14 — reconciliation с iOS-имплементацией (LIOS-2926).** По итогам dev-сверки field-семейства:
+- **iOS-пример** (B3): заменён SwiftUI (`struct TextareaView: View`) на **UIKit** (`MDSLTextareaView: UIView` + `Configuration`) — MDSL на iOS только UIKit.
+- **Helper цвет** (C1): без изменений — уже `Text&Icon/Secondary`; к нему унифицированы Field/Select (были Tertiary).
+- **Зазор container → helper** (C3): `spacing/2` (8) → **`spacing/1` (4)** — унификация с Field/Select. Figma Textarea (`9736:94`, wrapper gap) + iOS синкнуть.
+- **Placeholder в Disabled** (C4): подтверждён `Text&Icon/Tertiary` (= input-text цвет при пустом поле); добавлено явное «(вкл. placeholder)» в §4.
 
 **2026-09-20 — фикс: `input-text` ширина 0 в State=Focused (баг из CD-6262).**
 
