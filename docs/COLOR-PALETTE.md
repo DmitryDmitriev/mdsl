@@ -145,7 +145,7 @@ Orange уже имеет полную шкалу в палитре (введён
 | Surface Secondary | Background Primary   | Background Tertiary   |
 | **Black applied** (held) | Zinc/800 (#27272A) | Zinc/800 (#27272A) |
 
-**Surface/Black applied** — held (theme-invariant) тёмная поверхность-«остров»: дублирует Dark-значение `Surface/Primary` (Zinc/800) в **обе** темы, чтобы премиум-карточка (напр. XL-карточка, CD-6393) оставалась тёмной и в светлой теме, не переворачиваясь в белый. Заменяет анти-паттерн «форс Dark mode на слое». Пара `Surface/White applied` — по надобности (пока use case нет). Введён 2026-10-14.
+**Surface/Black applied** — held (theme-invariant) тёмная поверхность-«остров»: дублирует Dark-значение `Surface/Primary` (Zinc/800) в **обе** темы, чтобы премиум-карточка (напр. XL-карточка, CD-6393) оставалась тёмной и в светлой теме, не переворачиваясь в белый. Заменяет анти-паттерн «форс Dark mode на слое». Пара `Surface/White applied` — по надобности (пока use case нет). Введён 2026-10-14 (variable + одноимённый paint-стиль, bound к variable; `Border/Subtle` — variable-only, адаптивный).
 
 В Light обе base-роли = Background Primary: разделение от фона делается через border (или shadow в редких случаях).
 
