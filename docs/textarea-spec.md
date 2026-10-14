@@ -47,10 +47,10 @@ Textarea — поле ввода для длинного текста. Container
 ```
 Textarea wrapper (COMPONENT per variant)
 ├── layoutMode: VERTICAL, gap: spacing/1 (4), no padding, no fill
-├── width 328 (FILL родителя на инстансе), height HUG
+├── width 328 (FILL родителя на инстансе), height FIXED (resizable, minHeight 64)
 │
 ├── Container (FRAME — сам textarea)
-│   ├── width FILL, height FIXED (default 252, minHeight 64)
+│   ├── width FILL, height FILL (layoutGrow=1 — тянется за wrapper'ом; minHeight 64)
 │   ├── padding: spacing/2 (8) vertical · spacing/3 (12) horizontal
 │   ├── radius: radius/control/control-lg (12)
 │   ├── layoutMode: VERTICAL, gap: spacing/2 (8)
@@ -87,7 +87,9 @@ Textarea wrapper (COMPONENT per variant)
     └── fill: per-state helperColor (Accent/Negative на Error, Text&Icon/Secondary иначе)
 ```
 
-**Wrapper vs Container.** Variant root — это wrapper (HUG vertical, без BG/radius), а сам textarea сидит внутри как Container. Это нужно потому что Helper text живёт **ниже** textarea container'а — wrapper держит обоих в VERTICAL layout. Designer ресайзит **Container** вертикально (не wrapper), wrapper подстраивается HUG'ом.
+**Wrapper vs Container.** Variant root — это wrapper (**FIXED vertical, minHeight 64**, без BG/radius), а сам textarea сидит внутри как Container. Это нужно потому что Helper text живёт **ниже** textarea container'а — wrapper держит обоих в VERTICAL layout. **Высота меняется прямо на инстансе** (wrapper FIXED → поле высоты доступно), Container тянется за ней через `layoutGrow=1` (FILL), helper остаётся прижат снизу. Floor — `minHeight 64` на wrapper'е (= `control-height/textarea-min`).
+
+> **Изменено 2026-10-14:** раньше wrapper был `HUG vertical` (высоту приходилось менять на вложенном Container'е — недоступно напрямую на инстансе). Теперь wrapper `FIXED` + Container `FILL` — высота тянется с верхнего уровня инстанса. Применено ко всем 12 вариантам набора `9736:94`.
 
 **Дефолт width:** 328 px (вписывается в screen-card с `screen/padding-horizontal=16` от краёв 360-экрана). В инстансе можно `FILL` родителя.
 
@@ -286,6 +288,8 @@ final class MDSLTextareaView: UIView {
 ---
 
 ## 11. История
+
+**2026-10-14 — высота компонента стала изменяемой с инстанса.** Wrapper (variant root) переведён с `HUG vertical` на **`FIXED vertical` (minHeight 64)**, Container — с `FIXED` на **`FILL` (`layoutGrow=1`)**. Раньше высоту приходилось менять на вложенном Container'е (на инстансе не вытащить напрямую — поле высоты недоступно у HUG-фрейма). Теперь высота тянется с верхнего уровня инстанса, Container следует за wrapper'ом, helper прижат снизу. Применено ко всем 12 вариантам `9736:94`; input-text (FILL) не схлопывается (проверено). Детали — §3 «Wrapper vs Container».
 
 **2026-10-14 — reconciliation с iOS-имплементацией (LIOS-2926).** По итогам dev-сверки field-семейства:
 - **iOS-пример** (B3): заменён SwiftUI (`struct TextareaView: View`) на **UIKit** (`MDSLTextareaView: UIView` + `Configuration`) — MDSL на iOS только UIKit.
