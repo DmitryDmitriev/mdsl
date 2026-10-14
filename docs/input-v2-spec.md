@@ -109,7 +109,7 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 | **Editing** | `Background/Secondary` | `Border/Active` (2px, оба Type) | `Text&Icon/Primary` (значение) | `Accent/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary` | `Text&Icon/Primary`, **после значения** |
 | **Filled** | `Background/Secondary` | Outline: `Border/Default` · Filled: нет | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` | — |
 | **Error** | `Background/Secondary` | `Accent/Negative` (2px, оба Type) | `Text&Icon/Primary` | `Accent/Negative` | `Accent/Negative` | `Accent/Negative` | — |
-| **Disabled** | `Background/Tertiary` | Outline: `Border/Disabled` · Filled: нет | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
+| **Disabled** | `Background/Disabled` | Outline: `Border/Disabled` · Filled: нет | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
 | **ReadOnly** | `Background/Tertiary` | Outline: `Border/Default` · Filled: нет | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` | — |
 
 **Примечания:**

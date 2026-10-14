@@ -87,7 +87,7 @@ Slider (COMPONENT) — фикс. высота 24 (тач-зона), fill transpa
 
 | Элемент | Токен | Light | Dark |
 |---|---|---|---|
-| **Track** (неактивная дорожка) | `Background/Secondary` | #F4F4F5 | #18181B |
+| **Track** (неактивная дорожка) | `Background/Disabled` | #ECECEE | #202023 |
 | **Active** (выбранная часть) | `Text&Icon/Tertiary` | #D4D4D8 | #71717A |
 | **Thumb** fill | `Text&Icon/Tertiary` | #D4D4D8 | #71717A |
 | **Thumb** border (2px) | `Background/Primary` | #FFFFFF | #09090B |

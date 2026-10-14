@@ -98,7 +98,7 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 | **Focused** | `Background/Secondary` | `Border/Active` (2px, оба Type) | `Text&Icon/Secondary` (placeholder) | `Text&Icon/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary`, **перед плейсхолдером** |
 | **Editing** | `Background/Secondary` | `Border/Active` (2px, оба Type) | `Text&Icon/Primary` (значение) | `Text&Icon/Primary` | `Text&Icon/Tertiary` | `Text&Icon/Primary`, **после значения** |
 | **Filled** | `Background/Secondary` | `Border/Default` (1px) | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | — |
-| **Disabled** | `Background/Tertiary` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
+| **Disabled** | `Background/Disabled` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
 
 **Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`. То же правило, что и в Input v2.
 

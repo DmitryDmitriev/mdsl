@@ -95,11 +95,13 @@ Orange уже имеет полную шкалу в палитре (введён
 | Inverted Primary | Zinc/900       | Zinc/50        |
 | Overlay          | alpha Black/40 | alpha Black/30 |
 | on Photo         | alpha Black/40 | alpha White/50 |
-| **Disabled**     | Zinc/100       | **Zinc/900**   |
+| **Disabled**     | **Zinc/150**   | **Zinc/850**   |
 
-**Disabled** — единственный фон для всех disabled-controls (кнопки, чипы, плашки и т.п.). См. §3.4.
+**Disabled** — **единственный фон для ВСЕХ залитых disabled-controls** (кнопки, ButtonIcon, поля, Select, checkbox, Switch, Slider, Radio, send-кнопка композера и т.п.). После консолидации 2026-10-11 все эти компоненты биндят **только** `Background/Disabled` — раньше заливка была размазана по `Background/Tertiary` (поля/checkbox) и `Background/Secondary` (Switch/Slider). См. §3.4.
 
-> **Disabled Dark = Zinc/900 (не Zinc/800) — 2026-09-04, LIOS-2864.** Раньше Dark = Zinc/800 совпадал с `Surface/Primary` — выключенная кнопка на шторке/диалоге сливалась с панелью. Сдвиг на `Zinc/900` (на ступень **темнее** Surface/Primary) даёт «recessed» read — как в Light, где `Zinc/100` на шаг темнее белого сюрфейса. Совпадает с `Background/Secondary` Dark (Zinc/900) — но это состояние-контрола vs фон-области, пространственно почти не пересекаются. Часть общего фикса вторичной кнопки (см. §2.5 Accent).
+> **Disabled = выделенная ступень в зазоре между поверхностями — 2026-10-11 (консолидация).** `Background/Disabled` переведён на **новые base-ступени `Zinc/150` (#ECECEE, light) и `Zinc/850` (#202023, dark)**, которых не занимает ни одна поверхность: Zinc/150 лежит между `Background/Secondary` (Zinc/100) и `Background/Tertiary` (Zinc/200), Zinc/850 — между `Background/Secondary` (Zinc/900) и `Surface/Primary` (Zinc/800). Так disabled отличается от любой нейтральной поверхности в обеих темах и остаётся «тихим» (лёгкий шаг, не тяжёлый). Это снимает коллизию, когда disabled-control сливался с `Background/Secondary` того же тона (главный кейс — кнопка/ButtonIcon/Switch/Slider на вторичной поверхности).
+>
+> **Отменяет прежний фикс LIOS-2864 (2026-09-04):** раньше Disabled Dark держали на Zinc/900 (= `Background/Secondary`), полагаясь на то, что состояние-контрола и фон-область пространственно не пересекаются — но свод Disabled × Surfaces показал, что пересекаются (sticky action-bar на Secondary). Теперь зазор-ступень решает это тоном. Глиф/текст disabled — по-прежнему `Text&Icon/Disabled` / `Text&Icon/Tertiary`.
 
 **Overlay vs on Photo — не путать.**
 - **`Overlay`** (alpha Black/40 Light / Black/30 Dark) — затемняющий скрим. Full-screen диммер за Dialog/Sheet **и** подложка контролов поверх медиа (`ButtonIcon Type=Overlay`). В паре с `Text&Icon/White applied` (theme-invariant белый) гарантирует контраст иконки над произвольным фото.
@@ -122,15 +124,17 @@ Orange уже имеет полную шкалу в палитре (введён
 
 **Не применять** в структурных компонентах (Alert, Notification, Card, Dialog) для текста — там фон может быть tinted, но текст всегда `Text&Icon/Primary`/`Secondary`. См. §3.3.
 
-**Neutral / Disabled / Secondary** — три нейтральные роли (`Background/Tinted/Neutral`, `Background/Disabled`, `Background/Secondary`) в **Light** делят «самый светлый нейтральный тинт» `Zinc/100` (на shade-шкале для них нет другой адекватной ступени). В **Dark** они разведены по элевации (после фикса LIOS-2864, 2026-09-04):
+**Neutral / Disabled / Secondary** — после консолидации 2026-10-11 `Background/Disabled` **разведён тоном** и больше не делит ступень ни с `Background/Secondary`, ни с `Background/Tinted/Neutral`:
 
-| Роль | Light | Dark | Логика Dark |
+| Роль | Light | Dark | Логика |
 |---|---|---|---|
 | `Background/Tinted/Neutral` | Zinc/100 | **Zinc/800** | нейтральный тинт бейджа = уровню `Surface/Primary` (хроматической нагрузки нет) |
-| `Background/Disabled` | Zinc/100 | **Zinc/900** | recessed — на ступень темнее Surface/Primary |
-| `Background/Secondary` | Zinc/100 | **Zinc/900** | базовый фон-область на ступень темнее Surface |
+| `Background/Disabled` | **Zinc/150** | **Zinc/850** | **зарезервированная зазор-ступень** — отличается от всех нейтральных поверхностей в обеих темах |
+| `Background/Secondary` | Zinc/100 | **Zinc/900** | базовый фон-область |
 
-Раньше заметка утверждала, что все три = Zinc/800 в Dark — это было неточно (`Background/Secondary` всегда был Zinc/900) и создавало коллизию `Disabled`↔`Surface/Primary`. Теперь `Disabled` воссоединён с `Background/Secondary` на Zinc/900, а на Zinc/800 остаются только `Surface/Primary` и нейтральный тинт бейджа. В реальных компонентах роли не пересекаются пространственно. Если возникнет новый визуальный конфликт — пересматриваем точечно.
+**`Zinc/150` и `Zinc/850` — служебные base-ступени, заведены специально под disabled** (и только под него). Поверхности их не занимают: это и есть «зазор», гарантирующий контраст выключенного контрола на любой нейтральной подложке. Не использовать `Zinc/150`/`Zinc/850` как фон-поверхность — иначе зазор схлопнется и коллизия вернётся.
+
+История: до 2026-09-04 все нейтральные роли ошибочно числились Zinc/800 в Dark; LIOS-2864 (2026-09-04) развёл их по элевации, но Disabled оставили на Zinc/900 (= Secondary) — свод Disabled × Surfaces (2026-10) показал реальные пересечения, поэтому 2026-10-11 Disabled вынесен на собственную зазор-ступень.
 
 ### 2.3 Surface
 Поверхности **над базовым уровнем**: модалки, шторки, выезжающие панели.
@@ -154,10 +158,12 @@ Orange уже имеет полную шкалу в палитре (введён
 | **Positive** | Accent/Positive| Green/400   |
 | **Warning**  | Accent/Warning | Amber/400   |
 | **Focus**    | Accent/Link    | Blue/400    |
+| **Subtle**   | alpha Black/95 (чёрный 5%) | alpha White/92 (белый 8%) |
 
 **Active** — для статичных выделенных контейнеров (выбранная карточка/таб).
 **Focus** — отдельная роль для accessibility focus-ring; контрастный синий не сливается с Active.
 **Negative/Positive/Warning** — для инпутов и других компонентов в соответствующих состояниях.
+**Subtle** — еле заметный хайрлайн-контур карточек/контейнеров, чтобы светлые фото/поверхности не сливались с фоном экрана. Адаптивный (в light — чёрная альфа, в dark — белая), на зазор-примитивах `alpha Black/95` / `alpha White/92`. Не для input-состояний (там `Default`/`Active`/`Focus`). Введён 2026-10-14 под XL-карточку (CD-6393).
 
 ### 2.5 Accent
 Используется в кнопках, ссылках, активных и выделенных состояниях, а также как источник цвета для семантических ролей в Border, Text&Icon.

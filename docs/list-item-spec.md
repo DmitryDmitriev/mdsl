@@ -156,9 +156,12 @@ Inline auto-layout frame без отдельного компонента-обё
 | Content (Overline / Label text / Supporting text) | fill → `Text&Icon/Tertiary` | Per-variant fill binding на TEXT nodes в master'е variant'а |
 | Left Side instance | `opacity: 0.4` | Per-variant opacity на инстансе |
 | Right Side instance | `opacity: 0.4` | Per-variant opacity на инстансе |
-| Background / Border | без изменений | — |
+| **Avatar placeholder (`background`)** | fill → `Background/Disabled` | Per-variant fill override на `background`-эллипсе внутри Avatar (консолидация 2026-10-11) |
+| Background / Border (самого List Item) | без изменений | — |
 
 **Почему opacity для Left/Right Side, а не fill binding:** Left Side имеет 10 типов (Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, Brand, Checkbox+Brand), Right Side — 8 типов. Перебивать fills во всех типах генерически невозможно без добавления State axis в наборы `List Item / Left Side` (`5912:6666`) и `List Item / Right Side` (`5912:6691`). Opacity 0.4 — универсальный shortcut: приглушает всё содержимое одной командой, независимо от type variant'а.
+
+**Исключение — Avatar placeholder:** плейсхолдер аватара (`background`-эллипс) по умолчанию залит `Background/Tertiary` (Zinc/200) — тем же тоном, что и аватары в активных строках. Под одной лишь opacity 0.4 задизейбленный аватар читался как чуть бледный, но **не как disabled** (проверка на реальных экранах, 2026-10-11). Поэтому в disabled-вариантах `background`-эллипс аватара дополнительно биндится на `Background/Disabled` (Zinc/150 light / Zinc/850 dark) — так disabled-аватар тоном отличается от активных. Это единственный per-variant fill-override внутри Left Side; остальные типы остаются на opacity-shortcut'е. Применено ко всем 4 disabled-вариантам набора `6054:3813`.
 
 > ⚠️ **Phase 1 ограничение:** opacity не различает Dark/Light mode. На светлой теме 40% от Primary даёт визуально близкое к Tertiary. На тёмной — может оказаться слишком тускло (Primary в Dark уже не такой яркий, 40% от него — низкая контрастность). Если в Dark mode disabled state читается плохо — Phase 2: пробрасывать State в Left/Right Side наборы и красить через fill-токены.
 
@@ -293,6 +296,8 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-10-11 — консолидация disabled: аватар-плейсхолдер → `Background/Disabled`.** В рамках общей консолидации disabled-заливки (единый `Background/Disabled` на зазор-ступенях Zinc/150 light / Zinc/850 dark — см. [COLOR-PALETTE §3.4](./COLOR-PALETTE.md)) задизейбленный аватар в List Item получил per-variant fill-override. Было: `background`-эллипс аватара залит `Background/Tertiary` (Zinc/200) во всех состояниях — под opacity 0.4 disabled-аватар читался как чуть бледный, но не как disabled (проверка на реальных экранах: тон совпадал с активными аватарами). Стало: в 4 disabled-вариантах набора `6054:3813` `background`-эллипс → `Background/Disabled`. Opacity 0.4 на Left Side сохранён. Детали — §3a. Публикация UI-Kit — вручную.
 
 **2026-09-28 — добавлена ось `Density = Regular / Compact`.** По скану частотности плотных списков в PI3XrU (длинные ряды `≥6` List Item в ≥5 разделах: Выбор локации 13, Уведомления 10, Чат Rebuild 6, Профиль 01/01.3 5/5) заведён Compact. Реализация — на **публичном** наборе `List item` (`6054:3813`, 4→8 вариантов): `Compact` = `padding верт. 8→4`, `min-height 56→48` (≥44 WCAG). Базовый куб `.=List item` (~180 вариантов) **не трогали** — высота/padding живут на публичном варианте. Набору включён вертикальный auto-layout для аккуратной раскладки 8 вариантов. Compact — для селекторов/настроек; контентные (2-строчные, чат) — опционально. Публикация UI-Kit — вручную.
 

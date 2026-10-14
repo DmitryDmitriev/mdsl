@@ -69,9 +69,9 @@
 | Состояние | Квадрат (box) | Иконка (галочка) | Текст подписи |
 |-----------|---------------|------------------|---------------|
 | Unchecked, Active=Yes | stroke `Border/Active` (#18181b, 1 px) | — | `Text&Icon/Primary` |
-| Unchecked, Active=No (Disabled) | fill `Background/Tertiary` | — | `Text&Icon/Tertiary` |
+| Unchecked, Active=No (Disabled) | fill `Background/Disabled` | — | `Text&Icon/Tertiary` |
 | Checked, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** ⚠️ | `Text&Icon/Primary` |
-| Checked, Active=No (Disabled) | fill `Background/Tertiary` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
+| Checked, Active=No (Disabled) | fill `Background/Disabled` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
 | Indeterminate, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** (черта) | `Text&Icon/Primary` |
 | Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiary` (черта) | `Text&Icon/Tertiary` |
 | Hover | Подсветка по гайду продукта (в DS не реализовано — mobile-only) | — | `Text&Icon/Primary` |

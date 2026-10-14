@@ -51,7 +51,7 @@ Outer Ring всегда присутствует, Inner Dot — только в 
 | Select=No, Enabled=Yes  | `Border/Default`  | — (hidden) |
 | Select=Yes, Enabled=Yes | `Border/Active`   | `Accent/Primary` |
 | Select=No, Enabled=No   | `Border/Disabled` | — (hidden) |
-| Select=Yes, Enabled=No  | `Border/Disabled` | `Border/Disabled` |
+| Select=Yes, Enabled=No  | `Border/Disabled` | `Background/Disabled` |
 
 **Размеры:**
 - **Outer Ring:** 20×20 → `size/xs`. Stroke 2px → `border/emphasis`. Stroke alignment INSIDE.
@@ -132,4 +132,4 @@ RadioButton(
 - В Disabled бордер использовал `Text&Icon/Tertiary` — text-token для контура, семантически странно.
 - В Select=Yes Enabled=Yes ring и dot заливались одним `Accent/Primary` — нет визуального разделения, в крупных размерах смотрится как сплошной круг.
 
-Стало: компонент разделён на два ELLIPSE — Outer Ring (stroke) + Inner Dot (fill). Каждый слой использует своё семейство токенов: ring → `Border/*`, dot → `Accent/*`. Disabled теперь корректно использует `Border/Disabled` для обоих слоёв вместо смешивания семейств.
+Стало: компонент разделён на два ELLIPSE — Outer Ring (stroke) + Inner Dot (fill). Каждый слой использует своё семейство токенов: ring → `Border/*`, dot → `Accent/*`. Disabled: Outer Ring → `Border/Disabled`, Inner Dot → `Background/Disabled` (консолидация disabled-заливки 2026-10-11; ранее dot был на `Border/Disabled`).

@@ -129,7 +129,7 @@ Knob:      ○ Primary(white)   ○ Primary(white)    ○ Text&Icon/Tert(gray)
 | `Accent/Primary` | Track fill (On + Enabled) |
 | `Background/Primary` | Knob fill (Enabled) |
 | `Background/Tertiary` | Track fill (Off + Enabled) |
-| `Background/Secondary` | Track fill (Disabled) |
+| `Background/Disabled` | Track fill (Disabled) |
 | `Text&Icon/Tertiary` | Knob fill (Disabled) |
 
 ---
