@@ -44,7 +44,7 @@
 | Толщина бордера (покой) | **border/default** → border/1 (1 px) | |
 | Бордер (focus / акцент) | **border/emphasis** → border/2 (2 px) | Кольцо фокуса |
 | Бордер (покой, unchecked) | color: **Border/Active** (#18181b) | **COLOR-PALETTE** — канон 2026-07-13 (был неоднозначен Default/Active) |
-| Бордер (disabled) | Border/Disabled | |
+| Бордер (disabled) | — (disabled-бокс залит `Background/Disabled`, **без обводки**) | см. §4 |
 | Бордер (focus) | Border/Active или focus-ring | |
 | Фон квадрата (unchecked) | Background/Primary | |
 | Заливка (checked) | Accent/Primary | |
@@ -73,7 +73,7 @@
 | Checked, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** ⚠️ | `Text&Icon/Primary` |
 | Checked, Active=No (Disabled) | fill `Background/Disabled` | `Text&Icon/Tertiary` (приглушённая) | `Text&Icon/Tertiary` |
 | Indeterminate, Active=Yes | fill `Accent/Primary` | **`Text&Icon/Inverted W-B`** (черта) | `Text&Icon/Primary` |
-| Indeterminate, Active=No | fill `Background/Tertiary` | `Text&Icon/Tertiary` (черта) | `Text&Icon/Tertiary` |
+| Indeterminate, Active=No | fill `Background/Disabled` | `Text&Icon/Tertiary` (черта) | `Text&Icon/Tertiary` |
 | Hover | Подсветка по гайду продукта (в DS не реализовано — mobile-only) | — | `Text&Icon/Primary` |
 | Focus | Border/Active или ring `Border/Focus` (рисуется в коде поверх, не отдельный variant) | — | `Text&Icon/Primary` |
 

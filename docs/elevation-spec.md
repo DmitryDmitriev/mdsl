@@ -11,7 +11,7 @@
 | Токен | Направление | Use case |
 |-------|-------------|----------|
 | **`Elevation/Top`** | ↓ вниз | Sticky Top App Bar при скролле |
-| **`Elevation/Floating`** | равномерная | Плавающие контролы над визуальной подложкой (map buttons, Price Pin) |
+| **`Elevation/Floating`** | всесторонняя (ambient) | Плавающие контролы над любой подложкой и в любой позиции (Chat Composer, FAB Bar, map buttons, Price Pin) |
 | **`Elevation/Bottom`** | ↑ вверх | Sticky bottom bar: клавиатура, плашка с CTA-кнопкой |
 
 Каждый токен — двухслойная тень: мягкая контактная + основная глубина.
@@ -24,8 +24,8 @@
 |-------|-------|---|---|------|--------|-------|
 | **Elevation/Top** | 1 | 0 | 4 | 16 | 0 | 0.08 |
 |                   | 2 | 0 | 0 | 6  | 0 | 0.08 |
-| **Elevation/Floating** | 1 | 0 | 1 | 3 | 0 | 0.15 |
-|                        | 2 | 0 | 1 | 2 | 0 | 0.30 |
+| **Elevation/Floating** | 1 | 0 | 0 | 12 | 0 | 0.08 |
+|                        | 2 | 0 | 2 | 4  | 0 | 0.05 |
 | **Elevation/Bottom** | 1 | 0 | -8 | 24 | 0 | 0.10 |
 |                      | 2 | 0 | -2 | 24 | 0 | 0.08 |
 
@@ -39,8 +39,8 @@
   0 0   6px rgba(0, 0, 0, 0.08);
 
 --elevation-floating:
-  0 1px 3px rgba(0, 0, 0, 0.15),
-  0 1px 2px rgba(0, 0, 0, 0.30);
+  0 0   12px rgba(0, 0, 0, 0.08),
+  0 2px 4px  rgba(0, 0, 0, 0.05);
 
 --elevation-bottom:
   0 -8px 24px rgba(0, 0, 0, 0.10),
@@ -63,7 +63,7 @@
 
 1. **Sticky-элемент у верхнего края** (Top App Bar при скролле) → `Elevation/Top`
 2. **Sticky-элемент у нижнего края** (клавиатура, плашка с CTA) → `Elevation/Bottom`
-3. **Плавающий контрол над визуальной подложкой** (карта, фото-галерея) → `Elevation/Floating`
+3. **Плавающий контрол** (Chat Composer, FAB Bar, map buttons, Price Pin) → `Elevation/Floating`. Тень всесторонняя (ambient) — читается в любой позиции: у нижнего края, в центре, над медиа. На светлой подложке того же тона, где одна тень недостаточна (белое поле на белом экране чата), определённость края несёт парный **`Border/Default` 1px inside** — так собран Chat Composer (`field` + `btn-add`). Send-кнопка (залитая) — без бордера.
 4. **Модалки, drawers, dropdowns, bottom sheets** — overlay без тени
 5. **Карточки, Product Card, Btn Collect, GridCard** — без теней; дифференциация через `border/default` или поверхность
 6. **Dark-тема** — ни один Elevation-стиль не применяется
@@ -88,11 +88,11 @@ export const elevation = {
   floating: Platform.select({
     ios: {
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.30,
-      shadowRadius: 2,
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
     },
-    android: { elevation: 2 },
+    android: { elevation: 3 },
   }),
   bottom: Platform.select({
     ios: {
@@ -107,7 +107,23 @@ export const elevation = {
 ```
 
 > **Dark mode:** при активной тёмной теме возвращать пустой объект — тени не применяются.
-> **React Native** поддерживает одну тень — используется параметр с наибольшим визуальным весом (Layer 2 для Floating, Layer 1 для Top/Bottom).
+> **React Native** поддерживает одну тень — используется параметр с наибольшим визуальным весом (Layer 1 для Floating/Top/Bottom — основная глубина).
+
+---
+
+## Android (Jetpack Compose)
+
+Двухслойную тень (`Elevation/Floating` и др.) можно воспроизвести **точно** через **`Modifier.dropShadow()`** (Compose 1.8+): кастомные `color` / `offset` / `radius` (= blur) / `spread`, модификаторы **чейнятся** — это прямой аналог многослойного `box-shadow`.
+
+```kotlin
+Modifier
+  .dropShadow(shape, Shadow(radius = 12.dp, spread = 0.dp,
+      color = Color(0x14000000), offset = DpOffset(0.dp, 0.dp)))   // Layer 1 · 8%
+  .dropShadow(shape, Shadow(radius = 4.dp,  spread = 0.dp,
+      color = Color(0x0D000000), offset = DpOffset(0.dp, 2.dp)))   // Layer 2 · 5%
+```
+
+> **Версия Compose:** `dropShadow`/`innerShadow` — API Compose 1.8+. Если версия старее — доступен только `Modifier.shadow(elevation)` = **одна** системная тень из dp-значения (Material), двухслойный токен точно не воспроизвести, только грубо приблизить. Перед имплементацией подтвердить версию Compose.
 
 ---
 
@@ -129,6 +145,8 @@ Effect Styles в файле **UI Kit Mobile** (`PI2N65xbeJPTc5oWhOP7Bl`):
 ---
 
 ## История решения
+
+**2026-10-05 — `Elevation/Floating` переопределён на ambient.** Старое значение (`0 1 3 /15% · 0 1 2 /30%`) было тёмным и тугим — заточено под контраст над медиа, но на светлой подложке давало жёсткое тёмное кольцо, а на нижнем баре (FAB) тень уходила вниз/под элемент. Проверка на реальных экранах с данными (не на пустом фоне): нужна **всесторонняя мягкая** тень, работающая в любой позиции. Новое значение `0 0 12 /8% · 0 2 4 /5%` (≈ ретро `[deprecated] Elevation/Light/3`). Привязаны Chat Composer и FAB Bar. Старое значение на момент правки не использовал ни один узел (0 consumers). Для определённости края на белом фоне плавающие поверхности композера дополнены `Border/Default` 1px.
 
 Модель с 5 уровнями elevation + 2 sheet-теней была заменена на 3 токена после аудита реального использования подъёмов в приложении (апрель 2026). Аудит показал:
 

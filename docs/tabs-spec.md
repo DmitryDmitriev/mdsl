@@ -22,8 +22,8 @@ Figma: страница **🟢 Tabs**, наборы:
 ## 2. Структура
 
 ```
-Tabs (COMPONENT_SET, варианты Size × Items)
-└── Size=md, Items=3 (root, HORIZONTAL, HUG/HUG)
+Tabs (COMPONENT_SET, варианты Size × Distribution; `Items` = Figma Slot)
+└── Size=md, Items(slot)=3 default (root, HORIZONTAL, HUG/HUG)
     ├── padding = spacing/1 (4) со всех сторон
     ├── radius = radius/3 (12) — для md/lg
     ├── itemSpacing = 0
@@ -127,7 +127,7 @@ Tabs (COMPONENT_SET, варианты Size × Items)
 
 ### Tab items count
 
-В Figma — выбирается через variant `Items` (2 / 3 / 4). Если нужно больше — добавить вариант `Items=5` (расширение по запросу).
+Количество табов — **не variant, а Figma Slot** `Items` (см. §2): дизайнер кладёт в слот любое число инстансов `.=Tab Item`. Дефолтное наполнение слота — 3 таба. (Прежняя формулировка про `variant Items=2/3/4` — легаси до перехода на Slot, снято 2026-10-15.)
 
 ### Icon / Badge per tab
 
@@ -138,7 +138,7 @@ Boolean'ы `Icon` и `Badge` управляются на уровне каждо
 **Note:** библиотека Larixon не имеет 20px иконок, поэтому md и lg табы используют одинаковый 24px ассет. При появлении 20px ассетов — обновим md.
 
 **Конфигурация Badge внутри Tab Item** (по умолчанию):
-- `Type=Default, Size=2xs, Shape=Pill`
+- `Type=neutral, Size=2xs, Shape=Pill` (в Badge нет типа «Default»; дефолт для счётчика табов — `neutral`, несемантический индикатор)
 - `Icon=false, Label=false, Counter=true` — только число (паттерн «Notifications 8»)
 - Дизайнер меняет число через override counter-текста
 
@@ -230,7 +230,7 @@ Building blocks (`.=Tab Item`) залочены и скрыты из Assets че
 1. **Building block `.=Tab Item`** отдельным SET'ом — переиспользуется в `Tabs` через инстансы. Размеры через variant `Size`, активность через variant `Active`.
 2. **Tabs containerHeight** не токенизирован — вычисляется из item-height (`size/sm/md/lg`) + двойной `spacing/1` (4×2). Не нужен отдельный token.
 3. **Item padding-y** не задан — высота фиксирована, контент центруется (правило 6 audit rules).
-4. **Items=2/3/4** — наиболее частые кейсы. Items=5 добавим по запросу.
+4. **Items — Figma Slot** (произвольное число табов, дефолт 3). Раньше описывался как variant 2/3/4 — снято 2026-10-15 (противоречило §2).
 5. **Active controlled by variant** — каждый инстанс таба меняет своё `Active` через override. В коде это будет `selected` prop.
 
 **Следующие шаги:**
