@@ -100,7 +100,9 @@ Search v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 | **Filled** | `Background/Secondary` | `Border/Default` (1px) | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | — |
 | **Disabled** | `Background/Disabled` | `Border/Disabled` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | `Text&Icon/Tertiary` | — |
 
-**Примечание:** placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`. То же правило, что и в Input v2.
+**Примечания:**
+- **Supporting-текст (унификация C1, 2026-10-15):** в покое (Default/Focused/Editing/Filled) — `Text&Icon/Secondary`; в **Disabled** — `Text&Icon/Tertiary`; в **Error** — `Accent/Negative`. Колонку Supporting в таблице читать по этому правилу.
+- placeholder в Default использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`. То же правило, что и в Input v2.
 
 ### Каретка (курсор)
 

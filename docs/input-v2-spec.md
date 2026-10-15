@@ -113,6 +113,7 @@ Input v2 (COMPONENT) — VERTICAL, HUG, gap = spacing/1 (4)
 | **ReadOnly** | `Background/Tertiary` | Outline: `Border/Default` · Filled: нет | `Text&Icon/Primary` | `Text&Icon/Secondary` | `Text&Icon/Tertiary` | `Text&Icon/Secondary` | — |
 
 **Примечания:**
+- **Supporting-текст (унификация C1, 2026-10-15):** в покое (Default/Focused/Editing/Filled/ReadOnly) — `Text&Icon/Secondary`; в **Disabled** — `Text&Icon/Tertiary` (приглушён, как весь контент disabled-поля); в **Error** — `Accent/Negative`. В таблице состояний колонку Supporting читать по этому правилу (прежний Tertiary для покоя снят).
 - placeholder в Default/Focused использует `Text&Icon/Secondary` (не `Tertiary`) — чтобы визуально отличать от Disabled, где текст — `Text&Icon/Tertiary`.
 - `Focused` показывает **пустое** поле (placeholder + каретка перед ним) — это «начало ввода». Поле в фокусе **со значением** — это отдельное состояние `Editing` (каретка после значения).
 

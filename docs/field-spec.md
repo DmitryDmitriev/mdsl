@@ -94,7 +94,7 @@ Field (контейнер, HORIZONTAL, height по Size, padding H по Size)
 ├── Content   (FILL)  — наполнение компонента
 └── Trailing  (опц.)  — иконка/действие/шеврон
 Label          (опц., над Field)      — Base/Body 2 Medium, Text&Icon/Secondary (цвет по состоянию)
-Supporting Text (опц., под Field)     — Caption/caption-md, Text&Icon/Secondary (Error → Accent/Negative)
+Supporting Text (опц., под Field)     — Caption/caption-md; цвет: Text&Icon/Secondary в покое · Text&Icon/Tertiary в Disabled · Accent/Negative в Error
 ```
 
 **Нейминг слотов — `Leading` / `Trailing`** (не Left/Right). Совпадает с целевым неймингом Android (`leading/trailingIcon`) и UIKit-конвенцией iOS (directional). В легаси Android (`AppTextField`, @Deprecated) остались `Left/Right` — уезжают с деприкейтом.
