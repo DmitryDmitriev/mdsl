@@ -160,7 +160,7 @@ FAB-кнопки всегда круглые. Radius задаётся на са�
 
 Размер FAB-кнопок (lg / md / sm), наличие текста рядом с FAB и destructive/disabled-состояния задаются на инстанс-уровне через **Swap Instance** или override инстанса — не зашиты в variant-матрицу. Это даёт дизайнеру гибкость без раздувания компонент-сета.
 
-**Elevation:** все 3 варианта используют единый shadow-стиль `Elevation/Bottom` (sticky bottom-edge floating bar, см. [elevation-spec.md](./elevation-spec.md) §«Правила применения»).
+**Elevation:** все 3 варианта используют единый shadow-стиль **`Elevation/Floating`** (ambient `0 0 12 /8% · 0 2 4 /5%`). FAB Bar — плавающий контрол над контентом, тень должна читаться со всех сторон (у нижнего края в т.ч.); канон Floating введён под это (см. [elevation-spec.md](./elevation-spec.md) §«Правила применения», п. 3). Было `Elevation/Bottom` — переведено 2026-10-19.
 
 ---
 
@@ -219,6 +219,8 @@ Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
 ---
 
 ## История миграций
+
+**2026-10-19 — Elevation: `Elevation/Bottom` → `Elevation/Floating`.** FAB Bar — плавающий контрол, тень должна читаться со всех сторон; переведён на ambient-тень `Elevation/Floating` (та же, что у чат-композера). Снято противоречие с `elevation-spec` (который относил FAB Bar к Floating ещё с 2026-10-05, но перевод был запаркован). Перепривязано 6 нод набора `5879:812`. Android синкнуть (был на Bottom, `AppFabBar.kt`). Вопрос Android LAA-4622 п.1.
 
 **2026-07-13 — разрешён конфликт цвета капсул (token-аудит Android).** Спека описывала тёмные акцентные капсулы (`Accent/Primary` + белая иконка), Figma-нода `5879:812` и код — нейтральные светлые (`Background/Secondary` + `Border/Default` + `Text&Icon/Primary`, подпись `caption-sm Medium`). Канон = Figma/код (решение дизайна). §Цвета и §Типографика переписаны под нейтральную схему; код не менялся.
 
