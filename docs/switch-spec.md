@@ -89,7 +89,7 @@ Switch (COMPONENT) ← Track
 |---|---|---|---|---|
 | **Track** | True | `Accent/Primary` | #09090B (Zinc/950) | #E4E4E7 (Zinc/200) |
 | **Knob** | True | `Background/Primary` | #FFFFFF (White/Main) | #09090B (Zinc/950) |
-| **Track** | False | `Background/Secondary` | #F4F4F5 (Zinc/100) | #18181B (Zinc/900) |
+| **Track** | False | `Background/Disabled` | #ECECEE (Zinc/150) | #202023 (Zinc/850) |
 | **Knob** | False | `Text&Icon/Tertiary` | #D4D4D8 (Zinc/300) | #71717A (Zinc/500) |
 
 ### State = Off (выключен)
@@ -98,7 +98,7 @@ Switch (COMPONENT) ← Track
 |---|---|---|---|---|
 | **Track** | True | `Background/Tertiary` | #E4E4E7 (Zinc/200) | #52525B (Zinc/600) |
 | **Knob** | True | `Background/Primary` | #FFFFFF (White/Main) | #09090B (Zinc/950) |
-| **Track** | False | `Background/Secondary` | #F4F4F5 (Zinc/100) | #18181B (Zinc/900) |
+| **Track** | False | `Background/Disabled` | #ECECEE (Zinc/150) | #202023 (Zinc/850) |
 | **Knob** | False | `Text&Icon/Tertiary` | #D4D4D8 (Zinc/300) | #71717A (Zinc/500) |
 
 ### Визуальная таблица

@@ -144,7 +144,7 @@
 | **Overlay** | `Background/Overlay` (скрим: alpha Black/40 Light, alpha Black/30 Dark) | — | `Text&Icon/White applied` (White/Main в **обеих** темах, theme-invariant) | **не делаем** |
 
 - **Почему отдельный `Type`, а не fill-override:** контраст-гарантия — это связка «скрим + theme-invariant белая иконка», а не один цвет. Зашита в вариант, чтобы продукт не собирал её вручную (иначе — silent неправильные fill'ы, как было обнаружено в PB-1581).
-- **Почему нет Disabled:** disabled-фон `Background/Disabled` (Zinc/100) над фото невидим; overlay-контролы — всегда активные триггеры. Зеркалит логику «destructive icon-only не делаем».
+- **Почему нет Disabled:** disabled-фон `Background/Disabled` (Zinc/150) над фото невидим; overlay-контролы — всегда активные триггеры. Зеркалит логику «destructive icon-only не делаем».
 - **`Text&Icon/White applied` ≠ `Inverted W-B`:** White applied белый в обеих темах (медиа не знает о теме), Inverted W-B флипается на тёмный в Dark. Для контента поверх фото — только White applied.
 - **`Background/on Photo` НЕ использовать** для overlay-контролов: в Dark-теме = alpha White/50 (белый скрим), на нём белая иконка пропадает. `on Photo` — это photo-tint, а не control-scrim. См. COLOR-PALETTE.md §2.1.
 - **Ограничение скрима:** полупрозрачный Black/40 не даёт WCAG-гарантии над чисто-белым участком фото — врождённое свойство любого scrim-подхода (так же в iOS/Material). При проблеме на ярких фото — escape hatch — theme-invariant фикс-токен.

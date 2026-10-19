@@ -24,7 +24,7 @@
 |---------------|-----------------|------------|
 | `checked`     | true / false    | Заливка + иконка |
 | `indeterminate` | true / false  | Частичный выбор |
-| `disabled`    | true / false    | В Figma реализован как variant property `Active=No`. Border/disabled, текст tertiary |
+| `disabled`    | true / false    | В Figma реализован как variant property `Active=No`. Бокс залит `Background/Disabled` (без обводки), текст tertiary |
 | `size`        | sm / md         | При двух размерах — привязка к spacing/radius |
 
 > **Naming в Figma:** variant properties — `Select = Off / On / Indeterminate` и `Active = Yes / No`. **`Active=No` ≡ Disabled state**. Отдельного `Focus` variant нет: визуальный фокус (border/2 + Border/Active) рисуется поверх компонента в коде через focus-ring; spec-таблица состояний §4 описывает Focus как роль, не как Figma variant.
