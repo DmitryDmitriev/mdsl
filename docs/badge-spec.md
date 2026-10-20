@@ -239,12 +239,35 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 - **Заменяет прежний совет «на картинке → Outline»** (см. §«Когда Filled/Outline»): Outline (цветная обводка + цветной текст) над непредсказуемым фото контраст тоже не гарантирует.
 - Связка тождественна `ButtonIcon Type=Overlay` (контролы поверх медиа) — единый overlay-паттерн. См. composition-rules §11.
 
+### 7.2. Бейдж на тёмной held-поверхности (`Surface=On dark`)
+
+**Где:** нижний инфо-блок XL-карточки (поверх фото со скримом), VIP+ Info panel и любая поверхность `Surface/Black applied`. Эти поверхности тёмные **в обеих темах** (held).
+
+**Проблема.** Обычный бейдж собран на adaptive-парах: светлая подложка `Background/Tinted/*` и тёмный текст. В Light на тёмной поверхности он выглядит как вырезанная белая «дырка». В Dark адаптивная пара меняется, но фото и скрим под ней не меняются, поэтому контраст не гарантирован. Ручные перекраски (прозрачный фон + `Zinc/100`, светлая заливка + `Cyan/400`) расходятся от карточки к карточке.
+
+**Правило.** На held-тёмной поверхности бейдж тоже held: сплошная held-заливка и `Text&Icon/White applied`. Обводки нет, заливка сама отделяет бейдж от фона. Это та же пара, что у `Fill=Contrast` и `Type=Overlay`.
+
+| Тип бейджа | Default (светлая поверхность) | On dark (held) | Контраст текста |
+|---|---|---|---|
+| Акцент «Hot» (Most viewed / Популярное) | tinted-заливка + цветной текст | `Background/Orange applied` (Orange/700) + `White applied` | 5.2:1 |
+| Акцент «New» (New ads / Новое) | tinted-заливка + цветной текст | `Background/Cyan applied` (Cyan/700) + `White applied` | 5.4:1 |
+| Нейтральный (N views / просмотры) | `Background/Tinted/Neutral` + `Zinc/800` | `Background/Overlay` (Black 60–70%) + `White applied` (текст и иконка) | ≥ 7:1 на скриме |
+| Семантические DS Badge (good / info / negative / warning) | `Fill=Filled` | `Fill=Contrast` (held `Background/{hue} applied`) | см. §2 Contrast |
+
+- **Почему не Outline.** Цветная обводка и цветной текст тонкие. Над фото со скримом, который у верхнего края инфо-блока ещё полупрозрачен, контраст не гарантирован (см. §7.1).
+- **Почему не форс Dark-mode на слое.** Это анти-паттерн (COLOR-PALETTE §3.9): held-поверхность решается held-токенами, а не переключением режима.
+- **Размер, форма, шрифт** такие же, как у Default. Меняется только цвет.
+- **В коде:** вариант определяется **поверхностью**, а не темой: `surface = onDark` для XL / VIP+, `default` для остальных. Тема на него не влияет.
+
+**Figma.** Продуктовый `Social proof Badge` (Sellers-Cabinets, `11774:9520`) получил ось `Surface = Default | On dark` (+3 варианта, все на library-токенах). XL-карточки в CD-6398 переведены на `On dark`.
+
 ### Когда Filled, когда Outline (guidance для дизайнеров)
 
 | Сценарий | Filled | Outline |
 |---|---|---|
 | Бейдж на нейтральной поверхности (Card, List) | ✅ | OK |
 | Бейдж на цветной картинке / image-фоне (ad card) | используй **`Type=Overlay`** (§7.1) | Outline тоже не гарантирует контраст |
+| Бейдж на held-тёмной поверхности (XL-инфо, VIP+) | **`Surface=On dark`** / `Fill=Contrast` (§7.2) | ❌ |
 | Несколько бейджей в ряд (visual rhythm) | primary | secondary |
 | Counter / notification dot | ✅ | ⚠️ слабее заметен |
 | Dark mode на ярком фоне | ⚠️ | ✅ |
@@ -296,6 +319,8 @@ Bindings: см. §2 «Цвет» — Filled на `Background/Tinted/*`, Outline 
 ---
 
 ## История миграций
+
+**2026-10-20 — §7.2 бейдж на тёмной held-поверхности (CD-6398).** Правило `Surface=On dark`: held-заливка (`Orange applied` / `Cyan applied` / `Overlay`) + `White applied`, без обводки. Закрывает ручные перекраски бейджей в XL-карточке. Матрица DS Badge не менялась: для семантических бейджей это `Fill=Contrast`.
 
 **2026-08-31 — `Fill=Contrast` — третья заливка (+60 вариантов). Матрица 123 → 183.**
 
