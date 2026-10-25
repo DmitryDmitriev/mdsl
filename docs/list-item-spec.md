@@ -51,7 +51,7 @@ List Item (COMPONENT)
 | Слот | Доступные типы |
 |------|----------------|
 | **Left Side** (10 типов) | Icon, Image, Video, Avatar, Icon button, Radio, Checkbox, Switch, **Brand**, **Checkbox + Brand** |
-| **Right Side** | control-типы (Icon, Checkbox, Radio, Switch, Icon button, Accordion) + модификаторы `text` / `badge` + типы «Trailing text only» и «Trailing value» — см. ниже |
+| **Right Side** | control-типы (Icon, Checkbox, Radio, Switch, Icon button, Accordion) + модификаторы `text` / `badge` + типы «Trailing text only», «Trailing value» и «Button» — см. ниже |
 | **Content** (2 типа) | Основной (Title + Subtitle), с Overline |
 
 #### Геометрия слотов и модификаторы (reconciliation LIOS-2525, 2026-08-12)
@@ -77,6 +77,8 @@ List Item (COMPONENT)
 - `Text&Icon/Secondary` — когда рядом есть бейдж или контрол (текст становится подписью).
 
 **`Trailing value` — эмфаза значения (`5912:6691` вариант `Type=Trailing value`, добавлен 2026-09-28).** То же «значение» в правом слоте, но типографикой **`Base/Body 1 Medium` (16/24)** вместо `Body 2 Medium` (14/20). Когда применять: значение справа — **основа решения** в строке, а не второстепенная метадата. Канонический кейс — **priced-выбор**: список опций с ценой (периоды продвижения, тарифы, пакеты, доставка), где цена сопоставляется по строкам и должна читаться на равных с заголовком (`Body 1`), а не мелким trailing. Цвет — `Text&Icon/Primary` (это «значение»). Не путать с «суммой карточки» (напр. `Amount` пакетов 18 Bold) — то отдельный контекст карточки, в строку списка не тянем; для строки максимум `Trailing value` (16).
+
+**`Type=Button` — инлайн-действие кнопкой (`5912:6691` вариант `Type=Button`, добавлен 2026-10-25).** В правом слоте — компактная кнопка **Button `Type=Secondary, Size=32`** (`11998:447`), а не текст-ссылка. Когда применять: строка несёт **действие**, которое должно читаться как кнопка (нажми-сделай), а не как ссылка-значение. Канонический кейс — список заблокированных пользователей с действием **«Разблокировать»** (Mobile `57020:232100`): раньше собирали как `Trailing text only` (синий текст-линк), теперь — настоящая кнопка. Эмфаза средняя (Secondary); для низкой инлайн-эмфазы текст-линк (`Trailing text only`) остаётся. Лейбл по умолчанию — «Action». Высота 32 вписывается в Regular-ряд (60). Отличать от `Icon button` (иконка-действие без лейбла) и `Accordion button` (раскрытие).
 
 #### Composite Type=Checkbox + Brand
 
@@ -296,6 +298,8 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-10-25 — добавлен `Right Side / Type=Button` (инлайн-действие кнопкой).** Контекст: список заблокированных пользователей (Mobile `57020:232100`) с действием «Разблокировать», собранным текст-ссылкой (`Trailing text only`) — не читается как кнопка. У Right Side были `Icon button` / `Accordion button`, но не было кнопки-действия с лейблом. Добавлен 10-й вариант набора `List Item / Right Side` (`5912:6691`) `Type=Button` (`11998:447`): **Button `Type=Secondary, Size=32`**, лейбл по умолчанию «Action», высота 32 (вписывается в Regular-ряд 60). Эмфаза средняя; текст-линк (`Trailing text only`) остаётся для низкой. Публикация UI-Kit — вручную.
 
 **2026-10-11 — консолидация disabled: аватар-плейсхолдер → `Background/Disabled`.** В рамках общей консолидации disabled-заливки (единый `Background/Disabled` на зазор-ступенях Zinc/150 light / Zinc/850 dark — см. [COLOR-PALETTE §3.4](./COLOR-PALETTE.md)) задизейбленный аватар в List Item получил per-variant fill-override. Было: `background`-эллипс аватара залит `Background/Tertiary` (Zinc/200) во всех состояниях — под opacity 0.4 disabled-аватар читался как чуть бледный, но не как disabled (проверка на реальных экранах: тон совпадал с активными аватарами). Стало: в 4 disabled-вариантах набора `6054:3813` `background`-эллипс → `Background/Disabled`. Opacity 0.4 на Left Side сохранён. Детали — §3a. Публикация UI-Kit — вручную.
 
