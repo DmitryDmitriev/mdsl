@@ -186,7 +186,8 @@ interface AvatarProps {
   /** URL изображения (для type="photo") или логотипа (для type="logo") */
   src?: string;
   
-  /** Override цвета фона кружка (Letter / Icon / Logo). Дефолт — Background/Tertiary.
+  /** Override цвета фона кружка. Дефолт `Background/Tertiary` — только для Letter / Icon.
+   *  Для Logo фон = цвет логотипа (`logoBgColor` / бэк `logo_bg_color`); fallback без значения — `#FFFFFF` (§2.1), НЕ `Background/Tertiary`.
    *  Предпочтительно токен-переменная; raw hex — escape hatch для token-less семей (тир/бренд). */
   bgColor?: string;
   
