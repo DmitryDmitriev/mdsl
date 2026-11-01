@@ -253,7 +253,7 @@ Header в Figma имеет дополнительную ось `Alignment=Top|Ce
 | **Среднее (после миграции 2026-05-12)** | **100%** | ~85% | — | **~93%** |
 
 Что осталось вне canonical:
-- **Background/Overlay × 8** на декоративных backdrop-rectangles внутри `Bottom Sheet` mockup'а (приведено к canonical 2026-06-01, см. §«История миграций»). Визуально: dark scrim rgba(29,32,35) с opacity 60% Light / 80% Dark.
+- **Background/Overlay × 8** на декоративных backdrop-rectangles внутри `Bottom Sheet` mockup'а (приведено к canonical 2026-06-01, см. §«История миграций»). Визуально: dark scrim **`#0A0A0A` 60% Light / 70% Dark** (= `alpha Black/40` / `alpha Black/30`, [COLOR-PALETTE §2.1](./COLOR-PALETTE.md#21-background)). Прежнее описание `rgba(29,32,35)` 60/80 относилось к легаси `Background Old/Overlay` — не канон.
 - Декоративные размеры (логотип-фоны `e-mongolia_img`, `Img`) — это design-time mockup-ассеты, не токенизируемые контролы.
 
 Building blocks `.=Leading` и `.=Trailing` исключены из аудита.

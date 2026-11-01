@@ -105,7 +105,7 @@ Switch (COMPONENT) ← Track
 
 ```
            On + Enabled       Off + Enabled       Disabled (On/Off)
-Track:     ████ Accent/Pri    ░░░░ Tertiary       ░░░░ Secondary
+Track:     ████ Accent/Pri    ░░░░ Tertiary       ░░░░ Background/Disabled
 Knob:      ○ Primary(white)   ○ Primary(white)    ○ Text&Icon/Tert(gray)
 ```
 

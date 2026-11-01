@@ -99,8 +99,8 @@ RadioButton(
     colors = RadioButtonDefaults.colors(
         selectedColor = AccentPrimary,    // inner dot in selected state
         unselectedColor = BorderDefault,  // ring in unselected state
-        disabledSelectedColor = BorderDisabled,
-        disabledUnselectedColor = BorderDisabled,
+        disabledSelectedColor = BackgroundDisabled,   // inner dot, Select=Yes+Disabled (таблица §4)
+        disabledUnselectedColor = BorderDisabled,     // ring, Select=No+Disabled
     )
 )
 ```
