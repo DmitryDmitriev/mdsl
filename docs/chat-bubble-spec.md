@@ -1,8 +1,10 @@
 # Chat Bubble — спецификация
 
-> ⚠️ **DEPRECATED / не используется.** Chat Bubble в продукте не применяется — договорённость команды (подтверждено 2026-08-19). Компонент в Figma не собран и собираться не планируется. Спека оставлена как **исторический артефакт** (цветовые решения tinted-баблов могут пригодиться при возврате чат-сценария), но из активного реестра выведена. Не поддерживать, в drift-аудит не включать.
+> ✅ **Актуально (2026-11-01, сверка Android).** Прежний статус DEPRECATED снят: KMP-чат построен на **собранном COMPONENT_SET** `Chat Bubble` — Figma `56603:4214` (файл `PI3XrUDuoGyK4aXkqyzYoB`). **12 вариантов:** `Type = Outgoing / Incoming / Admin` × `Group = Single / First / Middle / Last` (ось Group = sticky-corners, см. §6). Ориентир — этот компонент (последние проработки чата), а не прежний guideline.
 
-Сообщение в чате (мессенджер, отзывы, support). Атомарный color-coded элемент с tinted-плашкой. **Компонент не реализован как формальный COMPONENT_SET в Figma** — спека фиксирует guideline для возможной будущей реализации.
+Сообщение в чате (мессенджер, отзывы, support). Атомарный color-coded элемент с tinted-плашкой.
+
+> **Собранный набор мигрирован на канонические Tinted** (не на легаси `Decor/Bubble Old/*`, см. §2): **Outgoing** = `Background/Tinted/Info` (синий, контент `Text&Icon/on Tinted/Info`), **Incoming** = `Background/Secondary` (нейтральный, контент `Text&Icon/Primary`), **Admin** = `Background/Tinted/Good` (зелёный, контент `Text&Icon/on Tinted/Good`). Типы `question / answer / negative` из §1 — расширенный guideline, в собранном наборе их пока нет. Внутри бабла есть под-блоки: quote-reply (цитата: бар `Accent/Link`, автор `Text&Icon/Link`, превью `Text&Icon/Secondary`), неподдерживаемое вложение (`Background/Tertiary` + `ic_broken_image_fill`), timestamp.
 
 ---
 
