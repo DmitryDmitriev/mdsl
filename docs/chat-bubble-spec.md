@@ -16,7 +16,7 @@
 | **incoming** | Собеседник | `Background/Secondary` или `Surface/Surface Primary` | `Text&Icon/Primary` |
 | **question** | Системный вопрос («Уточните детали», FAQ-prompt) | `Decor/Bubble Old/Question` | `Text&Icon/Primary` |
 | **answer** | Системный ответ / решение | `Background/Tinted/Info` | `Text&Icon/on Tinted/Info` |
-| **admin** | Сообщение модератора / системы | `Decor/Bubble Old/Admin` | `Text&Icon/Primary` |
+| **admin** | Сообщение модератора / системы | `Background/Tinted/Good` *(в собранном наборе; было легаси `Decor/Bubble Old/Admin`)* | `Text&Icon/on Tinted/Good` |
 | **negative** | Отклонено / ошибка отправки / red flag от системы | `Background/Tinted/Negative` | `Text&Icon/on Tinted/Negative` |
 
 **Outgoing vs Answer** — внешне неразличимы (оба Info-shade), потому что в продукте они никогда не появляются в одном экране одновременно: outgoing — мессенджер с собеседником, answer — system-prompt в FAQ/support. Если сценарий смешает их — пересмотрим.
@@ -25,18 +25,25 @@
 
 ---
 
-## 2. Цветовые токены — почему `Decor/Bubble Old/*`?
+## 2. Цветовые токены — канонические Tinted
 
-Изначально для чат-баблов планировалось переиспользовать канонические `Background/Tinted/Question` и `/Admin`. После 2026-05-07 канонические токены удалены — нейтральная и admin-роли в системных компонентах закрыты `Background/Tinted/Neutral` и `Background/Tinted/Good`. Чат-баблы оставлены на отдельной легаси-группе `Decor/Bubble Old/Question` и `/Admin`:
+Собранный компонент (`56603:4214`) использует **канонические токены**, а не легаси-группу `Decor/Bubble Old/*`. Фактические привязки по типам:
 
-- **Decor/Bubble Old/Question** (Zinc/100 / Zinc/800) — нейтральный shade для системных вопросов в чате.
-- **Decor/Bubble Old/Admin** (Green/100 / Green/700) — модераторские сообщения. Слегка отличается от `Background/Tinted/Good` по тёмной shade (Green/700 vs Green/800), что даёт лёгкое визуальное различие admin vs success в Dark.
+| Тип | Фон плашки | Контент / timestamp |
+|---|---|---|
+| **Outgoing** | `Background/Tinted/Info` (Blue/50 Light → Blue/900 Dark) | `Text&Icon/on Tinted/Info` |
+| **Incoming** | `Background/Secondary` (нейтральный, без tinted) | контент `Text&Icon/Primary`; timestamp `Text&Icon/Secondary` |
+| **Admin** | `Background/Tinted/Good` (Green/50 Light → Green/900 Dark) | `Text&Icon/on Tinted/Good` (включая timestamp) |
 
-`Decor/Bubble Old/*` — единственное оставшееся легаси-наследство в новой палитре, изолированное за чат-сценарием. Когда чат-bubble будет реализован как формальный COMPONENT_SET — пересмотрим: либо мигрируем на canonical (Neutral / Good / Info), либо переименуем `Decor/Bubble/*` в каноническую группу без суффикса Old.
+- **Outgoing / Admin — tinted-плашки** с парным on-Tinted-контентом: пара «фон + текст» адаптивная (§2.7/§2.8), меняется синхронно по теме, контраст держится внутри каждой темы.
+- **Incoming — без tinted**: нейтральный `Background/Secondary` = «обычное сообщение собеседника», в отличие от смысловых tinted-баблов.
+- Под-блоки внутри бабла (quote-reply: бар `Accent/Link`, автор `Text&Icon/Link`, превью `Text&Icon/Secondary`; неподдерживаемое вложение `Background/Tertiary` + `ic_broken_image_fill`) — см. §3.
 
-Текст на этих shade-плашках берётся из обычного `Text&Icon/Primary` (структурный компонент с tinted-фоном — см. `alert-spec.md` принцип цвета текста). Парный `Text&Icon/on Tinted/*` для чата не применяется.
+> **Легаси `Decor/Bubble Old/Question` и `/Admin` в собранном наборе больше не используются.** Admin-баблы переведены на канонический `Background/Tinted/Good` (не `Decor/Bubble Old/Admin` Green/700). Прежний план «держать чат на `Decor/Bubble Old/*` до реализации» закрыт самой миграцией на canonical. Если `Decor/Bubble Old/*` не потребляется больше нигде — это кандидат на удаление из палитры (отдельная foundation-задача, не в рамках чата).
 
-**Applied-слой (§2.12/§3.9) на чат-баблы не влияет — проверено 2026-08-19.** Токены `Text&Icon/on Tinted/*` (outgoing / answer / negative) — **adaptive** (Color/800 Light → Color/50 Dark, §2.8), не held. Они сидят на adaptive-плашке `Background/Tinted/*` (50-shade Light → 900-shade Dark, §2.7), поэтому пара «фон + текст» адаптируется синхронно и контраст держится внутри каждой темы (8.7–9.5:1). Held-слой `* applied` нужен только когда on-color-текст лежит на **theme-invariant** декор-поверхности или произвольном медиа (coach mark, tier-бейдж, элементы над фото) — у чат-бабла такого сценария нет. По тесту §3.9 chat bubble — функциональная/adaptive ветка. **Менять на `applied` не нужно.**
+> **Типы `question / answer / negative`** (см. §1) — расширенный guideline, в собранном наборе их пока нет. Если появятся — брать канонические `Background/Tinted/*` (Neutral / Info / Negative) с парным `Text&Icon/on Tinted/*`, не легаси.
+
+**Applied-слой (§2.12/§3.9) на чат-баблы не влияет — проверено 2026-08-19.** Токены `Text&Icon/on Tinted/*` (outgoing / admin) — **adaptive** (Color/800 Light → Color/50 Dark, §2.8), не held. Они сидят на adaptive-плашке `Background/Tinted/*` (50-shade Light → 900-shade Dark, §2.7), поэтому пара «фон + текст» адаптируется синхронно и контраст держится внутри каждой темы (8.7–9.5:1). Held-слой `* applied` нужен только когда on-color-текст лежит на **theme-invariant** декор-поверхности или произвольном медиа (coach mark, tier-бейдж, элементы над фото) — у чат-бабла такого сценария нет. По тесту §3.9 chat bubble — функциональная/adaptive ветка. **Менять на `applied` не нужно.**
 
 ---
 
@@ -154,6 +161,6 @@ ChatBubble (HORIZONTAL container, выравнивание по типу)
 
 ## 11. Связь с другими компонентами
 
-- `Decor/Bubble Old/Question`, `/Admin` — **только** в чате. Для нейтральных бейджей и других color-coded элементов вне чата — `Background/Tinted/Neutral` (см. `badge-spec.md`).
+- Собранный чат-бабл — на канонических `Background/Tinted/Info` (outgoing) / `Background/Secondary` (incoming) / `Background/Tinted/Good` (admin). Легаси `Decor/Bubble Old/Question`, `/Admin` набором больше не потребляются (см. §2). Для нейтральных бейджей и других color-coded элементов — `Background/Tinted/Neutral` (см. `badge-spec.md`).
 - Avatar в чате — стандартный компонент `Avatar v2`, размеры S/M.
 - Status badge для error — иконка из ic_*-набора.
