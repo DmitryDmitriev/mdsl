@@ -26,8 +26,8 @@ Dialog (root, 328 wide, radius 16, clipsContent)
 │   └── Text (frame)
 │       ├── Header (row, minHeight 32)
 │       │   ├── title (TEXT)
-│       │   └── close wrapper (32×32, FIXED)
-│       │       └── ButtonIcon (visibility = property `Close`)
+│       │   └── close wrapper (32×32) — visibility = property `Close` (схлопывается при Close=off)
+│       │       └── ButtonIcon
 │       └── Content slot
 └── Buttons Stack (instance, FILL/HUG)
 ```
@@ -94,7 +94,7 @@ Dialog (root, 328 wide, radius 16, clipsContent)
 - Строка с заголовком и (опционально) кнопкой ×.
 - `minHeight = 32` — высота не схлопывается, когда Close=off.
 - **`Alignment=Left` + `Close=on`** → close wrapper 32×32 в потоке справа от title; title слева, text-align по левому краю.
-- **`Alignment=Left` + `Close=off`** → ButtonIcon внутри wrapper'а скрыт, обёртка остаётся 32×32 для стабильности layout'а (заголовок не съезжает).
+- **`Alignment=Left` + `Close=off`** → **close wrapper схлопывается** (visibility привязана к свойству `Close`), заголовок (`FILL`) растягивается на всю ширину **296**. Высота Header row держится `minHeight=32` и от обёртки не зависит. *(2026-11-01: раньше обёртка оставалась 32×32, заголовок упирался в 252 — исправлено, см. §10.)*
 - **`Alignment=Center`** → close wrapper **всегда скрыт** (visible=false на мастер-уровне), title занимает всю ширину 296 с text-align по центру. Boolean `Close` на Center-варианте **не применяется** — этот вариант не предусматривает close. См. §«Свойства» и Историю миграций 2026-06-01.
 
 ### 3.5 Buttons Stack (instance)
@@ -184,6 +184,8 @@ interface DialogProps {
 
 ## 10. История решений
 
+**2026-11-01 — `Close=off` → заголовок на всю ширину (из Post-ad flow).** В Left-варианте видимость `close wrapper` привязана к свойству `Close` (`Close#6632:0`). Раньше `Close` прятал только внутренний ButtonIcon, а обёртка 32px оставалась в потоке — заголовок упирался в **252** вместо 296. Теперь при `Close=off` обёртка схлопывается, заголовок (`FILL`) = вся ширина **296**; высота Header row стабильна через `minHeight=32`. Проверено на временном инстансе (title=296). Мастер `6632:39`, Header `4701:417`. Center-вариант не затронут (close там всегда скрыт). Требует ручного ре-паблиша UI-Kit; продуктовые инстансы с `Close=off` подхватят фикс после публикации.
+
 **2026-04-23 — аудит модалок.** Скан продуктового файла: 12 диалогов в 4 визуальных кластерах с зоопарком размеров (312/328/344) и радиусов (16/24/28/32). Зафиксировано:
 
 1. **Единый компонент** — без вариантов «Basic / Editable / IMG»
@@ -198,7 +200,7 @@ interface DialogProps {
 2. Иконка-иконка по умолчанию **140×140**, прижата к низу Image-зоны (`primaryAxisAlignItems=MAX`) — ближе к заголовку, сверху декоративный whitespace.
 3. Подмена картинки — через **Instance Swap** вложенного инстанса (placeholder Bell_02). API не позволил создать formal `INSTANCE_SWAP` property — UI-механизм Figma полностью покрывает кейс.
 4. Добавлен variant `Alignment=Left/Center`. В Center close-кнопка позиционирована **абсолютно** (top-right), title занимает полную ширину для честного центрирования без переноса при коротких заголовках.
-5. Close wrapper всегда 32×32 FIXED — `Close=off` скрывает только иконку, обёртка остаётся для стабильности высоты Header row.
+5. ~~Close wrapper всегда 32×32 FIXED — `Close=off` скрывает только иконку, обёртка остаётся для стабильности высоты Header row.~~ **Пересмотрено 2026-11-01** (см. запись ниже): обёртка схлопывается при `Close=off`, заголовок занимает всю ширину; высота держится `minHeight=32`.
 6. Buttons Stack установлен в **FILL** по горизонтали — ширина 328 без overrides.
 7. Воздух между Content и Buttons убран — описание касается кнопки. Если визуально не хватает — добавим `paddingBottom` у Content в будущей итерации.
 
