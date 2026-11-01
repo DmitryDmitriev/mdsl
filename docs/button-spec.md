@@ -117,6 +117,9 @@
 | Secondary | `Button/Secondary` (= Accent/Secondary) | — | `Text&Icon/Primary` | Fill `Background/Disabled`, Text `Text&Icon/Disabled` |
 | Outline | прозрачный | `Border/Default`, толщина по размеру (см. § «Обводка») | `Text&Icon/Primary` | BG **остаётся прозрачным**; Border `Border/Disabled` (та же толщина); Text `Text&Icon/Disabled` |
 | Ghost | прозрачный | — | `Text&Icon/Primary` | BG **остаётся прозрачным**; Text `Text&Icon/Disabled` |
+| **Link** | прозрачный | — | **`Text&Icon/Link`** (синий) | BG прозрачный; Text `Text&Icon/Disabled` |
+
+> **`Type=Link`** — текстовая кнопка-ссылка без фона и обводки, цвет **синий `Text&Icon/Link`** (не нейтральный `Text&Icon/Primary`, как у Ghost). Для inline-ссылочных действий («Подробнее», «Изменить», «Показать все»), где нужен именно ссылочный, а не кнопочный акцент. Отличие от Ghost — цвет: Ghost нейтральный, Link синий. В Figma — `145:23138`, 8 символов: `Size {32 / 40 / 48 / 56} × State {Default / Disabled}`, `Form=Square`, text-only (ширина по тексту). Синий линк-цвет — канон Larixon Mobile (см. [COLOR-PALETTE.md](./COLOR-PALETTE.md), `Text&Icon/Link`).
 
 #### Negative-варианты (destructive actions)
 
@@ -340,6 +343,7 @@ Subtitle — **не альтернатива длинному названию �
 Для каждого размера (lg, md, sm, xs):
 
 1. **Text — нейтральные:** Primary, Secondary, Outline, Ghost (Default + Disabled); опция «только текст» или «текст + иконка». Form: `Square` | `Rounded`.
+   - **Link** — text-only ссылочная кнопка (синий `Text&Icon/Link`): `Size {32/40/48/56} × State {Default/Disabled}`, `Form=Square` = **8 символов**. См. §«Цвета».
 2. **Text — destructive:** Negative, Soft Negative, Ghost Negative (**только Default** — Disabled у destructive не делаем, см. §«Цвета — Negative-варианты»); опция «только текст» или «текст + иконка».
    - **Negative, Soft Negative** — Form: `Square` | `Rounded`.
    - **Ghost Negative** — Form: только `Square`. Rounded не делаем (ghost-фон без обводки + rounded-форма теряют визуальный контур, на фоне списка превращаются в неотличимый «красный текст»).
