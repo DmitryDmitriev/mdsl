@@ -117,6 +117,7 @@
 | Dialog (slots: Title/Description/Buttons Stack/Image) | ✅ | [dialog-spec](./dialog-spec.md) |
 | Empty State (Inline / Full-screen) | ✅ | [empty-state-spec](./empty-state-spec.md) |
 | ImageCard (App image card) | 🟡 | [imagecard-spec](./imagecard-spec.md) — черновик из iOS-реализации (LIOS-2687); ждёт Figma-компонент + сверку значений |
+| Island (Остров) — контейнер «заголовок + слот» | 🟡 | [island-card-spec](./island-card-spec.md) — компонент собран (`11804:288`, 8 вариантов Header×Slot); header сведён на новый Section Header `12132:14` (саб в SH), старый ретайрнут (2026-11-02) |
 | Sheet / Sheets | ✅ | [sheets-spec](./sheets-spec.md) |
 | Skeleton / Listing Card (Grid + Wide) | ✅ | [skeleton-spec](./skeleton-spec.md) |
 | Skeleton / List Item | ✅ | [skeleton-spec](./skeleton-spec.md) |
