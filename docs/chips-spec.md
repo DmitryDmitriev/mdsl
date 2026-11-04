@@ -16,14 +16,14 @@ Chips -- это компактные элементы в форме «табле
 
 | Свойство | Значения |
 |---|---|
-| **Fill** | **Filled** (default), **Outline** |
+| **Fill** | **Filled** (default), **Outline**, **Elevated** (для не-белых поверхностей) |
 | **Active** | Yes, No |
 | **Icon** | Left, Right, No, Icon Only |
 | **Type** | Text+Icon, Text, Icon |
 | **Size** | 32 (compact), 40 (standard), **48 (large)** |
 | **Shape** | **Rounded** (default для фильтров), **Pill** |
 
-Итого **96 вариантов** (с учётом валидных комбинаций Icon × Type) — для каждой комбинации: 2 Fill × 2 Active × 3 Size × 2 Shape.
+Итого **144 варианта** (с учётом валидных комбинаций Icon × Type) — для каждой комбинации: 3 Fill × 2 Active × 3 Size × 2 Shape.
 
 ### Boolean properties
 
@@ -109,6 +109,8 @@ Chip имеет два **визуальных режима** (по аналог�
 | **Filled** | **Yes** | `Background/Tertiary` | 1px `Border/Active` (INSIDE) | `Text&Icon/Primary` |
 | **Outline** | **No** | `Background/Primary` | 1px `Border/Default` (INSIDE) | `Text&Icon/Primary` |
 | **Outline** | **Yes** | `Background/Secondary` | 1px `Border/Active` (INSIDE) | `Text&Icon/Primary` |
+| **Elevated** | **No** | **`Surface/Surface Primary`** | 1px `Border/Subtle` (INSIDE) | `Text&Icon/Primary` |
+| **Elevated** | **Yes** | **`Surface/Surface Primary`** | 1px `Border/Active` (INSIDE) | `Text&Icon/Primary` |
 
 **Когда что использовать (guidance для дизайнера):**
 
@@ -123,9 +125,26 @@ Chip имеет два **визуальных режима** (по аналог�
 
 Правило: **если сомневаешься — Filled** (исторический default, нет визуального трения).
 
+### Fill=Elevated — для не-белых поверхностей (добавлен 2026-11-04)
+
+Filled и Outline собраны под страницу `Background/Primary` (белую). На **не-белой нейтральной поверхности** (`Background/Secondary` — ленты, filter-экраны, surface-карточки) обе ветки ломаются:
+- **Filled** (`Background/Secondary`) = тон поверхности → **сливается**;
+- **Outline** (`Background/Primary`) в **тёмной** теме уходит на `Zinc/950` — **темнее** поверхности `Zinc/900`, т.е. элевация в неправильную сторону.
+
+**Elevated** заливается из слоя **`Surface/Surface Primary`** (белый Light / `Zinc/800` Dark) — он **на ступень светлее `Background/Secondary` в обеих темах**, поэтому чип читается как приподнятая пилюля на любой нейтральной не-белой поверхности (Foundation-правило элевации, [COLOR-PALETTE §2.3](./COLOR-PALETTE.md)). Фон держится Surface Primary в обоих состояниях, Active сигналит **только бордером** (`Border/Subtle` → `Border/Active`) — идентичность «приподнятого» чипа не плывёт.
+
+| Поверхность под чипом | Рекомендуемый Fill |
+|---|---|
+| `Background/Primary` (белая страница) | **Filled** (default) / Outline |
+| **`Background/Secondary` и прочие нейтральные не-белые** (ленты, filter-card, surface) | **Elevated** |
+| Цветная картинка / фото | — overlay-приём, пока **не покрыто** (отдельная задача) |
+
+> **Охват Elevated — только нейтральные не-белые поверхности.** Для tinted/цветных и фото-поверхностей нужен held/overlay-приём (как Badge Overlay / On-dark) — отдельная история, здесь не покрыто.
+
 **Active-сигнал внутри каждой ветки:**
 - **Filled:** fill сдвигается Secondary → Tertiary (на одну ступень от страницы) + 1px `Border/Active`. Контейнер заметно «уплотняется» + bright border.
 - **Outline:** fill Primary → Secondary + border Default → Active. Два признака одновременно.
+- **Elevated:** fill держится `Surface/Surface Primary`, сигнал — только бордер `Border/Subtle` → `Border/Active`. Элевация сама отделяет чип от поверхности; active = яркий бордер.
 
 **Ключевое решение по элевации (Filled).** Active=No fill = `Background/Secondary` — мягкая filled-плашка. Active=Yes — `Background/Tertiary` (на ступень дальше от Background/Primary страницы, плюс bright border) — тем самым активный chip визуально «выпирает» сильнее, чем default. Это инверсия классической логики (где active обычно темнее) в пользу того, что Tertiary + border ярче читается, чем чистый fill shift в обе стороны.
 
@@ -317,6 +336,14 @@ Chip(
 ---
 
 ## История миграций
+
+**2026-11-04 — `Fill=Elevated` — третий режим Fill для не-белых поверхностей (+48 вариантов). Матрица 96 → 144. (CD-7138, parent CD-6396, link PR-50.)**
+
+- Запрос: нужен контрастный чип для нейтральных не-белых поверхностей (`Background/Secondary` — ленты, filter-экраны), где Filled сливается с фоном, а Outline в тёмной теме уходит темнее поверхности (Zinc/950 < Zinc/900 — элевация в неправильную сторону).
+- Решение: третий `Fill=Elevated` — заливка `Surface/Surface Primary` (на ступень светлее Secondary в обеих темах, Foundation-правило элевации §2.3 COLOR-PALETTE). Маппинг: Active=No → `Surface/Surface Primary` + `Border/Subtle`; Active=Yes → `Surface/Surface Primary` + `Border/Active`; текст/иконка `Text&Icon/Primary`. Фон держится Surface Primary в обоих состояниях, Active сигналит только бордером.
+- Сборка: клон 48 Outline-вариантов (`4210:54`) → перепривязка фона на `Surface/Surface Primary`, бордеров на Subtle/Active. Ось Fill: Outline/Filled → +Elevated. Проверено на `Background/Secondary` (Filled сливается, Elevated отделяется, Active читается). Покрытие токенами 100%.
+- Охват — только нейтральные не-белые поверхности; цветные/фото (overlay-приём) не покрыты — отдельная задача.
+- Референс-макет: Заявки на услугу — макеты (DS), лента `node 1017:7816`. Публикация UI-Kit — вручную.
 
 **2026-06-09 — Shape фильтр-чипов: Pill → Rounded (QA-reconciliation LIOS-2514).**
 
