@@ -97,6 +97,19 @@ Alert (VERTICAL, FIXED 328, padding=spacing/3 (12), gap=spacing/4 (16), radius=1
 | **Description** | boolean | — | `true` | Standard, Card |
 | **Supporting** | boolean | — | `false` | Card |
 | **Action** | boolean | — | `true` | Card |
+| **Close** | boolean | — | `false` | все |
+
+---
+
+## 5a. Close (dismissable) — опциональный крестик
+
+`Close` (boolean, default `false`) показывает trailing-крестик в правом-верхнем углу. Доступен во всех стилях и типах.
+
+- **Аффорданс:** `ButtonIcon` Type=Ghost / Size=32 / Form=Square с глифом `ic_close` (16). Прозрачный фон, 32-бокс = тап-таргет, цвет глифа — `Text&Icon` (тема-зависимый, тот же токен-биндинг, что у иконок прочих ghost-кнопок; в Dark становится светлым). Зеркалит паттерн `Show close affordance` у Snackbar, но на нашем `ButtonIcon`, а не на Material-импорте.
+- **Размещение:** Compact / Standard — trailing-элемент в корневом HORIZONTAL после text-блока; Card — trailing-элемент в `content-row` после `inner` (Action-кнопка снизу не задета). Во всех стилях выровнен по верхней строке (counterAxis MIN).
+- **Поведение:** скрыт по умолчанию (auto-layout не резервирует место — существующие алерты не меняются). При `Close=true` text-блок (`body` / `inner`, FILL) поджимается под крестик.
+
+**Когда включать `Close`:** только для **некритичных «прочитал — убрал» подсказок** (tip, необязательный анонс). **Не включать** на алертах, объясняющих состояние (валидация, статус модерации, ошибка с действием) — закрытие спрячет нужную инфу, которую юзер потом не восстановит. Для transient-сообщений «показали и само ушло» — `Snackbar`, не dismissable Alert. Persist dismiss-состояния (чтобы подсказка не всплывала повторно после закрытия) — на стороне продукта/рантайма, в компоненте только слот.
 
 ---
 
@@ -142,6 +155,8 @@ interface AlertProps {
   body: string;                                               // compact: required body / standard,card: description
   supporting?: string;                                        // card only
   action?: { label: string; onClick: () => void };           // card only
+  dismissible?: boolean;                                      // trailing close (×); default false
+  onClose?: () => void;                                       // called when close tapped
   icon?: ReactNode;                                           // override default
 }
 ```
@@ -190,6 +205,17 @@ interface AlertProps {
 ---
 
 ## 11. История решений
+
+**2026-11-04 — добавлен опциональный `Close` (dismissable alert).**
+
+Реализован roadmap-пункт из захода 2026-04-29 («если потребуется — добавить вариант с trailing close (×) для dismissable alerts»). Триггер — реальный кейс: закрываемая подсказка в Seller Cabinet (`Alert` instance `13243:59150`, Sellers-Cabinets).
+
+- Заведён boolean-проп **`Close`** (`Close#12191:0`, default `false`) на сете `6947:14128`, применён ко всем 15 вариантам. Variant-count не изменился (boolean, не ось).
+- Аффорданс — `ButtonIcon` Type=Ghost / Size=32 / Form=Square, глиф `16 / ic_close` (ключ `016be49b…`) swap'нут в дефолтный глиф. Биндинг цвета (`Text&Icon`, var `f9e337a2…/2207:12`) совпадает у обоих глифов → swap сохранил токен без литерал-override.
+- Размещение: Card → в `content-row` после `inner`; Standard / Compact → в корень после text-блока. counterAxis MIN → крестик по верхней строке. Hidden-дефолт: auto-layout не резервирует место, существующие алерты не затронуты.
+- Правило применения — §5a: только некритичные «прочитал-убрал» подсказки; не для статус/валидация/error-with-action алертов (там close прячет нужную инфо). Transient → Snackbar. Persist dismiss — рантайм.
+- Прецедент в DS: зеркалит `Show close affordance` у Snackbar, но на нашем `ButtonIcon` (не Material-импорт).
+- Jira: CD-6396 «Mobile DS» (Design Task). Публикация UI Kit Mobile — вручную (Дмитрий); до публикации проп не доедет до продуктовых инстансов.
 
 **2026-06-05 (вечер) — supporting text color зафиксирован как `Text&Icon/Primary`.**
 
