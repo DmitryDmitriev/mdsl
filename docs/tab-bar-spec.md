@@ -154,97 +154,9 @@ Tab Bar (COMPONENT) — sticky-bottom, FILL width
 
 ## 7a. Floating Tab Bar (плавающий вариант)
 
-**Отдельный компонент `Tab Bar / Floating`** (COMPONENT_SET `12070:1292`, стр. «🟢 Tab Bar»), пересобран **2026-10-28** по эталону продукта (нода `11922:1477`). Остров-навигация: скруглённый бар-пилюля, оторванный от нижнего края, поверх контента. Заменил старую сборку `11700:454` (удалена).
+Floating Tab Bar вынесен в отдельную спеку — **[tab-bar-floating-spec.md](./tab-bar-floating-spec.md)** (source of truth). Там: ячейка, иконки outline/fill, пин, оси `Active × Language` (25, с таблицей переводов), токены, решения (блюр/каунтер/pill), Code Connect (`AppFloatingTabBar`).
 
-**Почему отдельный компонент, а не ось `Style` на `Tab Bar` (`4318:873`):** anchored-бар маппится на нативные контролы (UITabBar / NavigationBar) и делится по `Type=Android/iOs`. Floating — **кастомный кросс-платформенный** паттерн (не нативный), платформенного деления не имеет; ось Style внутри нативного набора дала бы избыточные `Android×Floating` / `iOs×Floating` дубли. Поэтому — сосед в семействе Tab Bar.
-
-### Ячейка — `.=Tab Bar Button` (`5879:799`)
-
-Бар собран из отдельного компонента-ячейки `.=Tab Bar Button` (COMPONENT_SET `5879:799`, стр. «🟢 Tab Bar»). Ячейка — 80×48, VERTICAL: иконка 24×24 по центру сверху, лейбл fs10 под ней.
-
-| Свойство ячейки | Тип | Значения / дефолт |
-|---|---|---|
-| **`Selected`** | VARIANT | `True` / `False` |
-| **`Label`** (`#5735:10`) | TEXT | текст лейбла |
-| **`Pin`** (`#12069:0`) | BOOLEAN | `false` (дефолт) — опциональный красный пин оповещения |
-
-**`Selected=True` → активный таб:** подложка-пилюля `Background/Tertiary`, **заливная** иконка `Text&Icon/Primary`, лейбл `Text&Icon/Primary`.
-**`Selected=False` → неактивный:** без подложки, **outline**-иконка `Text&Icon/Secondary`, лейбл `Text&Icon/Secondary`.
-
-### Иконки — пара outline / fill на таб
-
-Активное состояние = **залитая** иконка, неактивное = **контурная** (это основной маркер, кроме цвета и пилюли):
-
-| Таб | Outline (inactive) | Fill (active) |
-|---|---|---|
-| Home | `ic_House` | `ic_House_fill` |
-| Favorite | `ic_favorite` | `ic_favorite_fill` |
-| New ad | `ic_add_round` | `ic_add_round_fill` |
-| Messages | `ic_chats` | `ic_chats_fill` |
-| Profile | `ic_person` | `ic_person_fill` |
-
-Иконки — из SECTION «tab icon» (`12056:2630`). Состав 5 табов: **Home / Favorite / New ad / Messages / Profile**.
-
-### Пин оповещения (`Pin`)
-
-Опциональный красный dot в правом-верхнем углу иконки (BOOLEAN-свойство на ячейке, по умолчанию выключен):
-
-| Параметр | Значение |
-|---|---|
-| Форма / размер | ELLIPSE 7×7 |
-| Fill | `Accent/Negative` |
-| Обводка (ring) | контекстная: активный таб → `Background/Tertiary` (цвет пилюли), неактивный → `Background/Secondary` (цвет бара); strokeWeight 1.5, OUTSIDE |
-| Позиция | ABSOLUTE, правый-верх иконки (icon_x+16 / icon_y+1), constraints `{horizontal: CENTER, vertical: MIN}` |
-
-Обводка пина цветом фона-носителя даёт «вырез» — пин не слипается с глифом.
-
-### Варианты — `Active` × `Language` (25)
-
-Локализация **зашита в компонент** отдельной осью (референс-макет шёл с 5 языками):
-
-| Ось | Значения |
-|---|---|
-| **Active** | `Home` / `Favorite` / `New ad` / `Messages` / `Profile` |
-| **Language** | `English` / `Ελληνικά` / `Тоҷикӣ` / `Монгол` / `Русский` |
-
-5 × 5 = **25 вариантов**. Выбор языка меняет лейблы всех пяти табов разом.
-
-### Контейнер-бар
-
-```
-Tab Bar / Floating (COMPONENT_SET, оси Active × Language)
-└── бар — HORIZONTAL, pill (cornerRadius 999), fill Background/Secondary, Elevation/Floating
-    ├── min-width 344, clipsContent = false (тень не обрезается)
-    └── 5 × .=Tab Bar Button (одна Selected=True, остальные False)
-```
-
-**Токены:**
-
-| Элемент | Значение | Токен |
-|---|---|---|
-| Бар fill | Secondary (адаптив по теме) | `Background/Secondary` |
-| Бар radius | pill | `cornerRadius 999` |
-| Бар elevation | Floating (в Dark теней нет — elevation-spec) | `Elevation/Floating` |
-| Бар min-width | 344 | — |
-| Активный таб — пилюля | сплошной, адаптив | `Background/Tertiary` |
-| Активная иконка / лейбл | заливная / Primary | `Text&Icon/Primary` |
-| Неактивная иконка / лейбл | контурная / Secondary | `Text&Icon/Secondary` |
-| Пин fill / ring | негатив / контекстный фон | `Accent/Negative` + `Background/Tertiary`‖`Background/Secondary` |
-
-**Активный индикатор — pill + fill-иконка (осознанное отличие от anchored).** Anchored §5 отверг pill в пользу accent-цвета. Для floating pill возвращён: на тёмной / медиа-поверхности цветовой accent читается хуже, чем плашка-подложка. Плюс смена формы иконки (outline→fill) — дополнительный не-цветовой маркер (A11y). Плашка — **сплошной `Background/Tertiary`**, НЕ opacity-приём (paint-level opacity на bound-краске нестабильна через пайплайн компонент→инстанс — рендерилась в 100%).
-
-**`clipsContent = false`** на баре и сете — иначе `Elevation/Floating` обрезается рамкой компонента.
-
-**Тема — адаптивная** (референс-макет был Dark). Компонент не пиннит variable-режим — наследует контекст экрана.
-
-**Прозрачность / блюр — нет (решение 2026-11-05).** Фон бара сплошной `Background/Secondary` — **как у `FAB Bar`** (у него тоже сплошная поверхность, без effect-стиля и без блюра). Floating-бар и FAB держим консистентными: блюр-материал не вводим ни в Figma, ни в коде. (Референс-макет был полупрозрачным поверх фото — от этого отказались ради консистентности с FAB.)
-
-**Счётчики на табах — не нужны (решение 2026-11-05).** Числовой Badge-counter во floating не вводим; индикатор непрочитанного — `Pin` (точка `Accent/Negative`). (TODO §10 про canonical Badge относится к anchored building blocks, не к floating.)
-
-**Лейблы разделов — зашиты в компонент на всех 5 языках** (EN / Ελληνικά / Тоҷикӣ / Монгол / Русский) из стресс-теста локализации. Проверено 2026-11-05: все 25 вариантов заполнены, плейсхолдеров нет. Отдельного файла-источника нет — канон живёт в самом компоненте.
-
-**Открытые задачи (Floating):**
-- **Publish UI-Kit** — вручную (единственный гейт перед хендоффом).
+Коротко: отдельный компонент `Tab Bar / Floating` (`12070:1292`, стр. «🟢 Tab Bar») — кросс-платформенный island-бар, НЕ ось `Style` на нативном anchored-баре. Опубликован, отдан в разработку (CD-6705).
 
 ---
 
@@ -262,6 +174,7 @@ Tab Bar / Floating (COMPONENT_SET, оси Active × Language)
 
 ## 9. Связанные документы
 
+- [tab-bar-floating-spec.md](./tab-bar-floating-spec.md) — **Floating Tab Bar** (плавающий island-вариант), отдельный компонент
 - [badge-spec.md](./badge-spec.md) — Badge для каунтеров на вкладках (см. §10 TODO)
 - [elevation-spec.md](./elevation-spec.md) — `Elevation/Bottom`
 - [COLOR-PALETTE.md](./COLOR-PALETTE.md) — `Accent/Primary`, `Background/Primary`, `Surface/Surface Primary`; §3.2 — правило sticky-overrride
