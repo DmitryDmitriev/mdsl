@@ -36,26 +36,27 @@ List Item — контейнер строки списка с опциональ
 ```
 List Item (COMPONENT)
   ├── .=Left Side (instance, опционально)
-  │   └── wrap-фрейм: center (1 str / 2+ str) ‖ top (3 str)
+  │   └── wrap-фрейм: center (1 str) ‖ top (2+ str)
   ├── .=Content (instance)
   └── .=Right Side (instance, опционально)
-      └── wrap-фрейм: center (1 str / 2+ str) ‖ top (3 str)
+      └── wrap-фрейм: center (1 str) ‖ top (2+ str)
 ```
 
-**Вертикаль leading/trailing — по числу строк (MD3, порог 88dp).** Правило [Material 3 lists](https://m3.material.io/components/lists/specs): leading и trailing **центрируются**, когда ряд `<88dp` (1–2 строки), и **прижимаются к верху**, когда ряд `≥88dp` (3+ строки). Leading и trailing всегда выровнены **одинаково** друг с другом. MD3 переключает это **динамически по высоте**; в Figma статический компонент не может быть одновременно center и top, поэтому ось `Type` разбита на три значения — по одному на режим выравнивания:
+**Ось `Type` считает строки ПОД заголовком** (не суммарные): `1 str` = заголовок + **1** строка саб-текста; `2+ str` = заголовок + **2 и более** строк. То есть `1 str` = MD3 «two-line» (2 суммарно), `2+ str` = MD3 «three-line+» (3+ суммарно).
 
-| `Type` | Строк | Высота (Regular) | Выравнивание leading/trailing | Верт. padding |
-|---|---|---|---|---|
-| **`1 str`** | 1 | 56 (Compact 52/48) | **center** | `spacing/2` (8) / Compact `spacing/1` (4) |
-| **`2+ str`** | 2 | 80 (<88) | **center** | `spacing/2` (8) / Compact `spacing/1` (4) |
-| **`3 str`** | 3+ | 88+ (≥88) | **top** | `spacing/3` (12) / Compact `spacing/2` (8) |
+**Вертикаль leading/trailing — по числу строк (MD3).** Правило [Material 3 lists](https://m3.material.io/components/lists/specs): элементы **центрируются** на ≤2-строчном ряду и **прижимаются к верху** на 3+-строчном (`≥88dp`). Leading и trailing всегда выровнены **одинаково**.
 
-- **`1 str` / `2+ str` → center.** Root/wrap `counterAxisAlignItems=CENTER` (Left, HORIZONTAL) и `primaryAxisAlignItems=CENTER` (Right `Frame 4`, VERTICAL), `paddingTop=0` на wrap. Проверено: checkbox/avatar и chevron оба `centerY` = центр ряда.
-- **`3 str` → top.** Left wrap `counterAxisAlignItems=MIN`, Right `Frame 4` `primaryAxisAlignItems=MIN`; корень `padding` = `spacing/3` (12). Leading (40-box) и trailing (chevron) прижаты к верхней строке заголовка (оба стартуют от `pt`), как в [MD3 «3-line item with checkbox»](https://m3.material.io/components/lists/specs). 4 варианта (Regular/Compact × Default/Disabled), id `12273:470/479/488/497`.
+| `Type` | Саб-строк | Суммарно | Высота (Regular) | Выравнивание leading/trailing | Верт. padding |
+|---|---|---|---|---|---|
+| **`1 str`** | 1 | 2 строки | 60 | **center** | `spacing/2` (8) / Compact `spacing/1` (4) |
+| **`2+ str`** | 2+ | 3+ строки (≥88dp) | 88 | **top** | `spacing/3` (12) / Compact `spacing/2` (8) |
 
-**Когда что ставить:** 1 строка → `1 str`; 2 строки → `2+ str`; **3 и более строк (ряд ≥88dp) → `3 str`** (иначе leading/trailing центрируются и «висят» в середине высокого ряда — неверно по MD3).
+- **`1 str` → center.** Root `counterAxisAlignItems=CENTER`. Заголовок + 1 строка (саб-текст в одну строку, truncate). checkbox/avatar и chevron по центру ряда.
+- **`2+ str` → top.** Left wrap `counterAxisAlignItems=MIN`, Right `Frame 4` `primaryAxisAlignItems=MIN`; корень `padding`=`spacing/3` (12, Regular) / `spacing/2` (8, Compact). Leading (40-box) и trailing (chevron) прижаты к верхней строке заголовка, как в [MD3 «3-line item with checkbox»](https://m3.material.io/components/lists/specs).
 
-> **История выравнивания.** До 2026-11-11 `2+ str` был жёстко align-top для всего диапазона (checkbox и chevron не совпадали на 2-строчном ряду). 11.11 выровняли `2+ str` на center (фикс 2-строчного), затем, по разбору редлайнов MD3 (1/2-line center, 3-line top), ось `Type` разбита: `2+ str` держит center (2 строки), добавлен `3 str` = top (3+ строки). `2+ str` **не переименован** — чтобы не рвать существующие инстансы. **Compose/iOS — синк:** 1–2 строки center, 3+ строки top (12dp).
+**Когда что:** саб-текст в 1 строку → `1 str`; саб-текст в 2+ строки → `2+ str`.
+
+> **История выравнивания (2026-11-11).** `2+ str` исходно был align-top, но checkbox (в 40-боксе, центрирует глиф) и chevron (28-бокс) давали расхождение центров глифов — выглядело «криво». По ходу разбора я ошибочно: (а) центрировал `2+ str`, (б) резал placeholder, (в) плодил `3 str`. **Откат:** модель = два варианта `1 str` (center) / `2+ str` (top); `str` считает строки под заголовком. `2+ str` приведён к top (оба слота top-align, pad 12), placeholder — родные 2 строки саб-текста. **Compose/iOS — синк:** `1 str` center, `2+ str` top (12dp).
 
 ### Building blocks (вне аудита)
 
@@ -209,8 +210,8 @@ Inline auto-layout frame без отдельного компонента-обё
 | paddingTop / paddingBottom (Density=Compact) | 4 px | `spacing/1` | min-height 48 |
 | paddingLeft | 16 px | `spacing/4` | |
 | paddingRight | 16 px | `spacing/4` | |
-| Выравнивание leading/trailing | center (`1 str`/`2+ str`) ‖ top (`3 str`) | — | По MD3-порогу 88dp; см. §3 |
-| Верт. padding `3 str` (Regular) | 12 px | `spacing/3` | 3-строчный ряд ≥88dp (MD3) |
+| Выравнивание leading/trailing | center (`1 str`) ‖ top (`2+ str`) | — | По числу строк, MD3; см. §3 |
+| Верт. padding `2+ str` (Regular / Compact) | 12 / 8 px | `spacing/3` / `spacing/2` | 3+-строчный ряд ≥88dp (MD3) |
 | Gap внутри Right Side слота | 8 px | `spacing/2` | между text / badge / control |
 
 ### Content slot
@@ -319,9 +320,9 @@ ListItem(
 
 ## 8. История миграций
 
-**2026-11-11 (вечер) — ось `Type` разбита на `1 str` / `2+ str` / `3 str` под MD3-порог 88dp.** По разбору всех трёх редлайнов MD3 (1-line и 2-line → center, 3-line → top) стало ясно: один `2+ str` не может обслужить и 2 строки (center), и 3+ (top) — MD3 переключает выравнивание динамически по высоте, а Figma-вариант статичен. Добавлен `Type=3 str` (4 варианта `12273:470/479/488/497`, Regular/Compact × Default/Disabled): leading/trailing `top` (Left wrap `counterAxisAlignItems=MIN`, Right `Frame 4` `primaryAxisAlignItems=MIN`), верт. padding `spacing/3` (12, Regular) / `spacing/2` (8, Compact), высота 88. `2+ str` оставлен center и **не переименован** (не рвём существующие инстансы). Проверено измерением: `2+ str` leading/trailing `centerY`=центр; `3 str` оба прижаты к верху (старт от pt=12). §3/§4 переписаны. **Compose/iOS синк:** 1–2 строки center, 3+ top(12). UI-Kit — публикация вручную. Jira: CD-7296.
-
-**2026-11-11 — вертикаль leading/trailing `2+ str` → MD3-порог 88dp (center для baseline).** Контекст: в Post-ad flow checkbox и chevron в многострочной строке не совпадали по вертикали — checkbox ~центр (40-бокс сам центрирует глиф), chevron на 4px top-anchored. Диагностика: мастер `2+ str` был собран жёстко **align-top** (wrap `paddingTop=4`) для всего диапазона 2+ строк, что недооценивало доминантный 2-строчный кейс (80dp). По [MD3 lists](https://m3.material.io/components/lists/specs) ряд <88dp центрирует leading/trailing, ≥88dp — top. Решение (Дмитрий): «по канонам МТ3». Мастер `6054:3813`, 4 варианта `2+ str` (Regular/Compact × Default/Disabled) приведены к center: Left wrap `counterAxisAlignItems=CENTER`+`paddingTop=0`, Right wrap `Frame 4` `primaryAxisAlignItems=CENTER`+`paddingTop=0`. Проверено измерением: leading и trailing оба `centerY=40`. Реальные 3-строчные ряды (≥88dp) — top на инстансе (мастер оптимизирован под 2 строки). §3 переписан. **Compose/iOS — синк** (раньше код тоже align-top). Публикация UI-Kit — вручную.
+**2026-11-11 — `2+ str` приведён к top (MD3 «three-line»); модель = 2 варианта.** Контекст: в Post-ad flow checkbox и chevron в `2+ str` не совпадали по вертикали — checkbox (40-бокс центрирует глиф), chevron (28-бокс) → центры глифов расходятся. Ключ: **ось `Type` считает строки ПОД заголовком** — `1 str` = заголовок+1 (MD3 two-line → center), `2+ str` = заголовок+2+ (MD3 three-line+ → **top**). Значит `2+ str` и есть 3+-строчный кейс и должен быть top. Итог: `6054:3813`, 4 варианта `2+ str` (Regular/Compact × Default/Disabled) → Left wrap `counterAxisAlignItems=MIN`, Right `Frame 4` `primaryAxisAlignItems=MIN`, корень `padding`=`spacing/3` (12) / Compact `spacing/2` (8); placeholder — родные 2 строки саб-текста. Проверено: leading/trailing прижаты к верхней строке. `1 str` (center) не тронут. §3/§4 переписаны. **Compose/iOS синк:** `1 str` center, `2+ str` top(12). UI-Kit — публикация вручную. Jira: CD-7296.
+>
+> *Путь к решению (для истории):* по дороге ошибочно центрировал `2+ str`, резал placeholder и заводил лишний `Type=3 str` — всё откачено. Правильная модель: два варианта по числу строк под заголовком.
 
 **2026-11-02 — уточнён disabled у `Type=Button` (ответ на dev-сверку).** Канон: недоступное инлайн-действие выключается на уровне **самой кнопки** (её `State=Disabled` = `Secondary/Disabled`: фон `Background/Disabled`, текст `Text&Icon/Disabled`), **строка остаётся `Default`**; opacity-shortcut строки (§3a) к Button не применяется — у кнопки есть своё спроектированное disabled, 40%-полупрозрачная кнопка читается как «ghost/loading». Button — второе исключение из opacity-shortcut после Avatar placeholder. Отдельный disabled-вариант строки с `Type=Button` не нужен. По длинной подписи переподтверждено правило §3: `max-width ≈ 50%` строки + собственное «…» у кнопки, заголовок режется первым. Код уже так (align Figma/спека → код). §3a и §3 дополнены; в Figma собраны примеры (disabled-кнопка + длинная подпись с maxWidth 50%). Публикация UI-Kit — вручную.
 
