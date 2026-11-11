@@ -36,13 +36,20 @@ List Item — контейнер строки списка с опциональ
 ```
 List Item (COMPONENT)
   ├── .=Left Side (instance, опционально)
-  │   └── [Type=2+ str] обёрнут wrap-фреймом с paddingTop=spacing/1 (4 px) — align-top
+  │   └── [Type=2+ str] wrap-фрейм центрирует слот по вертикали ряда (MD3, <88dp)
   ├── .=Content (instance)
   └── .=Right Side (instance, опционально)
-      └── [Type=2+ str] обёрнут wrap-фреймом с paddingTop=spacing/1 (4 px) — align-top
+      └── [Type=2+ str] wrap-фрейм центрирует слот по вертикали ряда (MD3, <88dp)
 ```
 
-**Wrap-фреймы для `Type=2+ str`.** В многострочном варианте Left/Right слоты обёрнуты в дополнительные фреймы (`6054:3837`, `6054:3844`) с `paddingTop = spacing/1` (4 px). Это даёт визуальный align-top: икон-слоты прижимаются к верхней строке заголовка, а не центрируются по всему многострочному блоку. Для `1 str` обёрток нет — центрирование по высоте строки.
+**Вертикаль leading/trailing — по порогу MD3 88dp (пересмотр 2026-11-11).** Правило [Material 3 lists](https://m3.material.io/components/lists/specs): leading и trailing элементы **центрируются по вертикали ряда, когда ряд <88dp**, и прижимаются к верху при **≥88dp**; leading и trailing всегда выровнены **одинаково** друг с другом.
+
+- **`1 str`** (56/48 dp) — center (`counterAxisAlignItems=CENTER` на корне). Всегда так и было.
+- **`2+ str`** — baseline 2 строки = **80 dp < 88 → center.** Мастер (`6054:3813`, 4 варианта `2+ str`) приведён к center: Left wrap (`6054:3837`) `counterAxisAlignItems=CENTER` + `paddingTop=0`; Right wrap `Frame 4` (`6054:3844`) `primaryAxisAlignItems=CENTER` + `paddingTop=0`. Проверено: checkbox/avatar и chevron оба `centerY=40` (центр ряда) — совпадают.
+
+**Реальные 3-строчные ряды (≥88dp) — top на инстансе.** Один статический вариант `2+ str` обслуживает и 2, и 3+ строки; по MD3 ≥88dp хочет top. Когда контент реально разворачивается в ≥3 строки (ряд ≥88dp) — на инстансе вернуть wrap-слотам `paddingTop=4` / align-top. Мастер оптимизирован под доминанту (2 строки).
+
+> **До 2026-11-11** мастер собирал `2+ str` жёстко **align-top** (wrap `paddingTop=4`) для всего диапазона — это недооценивало baseline-кейс (checkbox и chevron не совпадали по вертикали). Развёрнуто на MD3-порог по прямому решению Дмитрия. **Compose/iOS — синк:** привести leading/trailing `2+ str` к center при <88dp.
 
 ### Building blocks (вне аудита)
 
@@ -196,7 +203,7 @@ Inline auto-layout frame без отдельного компонента-обё
 | paddingTop / paddingBottom (Density=Compact) | 4 px | `spacing/1` | min-height 48 |
 | paddingLeft | 16 px | `spacing/4` | |
 | paddingRight | 16 px | `spacing/4` | |
-| Wrap padding (Left/Right, `Type=2+ str`) | 4 px (top) | `spacing/1` | Align-top для многострочного контента — см. §3 |
+| Wrap padding (Left/Right, `Type=2+ str`) | 0 (center) | — | Center по MD3 <88dp (с 2026-11-11); top (`paddingTop=4`/`spacing/1`) только на инстансе для ≥88dp — см. §3 |
 | Gap внутри Right Side слота | 8 px | `spacing/2` | между text / badge / control |
 
 ### Content slot
@@ -304,6 +311,8 @@ ListItem(
 ---
 
 ## 8. История миграций
+
+**2026-11-11 — вертикаль leading/trailing `2+ str` → MD3-порог 88dp (center для baseline).** Контекст: в Post-ad flow checkbox и chevron в многострочной строке не совпадали по вертикали — checkbox ~центр (40-бокс сам центрирует глиф), chevron на 4px top-anchored. Диагностика: мастер `2+ str` был собран жёстко **align-top** (wrap `paddingTop=4`) для всего диапазона 2+ строк, что недооценивало доминантный 2-строчный кейс (80dp). По [MD3 lists](https://m3.material.io/components/lists/specs) ряд <88dp центрирует leading/trailing, ≥88dp — top. Решение (Дмитрий): «по канонам МТ3». Мастер `6054:3813`, 4 варианта `2+ str` (Regular/Compact × Default/Disabled) приведены к center: Left wrap `counterAxisAlignItems=CENTER`+`paddingTop=0`, Right wrap `Frame 4` `primaryAxisAlignItems=CENTER`+`paddingTop=0`. Проверено измерением: leading и trailing оба `centerY=40`. Реальные 3-строчные ряды (≥88dp) — top на инстансе (мастер оптимизирован под 2 строки). §3 переписан. **Compose/iOS — синк** (раньше код тоже align-top). Публикация UI-Kit — вручную.
 
 **2026-11-02 — уточнён disabled у `Type=Button` (ответ на dev-сверку).** Канон: недоступное инлайн-действие выключается на уровне **самой кнопки** (её `State=Disabled` = `Secondary/Disabled`: фон `Background/Disabled`, текст `Text&Icon/Disabled`), **строка остаётся `Default`**; opacity-shortcut строки (§3a) к Button не применяется — у кнопки есть своё спроектированное disabled, 40%-полупрозрачная кнопка читается как «ghost/loading». Button — второе исключение из opacity-shortcut после Avatar placeholder. Отдельный disabled-вариант строки с `Type=Button` не нужен. По длинной подписи переподтверждено правило §3: `max-width ≈ 50%` строки + собственное «…» у кнопки, заголовок режется первым. Код уже так (align Figma/спека → код). §3a и §3 дополнены; в Figma собраны примеры (disabled-кнопка + длинная подпись с maxWidth 50%). Публикация UI-Kit — вручную.
 
