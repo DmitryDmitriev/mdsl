@@ -75,6 +75,9 @@ Orange уже имеет полную шкалу в палитре (введён
 | Somon    | #0093D3  | #8BCEFF   |
 | PinTT    | #990099  | #FFAAF3   |
 | Unegui   | #E60803  | #F22418   |
+| JaCars   | #009549  | #4FD08B ⚠️ |
+
+⚠️ **JaCars Dark (`#4FD08B`) — предложенный (осветлённый тинт Light'а), ждёт ратификации.** Light `#009549` — бренд-зелёный из логотипа JaCars (ямайская айдентика), донесён из веба 2026-11-17 по запросу. **Не путать с Bazaraki `#136938`** — на сайте jacars.net хром переиспользует общий классифайд-зелёный Bazaraki, но бренд-идентичность JaCars = отдельный зелёный логотипа. Переменные заведены в `App Color Palette` (`Brand Color/JaCars` + `/JaCars Inverted` + `Brand/JaCars`), публикация Kit — вручную.
 
 **Inverted-пары:** для каждого бренда дополнительная пара, где Primary и Secondary меняются местами.
 
@@ -315,7 +318,7 @@ Decor-примитивы (Purple/Pink/Cyan/Teal/Indigo + дополнения Or
 > **Held-механизм для expressive (ратифицировано 2026-08-05).** Theme-invariant поведение цвета кодифицировано отдельно от decor-hue mapping — слой `* applied` (§2.12) + правило adaptive vs held (§3.9). Оси ортогональны: applied отвечает «как цвет ведёт себя по теме», decor — «какой hue под категорию».
 
 ### 2.9 Brand Color
-Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`.
+Семантика бренда: обычная и Inverted (см. §1.7). В UI использовать семантические имена `Brand/Somon`, `Brand/PinTT`, `Brand/Unegui`, `Brand/Bazaraki`, `Brand/JaCars`.
 
 **Структура каждой brand-роли:**
 - `Brand/<name>` — основной brand-цвет, Light/Dark значения по таблице §1.7.
