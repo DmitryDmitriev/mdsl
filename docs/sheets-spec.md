@@ -54,9 +54,10 @@ Sheets (шит) — выезжающая панель поверх контен�
 | Padding horizontal | space → spacing/4 (16 px) |
 | Padding vertical | spacing/3 (12 px) |
 | Gap между заголовком и кнопкой закрытия | spacing/2 (8 px) |
-| Разделитель под хедером | divider/default (1 px), color semantic.border.default |
+| Разделитель под хедером | divider/default (1 px), color semantic.border.default. **Условный:** показывать при скролле контента под залипающей шапкой (отделяет шапку от прокручиваемого тела); на коротких / статичных шторках — **без линии** (= как в Figma-мастере, где его нет). Не статичная линия. |
 | Текст заголовка | **`Heading/H3 Medium`** (20/28 w500) + `Text&Icon/Primary`. Bold (700) и Semi-Bold не используются в Larixon Mobile DS — см. `TYPOGRAPHY.md` §2 |
 | Иконка закрытия | 24×24 px, `Text&Icon/Secondary` |
+| **Высота ряда шапки (close-only)** | **52 px = 12 + 28 (Heading/H3) + 12.** Высоту задаёт заголовок (H3, lineHeight 28) + вертикальные 12/12, **не кнопка**. Тап-зона кнопки закрытия (до 48) центрируется **внутри** ряда — её нельзя оборачивать в собственные 12/12 (иначе 12 + 48 + 12 = **72**). Handle — отдельная аффорданса сверху, в 52 не входит. |
 | **Выравнивание заголовка** | заголовок выровнен по сетке **16** (левый край = `padding horizontal`). Внутренний фрейм `Text` имеет `pL=4` при `Leading=Yes` (компенсация под back-стрелку + gap) и **`pL=0` при `Leading=No`** (заголовок к 16). ⚠️ До 2026-09-20 `Leading=No` имел `pL=12` — заголовок уезжал на 28 (баг, чинился на инстансах). Исправлено в мастере. |
 
 #### Header — ось `Alignment` (Top / Center)
@@ -216,10 +217,10 @@ Header в Figma имеет дополнительную ось `Alignment=Top|Ce
 | Header padding H | spacing/4 (16 px) |
 | Header padding V | spacing/3 (12 px) |
 | Header gap | spacing/2 (8 px) |
-| Divider | divider/default, semantic.border.default |
+| Divider | divider/default, semantic.border.default. **Условный** — при скролле контента под залипающей шапкой; статичные шторки — без линии (§2.4). |
 | Body padding vertical (на слоте) | **`pT = section/padding-default` (16), `pB = 0`** — асимметрия (§2.5.2). Верх держит слот (Header даёт мало), низ — сосед снизу (Button area / safe-area). Padding-семейство, не `stack/*`. |
 | Body padding horizontal (на слоте) | **0 — слот нейтральный.** Гориз. инсет 16 задаёт контент, не слот (§2.5.1: full-bleed List Item vs 16-обёртка для текста/контролов) |
-| **Bottom safe-area** (root `paddingBottom`) | **spacing/3 (12 px)** — постоянный buffer между контентом / кнопкой и нижней кромкой панели. На iOS закрывается зоной Home Indicator; на Android даёт breathing room. Действует независимо от наличия Buttons Stack. |
+| **Bottom safe-area** (root `paddingBottom`) | **spacing/3 (12 px)** — постоянный buffer между контентом / кнопкой и нижней кромкой панели. На iOS закрывается зоной Home Indicator; на Android даёт breathing room. Действует независимо от наличия Buttons Stack. **Системная навигация Android — сверх этих 12, НЕ входит в них:** 32-baseline контента считается до контентной кромки шторки; тонкий жест-бар укладывается в 12-буфер, а 3-кнопочный бар добавляет свою полную высоту (контент/CTA никогда не под баром). Практически — `paddingBottom = max(12, systemNavInset)`. |
 | Title typography | `Heading/H3 Medium` (20/28 w500), `Text&Icon/Primary` |
 | Close icon | 24×24, `Text&Icon/Secondary` |
 
@@ -281,6 +282,11 @@ Sheets — **не единый COMPONENT_SET** с axes `anchor × size × withHa
 ---
 
 ## История миграций
+
+**2026-11-17 — сверка Android 26.13 (уточнения §2.4/§6, канон не менялся).**
+- **Системная навигация Android** — сверх 12-буфера safe-area, не входит в него (`paddingBottom = max(12, systemNavInset)`): 32-baseline считается до контентной кромки, 3-кнопочный бар добавляет свою высоту. §6.
+- **Высота ряда шапки close-only = 52** (12 + 28 H3 + 12), задаётся заголовком, не кнопкой. Тап-зона закрытия (≤48) центрируется внутри ряда — не оборачивать в свои 12/12 (иначе 72). §2.4. Канон 12/12 — с 2026-11-01 (см. ниже).
+- **Разделитель под шапкой — условный** (при скролле под залипающей шапкой), не статичная линия; короткие шторки без него (= Figma-мастер). §2.4/§6.
 
 **2026-09-20 — фикс горизонтальных паддингов (Figma-дрейф от §6, из аудита hub).**
 

@@ -21,7 +21,7 @@ Figma: страница **Alert**, набор **Alert** (`6947:14128`). 15 ва�
 |---|---|---|---|
 | **Compact** | HORIZONTAL: icon + body | 16×16 | Inline-инфо в потоке формы / списка / страницы. Без действия. |
 | **Standard** | VERTICAL: icon+title (header) + description | 24×24 | Заметное сообщение с заголовком и контекстом. Description — boolean. |
-| **Card** | VERTICAL: icon+title + description + (?supporting) + action button | 32×32 fill | Эмфатическое сообщение: confirm, error с CTA. Action — boolean. |
+| **Card** | VERTICAL: icon+title + description + (?supporting) + action button | 32×32 outline | Эмфатическое сообщение: confirm, error с CTA. Action — boolean. |
 
 ---
 
@@ -36,11 +36,13 @@ Figma: страница **Alert**, набор **Alert** (`6947:14128`). 15 ва�
 | **Negative** | `Background/Tinted/Negative` | `Text&Icon/Negative` | `Text&Icon/Negative` | `Text&Icon/Negative` | `ic_declined` / `ic_declined` / `ic_MinusCircle` |
 
 **Принцип цвета текста:**
-- Alert — **структурный** компонент (см. `COLOR-PALETTE.md` §3.3). Фон `Background/Tinted/*`, текст — обычные `Text&Icon/Primary`, **независимо от темы**. В Light: Zinc/950 на пастельном tinted; в Dark: Zinc/50 на тёмном tinted (Green/800 / Blue/800 / Orange/800 и т.д.). Иерархия title vs description задаётся **типографикой** (Medium/Bold vs Regular), не цветом.
+- Alert — **структурный** компонент (см. `COLOR-PALETTE.md` §3.3). Фон `Background/Tinted/*`, текст — обычные `Text&Icon/Primary`, **независимо от темы**. В Light: Zinc/950 на пастельном tinted; в Dark: Zinc/50 на тёмном tinted (Green/900 / Blue/900 / Amber/900 и т.д.). Иерархия title vs description задаётся **типографикой** (Medium/Bold vs Regular), не цветом.
 - Парный набор `Text&Icon/on Tinted/*` (theme-invariant чёрный) — **не** для структурных компонентов. Он применяется только в атомарных color-coded элементах (chat bubble, badge, chip, soft-кнопка), где плашка остаётся пастельной и в Dark.
 - **Negative** — особый случай: `Text&Icon/Negative` подчёркивает urgency для destructive-сценариев. В других типах семантика уже даётся фоном + иконкой; цветной текст там — лишний шум.
 
-**Note:** Все иконки следуют конвенции `ic_*` префикса. Для Compact используется 16-вариант, для Standard — 24, для Card — 32 (outline-стиль).
+**Note:** Все иконки следуют конвенции `ic_*` префикса и **outline-стиля** во всех размерах (16 / 24 / 32). Для Compact используется 16-вариант, для Standard — 24, для Card — 32.
+
+> ⚠️ **`ic_declined` 16 (Compact Negative):** канон — **контурная** (outline), как весь набор Compact. В библиотеке пока только залитая 16 — используется как плейсхолдер; контурную дорисовать (иконочный трек). Не канонизировать залитую.
 
 ---
 
@@ -139,11 +141,11 @@ Alert (VERTICAL, FIXED 328, padding=spacing/3 (12), gap=spacing/4 (16), radius=1
 | Compact body | `Base/Body 2` (14/20) | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
 | Standard title | `Base/Body 1 Medium` (16/24) — был Body 2 Medium, поднят чтобы балансировать с 24-иконкой | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
 | Standard description | `Base/Body 2` (14/20) | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
-| Card title | `Heading/H4 Bold` — был Body 1 Medium, поднят до H4 Bold чтобы балансировать с 32 fill-иконкой | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
+| Card title | `Heading/H4 Bold` — был Body 1 Medium, поднят до H4 Bold чтобы балансировать с 32-иконкой (outline) | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
 | Card description | `Base/Body 2` (14/20) | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
 | Card supporting | `Caption/caption-md` (12/16) | `Text&Icon/Primary` (Negative: `Text&Icon/Negative`) |
 
-**Принцип:** иерархия задаётся **типографикой** (Bold 16 → Regular 14 → Regular 12), не цветом. `Text&Icon/Tertiary` не применяется — на тёмных tinted-фонах (Dark theme, Green/800, Blue/800…) даёт слабый контраст.
+**Принцип:** иерархия задаётся **типографикой** (Bold 16 → Regular 14 → Regular 12), не цветом. `Text&Icon/Tertiary` не применяется — на тёмных tinted-фонах (Dark theme, Green/900, Blue/900…) даёт слабый контраст.
 
 ---
 
@@ -202,11 +204,16 @@ interface AlertProps {
 15 вариантов (5 type × 3 style). Design-constants оптической компенсации (намеренные design-decisions, не баг):
 - **Compact:** `icon-wrap.paddingTop = 1` — иконка 16 сдвинута вниз на 1 px для оптического выравнивания с первой строкой Body 2 (lineHeight=20).
 - **Standard:** `inner.paddingTop = 1` — текстовый блок сдвинут вниз на 1 px для выравнивания с иконкой 24.
-- **Card:** `inner.paddingTop = 4` (= `spacing/1`) — привязано к токену; текстовый блок сдвинут вниз для выравнивания с fill-иконкой 32.
+- **Card:** `inner.paddingTop = 4` (= `spacing/1`) — привязано к токену; текстовый блок сдвинут вниз для выравнивания с иконкой 32 (outline).
 
 ---
 
 ## 11. История решений
+
+**2026-11-17 — сверка со спринтом Android 26.13 (уточнения прозы, канон не менялся).**
+- **Tinted в Dark = 900-shade** (не 800). Нормативная проза §3/§6/§7 приведена к канону `COLOR-PALETTE.md` §2.2: Green/900, Blue/900, Warning = **Amber/900** (переход 800→900 зафиксирован в палитре 2026-05-07). Датированные записи до 2026-05-07 оставлены как есть (тогда Dark был 800).
+- **Иконка Card = outline** (не fill). Таблица §2 «32×32 fill» → «outline»; рационал §4/§7 очищен от «fill-иконка». Канон outline зафиксирован ещё 2026-04-30 — таблица несла устаревший хвост.
+- **`ic_declined` 16 — контурная** (канон Compact = outline). Залитая 16 в библиотеке — плейсхолдер; контурную дорисовать (иконочный трек). См. §3 Note.
 
 **2026-11-04 — добавлен опциональный `Close` (dismissable alert).**
 
@@ -226,7 +233,7 @@ interface AlertProps {
 Пробел в спеке: §3 и §7 не указывали цвет для Supporting слоя Alert Card. iOS-код использовал `Text&Icon/Tertiary` как дефолт. Определён канон — **`Text&Icon/Primary`** (Negative: `Text&Icon/Negative`), по той же логике, что Title и Description:
 
 - Иерархия в Alert — через типографику (Bold 16 → Regular 14 → Regular 12), не цвет.
-- `Text&Icon/Tertiary` (Zinc/300 Light, Zinc/600 Dark) даёт слабый контраст на тёмных tinted-фонах Dark mode (Green/800, Blue/800, Orange/800…) — ровно та проблема, из-за которой 2026-05-04 текст в Alert ушёл от серых к Primary.
+- `Text&Icon/Tertiary` (Zinc/300 Light, Zinc/600 Dark) даёт слабый контраст на тёмных tinted-фонах Dark mode (Green/900, Blue/900, Amber/900…) — ровно та проблема, из-за которой 2026-05-04 текст в Alert ушёл от серых к Primary.
 - `Text&Icon/Secondary` — промежуточный вариант, избыточен: иерархия уже задана размером 12.
 
 Figma master исправлен: 5 нод `supporting` (6947:14065/14080/14093/14108 → `Text&Icon/Primary`; 6947:14122 Negative → `Text&Icon/Negative`). iOS-fix: `Token.Color.TextIcon.tertiary → Token.Color.TextIcon.primary` (`.negative` для Type=Negative). §3 расширен столбцом Supporting color, §7 дополнен колонкой Цвет + примечание про принцип.

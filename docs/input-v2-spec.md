@@ -162,9 +162,12 @@ Boolean-свойства (с дефолтными значениями):
 | **Helper** | off | Stacked-поле чаще всего компактное, helper — по запросу |
 | **Left Icon** | **on** | Паттерн Stacked предполагает визуальный якорь (иконка/лого/аватар) |
 | **Right Icon** | **on** *(было `off` до 2026-06-01)* | Действие справа (×, ›, share). Default flipped в `true` 2026-06-01 при привязке к 12 `24/ic_close` инстансам внутри Field — раньше property была декларирована, но не bind'илась (Figma помечал unused). После привязки сохранил визуал by-default. Property key неизменный: `Right Icon#6346:26`. |
+| **Prefix** | off | Знак валюты / единица перед значением ($, €). Для симметрии с Field/Input — см. ниже ⚠️ |
 | **Suffix** | off | Редко используется — для единиц измерения |
 
 Label внутри поля — всегда виден, не имеет Boolean-свойства (часть структуры).
+
+> ⚠️ **Prefix в Stacked (2026-11-17, сверка Android 26.13).** Канон `Field` — симметричная пара `Prefix` / `Suffix` (см. `field-spec.md` §Аффиксы). При раскатке аффиксов 2026-08-11 `Prefix` добавили в кубик и Input, но **в Stacked пропустили** — это недочёт раскатки, не намеренное решение. **Канон: `Prefix` в Stacked нужен** (leading-сторона, перед `Content`, `visible=false` по умолчанию — как Suffix). Добавить TEXT-ноду `Prefix` в набор `6346:304`; правка Figma — ручная, при следующем ре-паблише.
 
 ### Структура
 
@@ -172,6 +175,7 @@ Label внутри поля — всегда виден, не имеет Boolean
 Input v2 Stacked (COMPONENT) — VERTICAL, HUG
 ├── Field (HORIZONTAL, height = 56, padding = 0 12 0 12, gap = 4)
 │   ├── Leading (INSTANCE of Input Leading)
+│   ├── Prefix     (TEXT, optional, visible=false) — $, € перед значением (добавить, см. ⚠️ выше)
 │   ├── Content (VERTICAL, FILL, center vertically, padLeft = 4)
 │   │   ├── Label      (TEXT) — Caption/caption-md Medium (12/16)
 │   │   └── Input Text (TEXT) — Base/Body 1 (16/24)

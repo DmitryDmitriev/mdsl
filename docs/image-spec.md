@@ -63,7 +63,7 @@ Image (COMPONENT_SET) ← HORIZONTAL auto-layout (раскладка вариа�
 |---|---|
 | Состояние **загрузки** (shimmer) | `Skeleton` (`Skeleton / Listing Card` и атомы) — не дублируем |
 | **Нет фото / ошибка** (плейсхолдер с иконкой) | Состояние компонента-потребителя (карточка/галерея), не Image |
-| **Favorite ♡, счётчик «1/8», тег VIDEO/360°** | `ButtonIcon Type=Overlay` / `Badge Type=Overlay` поверх — composition-rules §11 |
+| **Favorite ♡, счётчик «1 · 8», тег VIDEO/360°** | `ButtonIcon Type=Overlay` / `Page Indicator / Numeric` / `Badge Type=Overlay` поверх — composition-rules §11. Формат счётчика — «n · m» (средняя точка U+00B7), канон в `page-indicator-spec.md` |
 | **Затемнение фото для читаемости** | `Background/onPhoto` (photo-tint) на потребителе — не scrim, не здесь |
 | Скрим под overlay-лейблами | связка Overlay-компонентов (§11) |
 
