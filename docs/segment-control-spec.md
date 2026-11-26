@@ -32,6 +32,8 @@ Segment Control — горизонтальный набор взаимоискл
 
 × 2 (Fixed/Scrollable) = 10.
 
+> **Secondary × Icon-only не поддерживается** — комбинации нет в матрице. Enforce на стороне кода (Android `require`, iOS debug-assert; в release деградирует к Primary). Подтверждено сверкой iOS LIOS-2588 (2026-11-26).
+
 ### Type: Fixed vs Scrollable
 
 - **Fixed.** Все сегменты делят ширину контейнера поровну (`FILL`). Используется когда сегментов 2–4 и они помещаются без переноса.
@@ -79,7 +81,7 @@ Segmented control (HORIZONTAL, FILL width)
 |---|---|---|
 | **Высота сегмента** | 48 (`control-height/md`) | 64 |
 | **Padding H** | `spacing/4` (16) | `spacing/4` (16) |
-| **Padding V** | 0 (items-end, pb 14 = (48−20)/2 — визуально центровано) | pt 10 / pb `spacing/2` (8) — асимметрично |
+| **Padding V** | **Label-only:** items-end, pb 14 = (48−20)/2. **Icon-only:** центр, pt/pb **12** = (48−24)/2 | pt 10 / pb `spacing/2` (8) — асимметрично |
 | **Gap** между Icon и Label | — | 2 px (off-scale, M3-default) |
 | **Icon size** | `size/sm` (24) | `size/sm` (24) |
 | **Container border** | `border/1` (1) | `border/1` (1) |
@@ -101,6 +103,8 @@ Segmented control (HORIZONTAL, FILL width)
 | Капсула (Secondary, активный) | 0 (плоский прямоугольник с заливкой `Background/Tertiary`) |
 
 > **Без скруглений по дизайн-решению.** Если в продукте понадобится capsule-вариант (M3 default), добавлять отдельным variant'ом или паттерном, не модифицируя текущий компонент.
+
+> **Indicator (Primary) тянется по ширине сегмента, не подписи.** Ширина = ширина сегмента − 4 (inset 2 слева + 2 справа), НЕ HUG по тексту. В Figma building-block `888:8058` индикатор лежит внутри `Tab Contents` (HUG по подписи) — это **артефакт сборки**, в продукт/код не тащить. Канон (и iOS) — ширина сегмента. (Сверка iOS LIOS-2588, 2026-11-26.)
 
 ---
 
@@ -132,6 +136,8 @@ Segmented control (HORIZONTAL, FILL width)
 |---|---|---|
 | **Default** | `Text&Icon/Secondary` | `transparent` |
 | **Active** | `Accent/Primary` | `Background/Tertiary` |
+
+> ⚠️ **Figma-билдблок Secondary (`888:8244` / `888:7966`) устарел — переверстать.** Он держит Primary-внешность (линия-индикатор 2 px во всю ширину, без заливки; Label&Icon — иконка слева от подписи, h 48). Канон Secondary (= Android `AppSegmentControl.kt` = iOS) — **заливка `Background/Tertiary` без индикатора**, а Label&Icon — **иконка сверху, подпись снизу, h 64** (§Структура). iOS собран верно по канону. Привести Figma-билдблок к канону (ручная правка). (Сверка iOS LIOS-2588, 2026-11-26.)
 
 **Disabled-state — не зашит в variant-матрицу.** В Figma COMPONENT_SET оси `State` нет (Default ↔ Active передаётся не через variant, а через override иконки/индикатора). Disabled-режим рендерится **на стороне продукта** через родительский контейнер: `aria-disabled="true"` + `pointer-events: none` + `opacity: 0.4`. На самом сегменте отдельных Disabled-токенов не существует — это упрощает variant matrix и согласуется с тем, что Segment Control обычно либо весь активен, либо весь disabled (групповой контрол).
 
@@ -166,7 +172,7 @@ Segmented control (HORIZONTAL, FILL width)
 |---|---|---|---|
 | Height | `control-height/md` (48) | `control-height/md` (48) | 64 (раскладка iconLabel) |
 | Padding H | `spacing/4` (16) | `spacing/4` (16) | `spacing/4` (16) |
-| Padding V | — | — | pt 10 / pb `spacing/2` (8) |
+| Padding V | pb 14 (items-end) | 12 / 12 (центр) | pt 10 / pb `spacing/2` (8) |
 | Gap (icon→label) | — | — | 2 px (off-scale) |
 | Icon size | — | `size/sm` (24) | `size/sm` (24) |
 | Border width | `border/1` (1) | `border/1` (1) | `border/1` (1) |
@@ -224,6 +230,7 @@ CSS-переменные (из существующих токенов):
 --segment-padding-v:        var(--spacing-2);           /* 8  pb (icon-label only) */
 --segment-padding-top:      10px;                       /* pt (icon-label only, off-scale) */
 --segment-label-only-pb:    14px;                       /* pb (label-only, bottom-align под slot) */
+--segment-icon-only-pv:     12px;                       /* pt/pb (icon-only, центр: (48−24)/2) */
 --segment-gap:              2px;                        /* gap icon→label (off-scale, M3-default) */
 --segment-icon:             var(--size-sm);             /* 24 */
 --segment-border:           var(--border-1);            /* 1  */
@@ -254,7 +261,7 @@ CSS-переменные (из существующих токенов):
 | Что было | Что стало | Когда |
 |---|---|---|
 | 12 hardcoded `#49454f` (Material 3 dark gray) | `Text&Icon/Primary` (canonical) | 2026-05-06 |
-| Текстовые стили raw 14/16, 14/14, 10/12, 10/10 | `Base/Body 2 Medium` 14/20 + `Caption sm` 10/12 | 2026-05-07 |
+| Текстовые стили raw 14/16, 14/14, 10/12, 10/10 | `Base/Body 2 Medium` 14/20 ~~+ `Caption sm` 10/12~~ *(Caption sm отменён — финал `Body 2 Medium` 14/20, см. Историю 2026-06-18)* | 2026-05-07 |
 | Микс fills `Surface/Surface Primary` (selected) + `Background/Primary` (unselected) — неконсистентно | **`Background/Primary`** единообразно на всех 90 fills (root + Tab + Building Blocks). Дефолт — inline-кейс. Sticky-режим решается override на инстансе → `Surface/Surface Primary` (2 шага elevation в Dark). Variant axis `Elevation` не вводим. Правило зафиксировано в `COLOR-PALETTE.md` §3.2 | 2026-05-12 |
 | 6 text nodes на `M3/title/small` (Material 3 library) | **`Base/Body 2 Medium`** (canonical Larixon) | 2026-05-12 |
 | Подпись под иконкой (Label & Icon) — `Base/Body 2 Medium` 14/20 в building blocks | Остаётся **`Base/Body 2 Medium`** 14/20; попытка перевода на Caption sm не отразилась в instances. Исправлено в спеке 2026-06-18 | 2026-05-12 → 2026-06-18 |
@@ -265,6 +272,13 @@ API-breaking изменений не было — варианты сохран�
 ---
 
 ## История миграций
+
+**2026-11-26 — сверка iOS LIOS-2588 (4 уточнения спеки).**
+- **Icon-only Padding V** — центр `pt/pb 12` = (48−24)/2, а не общий с Label-only `pb 14`. Спека ошибочно складывала их в одну строку; Figma+iOS центрируют. §Размеры + сводная таблица + CSS-var `--segment-icon-only-pv`.
+- **Indicator Primary** — тянется по **ширине сегмента** (− 4, inset 2+2), не по подписи. Figma-билдблок `888:8058` (HUG по тексту) — артефакт, в код не тащить. iOS верно. §Радиусы дополнена.
+- **Secondary-билдблок `888:8244`** устарел (держит Primary-вид: линия-индикатор + иконка слева, h 48). Канон = заливка `Background/Tertiary` без индикатора, Label&Icon иконка сверху h 64 (= Android + iOS). Привести Figma к канону (ручная правка). §Цвета Secondary дополнена ⚠️.
+- **Secondary × Icon-only** — не поддерживается, enforce в коде (assert). §Варианты дополнена.
+- **Миграция-таблица:** строка `Caption sm 10/12` помечена отменённой (финал `Body 2 Medium` 14/20).
 
 **2026-05-12 — аудит готовности (component-spec-check), 48 правок в Figma.**
 
